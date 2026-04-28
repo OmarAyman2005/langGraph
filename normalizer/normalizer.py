@@ -129,6 +129,27 @@ def detect_yes_no_questions(raw_input: str) -> Tuple[List[str], List[str]]:
             questions = [q]
             non_questions = remaining_clauses
 
+    # Fallback: punctuation-free trailing question heuristic
+    # If still no question found and the input contains no terminal '?' and no sentence punctuation,
+    # attempt a conservative detection of a trailing auxiliary-led clause as question.
+    if not questions:
+        cleaned = raw_input.strip()
+        # Only attempt this when there is no obvious sentence-ending punctuation
+        if not re.search(r"[.?!]", cleaned):
+            aux_pattern = r"\b(" + "|".join(sorted(AUXILIARIES, key=lambda x: -len(x))) + r")\b\s+"
+            # Look near the end for an auxiliary followed by a short clause
+            m2 = re.search(aux_pattern + r"(.{1,60})$", cleaned, flags=re.IGNORECASE)
+            if m2:
+                candidate = cleaned[m2.start():].strip()
+                # Heuristic: require at least two words in candidate (aux + subject/predicate)
+                if len(candidate.split()) >= 2:
+                    remaining = cleaned[:m2.start()].strip()
+                    remaining_clauses = [c.strip() for c in re.split(r"[,;]+", remaining) if c.strip()]
+                    # Conservative: only accept if there is some remaining premise text
+                    if remaining_clauses:
+                        questions = [candidate]
+                        non_questions = remaining_clauses
+
     return questions, non_questions
 
 
@@ -696,9 +717,19 @@ def is_irrelevant_or_noisy_text(sentence: str) -> bool:
 def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
     if not raw_input or not raw_input.strip():
         return make_error("Empty input")
+    # Conservative policy: if the entire input contains no sentence-ending
+    # punctuation, do not attempt aggressive segmentation. Return a clear
+    # error so callers can decide how to proceed.
+    if not re.search(r"[.?!]", raw_input):
+        return make_error("Could not safely detect exactly one yes/no question from punctuation-free input")
     questions, non_questions = detect_yes_no_questions(raw_input)
 
     if len(questions) == 0:
+        # If the input contains no sentence-ending punctuation, provide
+        # a clearer, conservative error message indicating inability to
+        # safely detect a single yes/no question from punctuation-free input.
+        if not re.search(r"[.?!]", raw_input):
+            return make_error("Could not safely detect exactly one yes/no question from punctuation-free input")
         return make_error("No yes/no question detected")
 
     if len(questions) > 1:
