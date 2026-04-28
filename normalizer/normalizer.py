@@ -94,6 +94,7 @@ def split_candidate_clauses(raw_input: str) -> List[str]:
 
 
 def detect_yes_no_questions(raw_input: str) -> Tuple[List[str], List[str]]:
+    # First, try simple clause splitting
     clauses = split_candidate_clauses(raw_input)
 
     questions = []
@@ -105,6 +106,28 @@ def detect_yes_no_questions(raw_input: str) -> Tuple[List[str], List[str]]:
             questions.append(clause.strip())
         else:
             non_questions.append(clause.strip())
+
+    # If no questions were detected via clause starts, try to find an
+    # inline auxiliary-started yes/no question anywhere in the text
+    # Example: "It rains and if it rains, the ground is wet, is the ground wet?"
+    if not questions:
+        # Anchor the search to the final question mark to avoid matching
+        # earlier auxiliary words inside premises (pick the clause that
+        # actually ends the input with a question).
+        cleaned = raw_input.strip()
+        pattern = re.compile(r"\b(" + "|".join(sorted(AUXILIARIES, key=lambda x: -len(x))) + r")\b[^?]*\?$",
+                             flags=re.IGNORECASE | re.DOTALL)
+        m = pattern.search(cleaned)
+        if m:
+            q = cleaned[m.start():m.end()].strip()
+            # remove the found question substring from the non_questions text
+            remaining = (cleaned[:m.start()] + cleaned[m.end():]).strip()
+
+            # re-split remaining text into non-question clauses, include commas
+            remaining_clauses = [c.strip() for c in re.split(r"[,?.!]+", remaining) if c.strip()]
+
+            questions = [q]
+            non_questions = remaining_clauses
 
     return questions, non_questions
 
