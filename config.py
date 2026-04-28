@@ -1,0 +1,11 @@
+STATUS_INITIALIZED = "initialized"
+STATUS_GENERATED = "generated"
+STATUS_PARSED = "parsed"
+STATUS_TRANSLATED = "translated"
+STATUS_VERIFIED = "verified"
+STATUS_COMPLETED = "completed"
+STATUS_FAILED = "failed"
+
+FAILURE_PARSE = "parse"
+FAILURE_TRANSLATION = "translation"
+FAILURE_VERIFICATION = "verification"
