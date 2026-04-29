@@ -25,6 +25,8 @@ AUXILIARIES = {
     "must",
 }
 
+WH_WORDS = {"what", "who", "where", "when", "why", "how", "which"}
+
 
 def make_error(reason: str) -> Dict[str, Any]:
     return {
@@ -94,13 +96,76 @@ def split_candidate_clauses(raw_input: str) -> List[str]:
 
 
 def detect_yes_no_questions(raw_input: str) -> Tuple[List[str], List[str]]:
+    # Early pass: extract explicit question sentences that end with '?'
+    # Use finditer to capture spans so removal is reliable even with
+    # repeated or overlapping text. This will produce separate
+    # candidates for "Do they eat? Will they eat?".
+    explicit_iter = list(re.finditer(r"[^?]*\?", raw_input, flags=re.DOTALL))
+    if explicit_iter:
+        questions = []
+        non_questions = []
+
+        # Collect question substrings and their spans
+        qs = []
+        spans = []
+        for m in explicit_iter:
+            qtext = m.group(0).strip()
+            if qtext:
+                qs.append(qtext)
+                spans.append((m.start(), m.end()))
+
+        # Classify explicit question sentences by their first word.
+        for q in qs:
+            if first_word(q) in AUXILIARIES:
+                questions.append(q)
+            else:
+                non_questions.append(q)
+
+        # Build remaining text by removing the explicit question spans
+        # from the original input.
+        pieces = []
+        last = 0
+        for (s, e) in spans:
+            pieces.append(raw_input[last:s])
+            last = e
+        pieces.append(raw_input[last:])
+        remaining = " ".join(pieces).strip()
+
+        remaining_clauses = [c.strip() for c in split_candidate_clauses(remaining) if c.strip()]
+        non_questions = remaining_clauses + non_questions
+
+        return questions, non_questions
+
     # First, try simple clause splitting
     clauses = split_candidate_clauses(raw_input)
+
+    # Expand clauses that contain multiple question sentences (e.g.,
+    # "Do they eat? Will they eat?") into separate candidates so we
+    # count each question separately instead of merging them.
+    expanded_clauses: List[str] = []
+    for clause in clauses:
+        # Split on question boundaries while preserving other punctuation.
+        # Use a conservative split on the literal '?' so we don't rely
+        # on lookbehind semantics which may behave unexpectedly in
+        # some environments; this yields each question as its own
+        # candidate when multiple question sentences appear on one line.
+        if "?" in clause:
+            tokens = [t.strip() for t in clause.split("?")]
+            for i, tok in enumerate(tokens):
+                if not tok:
+                    continue
+                is_question = clause.strip().endswith("?") and i == len(tokens) - 1
+                if i < len(tokens) - 1 or is_question:
+                    expanded_clauses.append(tok + "?")
+                else:
+                    expanded_clauses.append(tok)
+        else:
+            expanded_clauses.append(clause.strip())
 
     questions = []
     non_questions = []
 
-    for clause in clauses:
+    for clause in expanded_clauses:
         fw = first_word(clause)
         if fw in AUXILIARIES:
             questions.append(clause.strip())
@@ -714,15 +779,100 @@ def is_irrelevant_or_noisy_text(sentence: str) -> bool:
 
     return any(phrase in lowered for phrase in noise_phrases)
 
+def count_question_starts(raw_input: str) -> int:
+    """
+    Counts explicit question-form starts, with or without '?'.
+    This is used only as an early guard for multiple questions.
+    """
+    starters = sorted(AUXILIARIES | WH_WORDS, key=len, reverse=True)
+    starter_pattern = "|".join(re.escape(w) for w in starters)
+
+    # Count words that begin a sentence/question-like segment.
+    # Start of string OR after . ? ! followed by a question starter.
+    pattern = re.compile(
+        rf"(^|[.?!]\s+)\s*({starter_pattern})\b",
+        flags=re.IGNORECASE,
+    )
+
+    return len(pattern.findall(raw_input.strip()))
+
+def detect_question_form_starts(raw_input: str) -> List[Tuple[str, str]]:
+    """
+    Detect question-form starts at sentence/question boundaries.
+    Returns: [("wh", "what"), ("yes_no", "do"), ...]
+    """
+    starters = WH_WORDS | AUXILIARIES
+    starter_pattern = "|".join(
+        re.escape(w) for w in sorted(starters, key=len, reverse=True)
+    )
+
+    pattern = re.compile(
+        rf"(^|[.?!]\s+)\s*({starter_pattern})\b",
+        flags=re.IGNORECASE,
+    )
+
+    found = []
+    for match in pattern.finditer(raw_input.strip()):
+        word = match.group(2).lower()
+        kind = "wh" if word in WH_WORDS else "yes_no"
+        found.append((kind, word))
+
+    return found
+    
 def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
     if not raw_input or not raw_input.strip():
         return make_error("Empty input")
-    # Conservative policy: if the entire input contains no sentence-ending
-    # punctuation, do not attempt aggressive segmentation. Return a clear
-    # error so callers can decide how to proceed.
+
     if not re.search(r"[.?!]", raw_input):
         return make_error("Could not safely detect exactly one yes/no question from punctuation-free input")
+
+    question_forms = detect_question_form_starts(raw_input)
+
+    yes_no_count = sum(1 for kind, _ in question_forms if kind == "yes_no")
+    wh_count = sum(1 for kind, _ in question_forms if kind == "wh")
+
+    if yes_no_count == 0 and wh_count > 0:
+        return make_error("No yes/no question detected")
+
+    if yes_no_count > 1:
+        return make_error("More than one yes/no question detected")
+
+    if yes_no_count == 1 and wh_count > 0:
+        return make_error("More than one question detected")
+
     questions, non_questions = detect_yes_no_questions(raw_input)
+
+    # If any detected question entries themselves contain multiple
+    # question sentences (e.g., detection produced a merged string),
+    # split them now so we correctly count multiple yes/no questions.
+    split_questions: List[str] = []
+    for q in questions:
+        if q.count("?") > 1:
+            toks = [t.strip() for t in q.split("?")]
+            for i, tok in enumerate(toks):
+                if not tok:
+                    continue
+                if i < len(toks) - 1 or q.strip().endswith("?"):
+                    split_questions.append(tok + "?")
+                else:
+                    split_questions.append(tok)
+        else:
+            split_questions.append(q)
+
+    questions = split_questions
+
+    # Prioritize question-type validation: reject WH-questions and other
+    # non-yes/no question forms before attempting any premise analysis.
+    # Inspect the final question clause from the original raw input (don't
+    # rely on the auxiliary-extracted question which may omit leading WH
+    # words like 'What'). If the final clause begins with a WH-word,
+    # reject immediately.
+    cleaned = raw_input.strip()
+    m_final = re.search(r"([^.?!]*\?)\s*$", cleaned, flags=re.DOTALL)
+    if m_final:
+        final_question_clause = m_final.group(1).strip()
+        if first_word(final_question_clause) in WH_WORDS:
+            return make_error("Unsupported question type / not a yes-no question")
 
     if len(questions) == 0:
         # If the input contains no sentence-ending punctuation, provide
@@ -733,7 +883,7 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
         return make_error("No yes/no question detected")
 
     if len(questions) > 1:
-        return make_error("More than one question detected")
+        return make_error("More than one yes/no question detected")
 
     raw_question = questions[0]
     candidate_premise_text = "\n".join(non_questions).strip()

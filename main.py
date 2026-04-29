@@ -1,12 +1,13 @@
 from graph.builder import build_graph
 from graph.state import make_initial_state
+from normalizer.normalizer import normalize_raw_prompt
 
 
 def main():
     raw_input = """
-I am Crazy or Stupid.
-Ahmed is Crazy.
-is Ahmed Stupid?
+if people eat healthy, they become fit.
+Would they eat
+people eat healthy.
 """
 
     initial_state = make_initial_state(raw_input=raw_input)
