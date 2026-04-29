@@ -5,9 +5,8 @@ from normalizer.normalizer import normalize_raw_prompt
 
 def main():
     raw_input = """
-if people eat healthy, they become fit.
-Would they eat
-people eat healthy.
+if people eat healthy they become fit people eat healthy
+Do people become fit
 """
 
     initial_state = make_initial_state(raw_input=raw_input)

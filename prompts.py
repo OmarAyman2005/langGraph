@@ -793,8 +793,65 @@ Rules:
 - Use English sentence understanding.
 - Each returned premise must be a proper English sentence.
 - If the text cannot be separated into at least one proper premise sentence, return success false.
-"""
+- Do NOT accept fragments such as a single name, random adjectives, or keyword lists.
+- Do NOT accept text that only looks like words placed together without a clear subject and predicate.
+- Do NOT infer missing verbs or missing subjects.
+- Do NOT invent punctuation if the sentence boundaries are unclear.
+- If any candidate premise is malformed, unclear, or not a complete English sentence, return success false.
+- If the input contains multiple possible segmentations and you are not certain, return success false.
+- Validate every returned premise.
+- If even one candidate premise is incomplete, malformed, or not a proper English sentence, return success false.
+- Do not return only the valid premises while silently dropping invalid ones.
 
+Important conditional rule:
+- If a segment starts with "if", preserve it as a conditional premise.
+- For conditionals without punctuation, infer the boundary as:
+  "if <condition> <consequence>"
+  only when both condition and consequence are clear clauses.
+- Do NOT reverse the direction of a conditional.
+- Do NOT convert "if X Y" into "If Y, then X".
+- Do NOT create a premise containing "then" unless it starts with "If".
+- If a conditional boundary is unclear, return success false.
+"""
+PREMISE_VALIDATION_PROMPT = """You are a strict premise validation module.
+
+Input:
+A JSON list of candidate premise sentences.
+
+Your task:
+Decide whether EVERY candidate premise is a complete, proper English premise sentence.
+
+A valid premise must:
+- express a complete proposition
+- have a clear subject
+- have a complete predicate
+- be understandable without inventing missing words
+- not be a fragment
+- not be random words
+- not require repair or completion
+- not depend on unstated context
+
+Important:
+- Do NOT repair sentences.
+- Do NOT rewrite sentences.
+- Do NOT infer missing meaning.
+- If ANY premise is invalid, return success false.
+- If ALL premises are valid, return success true.
+
+Output ONLY valid JSON in exactly one of these forms:
+
+{
+  "success": true,
+  "error": null
+}
+
+OR:
+
+{
+  "success": false,
+  "error": "<short reason>"
+}
+"""
 
 PREMISE_NORMALIZATION_PROMPT = """You are a strict premise pattern normalizer.
 

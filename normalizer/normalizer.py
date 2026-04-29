@@ -10,6 +10,7 @@ ChatOllama = None
 from prompts import (
     PREMISE_SEGMENTATION_PROMPT,
     PREMISE_NORMALIZATION_PROMPT,
+    PREMISE_VALIDATION_PROMPT,
     ATOM_RELATION_PROMPT,
 )
 
@@ -100,7 +101,7 @@ def detect_yes_no_questions(raw_input: str) -> Tuple[List[str], List[str]]:
     # Use finditer to capture spans so removal is reliable even with
     # repeated or overlapping text. This will produce separate
     # candidates for "Do they eat? Will they eat?".
-    explicit_iter = list(re.finditer(r"[^?]*\?", raw_input, flags=re.DOTALL))
+    explicit_iter = list(re.finditer(r"[^.?!\n]*\?", raw_input))
     if explicit_iter:
         questions = []
         non_questions = []
@@ -224,6 +225,10 @@ def segment_premises_with_llm(candidate_premise_text: str) -> Dict[str, Any]:
 """
     return call_llm_json(PREMISE_SEGMENTATION_PROMPT, user_prompt)
 
+def validate_premises_with_llm(raw_premises: List[str]) -> Dict[str, Any]:
+    user_prompt = "Candidate premises:\n" + json.dumps(raw_premises, indent=2)
+
+    return call_llm_json(PREMISE_VALIDATION_PROMPT, user_prompt)
 
 def normalize_premise_with_llm(sentence: str) -> Dict[str, Any]:
     user_prompt = f"""Premise sentence:
@@ -317,16 +322,31 @@ def convert_question_to_target_candidates(question: str) -> List[str]:
         if len(rest_words) < 2:
             return [" ".join(rest_words)]
 
-        subject = rest_words[0]
-        verb = rest_words[1]
-        after = rest_words[2:]
+        # Handle common particle/preposition verb phrases:
+        # "wake up", "turn on", "shut down", etc.
+        particles = {"up", "on", "off", "down", "out", "in", "over", "away", "back"}
+
+        if len(rest_words) >= 3 and rest_words[-1].lower() in particles:
+            subject_words = rest_words[:-2]
+            verb_phrase_words = rest_words[-2:]
+        else:
+            subject_words = rest_words[:-1]
+            verb_phrase_words = rest_words[-1:]
+
+        subject = " ".join(subject_words)
+        verb_phrase = " ".join(verb_phrase_words)
 
         if aux == "does":
-            proposition_without_do = " ".join([subject, verb_to_third_person(verb)] + after)
-        else:
-            proposition_without_do = " ".join([subject, verb] + after)
+            first_verb = verb_phrase_words[0]
+            rest_of_verb = verb_phrase_words[1:]
 
-        proposition_with_do = " ".join([subject, aux, verb] + after)
+            proposition_without_do = " ".join(
+                [subject, verb_to_third_person(first_verb)] + rest_of_verb
+            )
+        else:
+            proposition_without_do = " ".join([subject] + verb_phrase_words)
+
+        proposition_with_do = " ".join([subject, aux] + verb_phrase_words)
 
         return [proposition_without_do, proposition_with_do]
 
@@ -570,6 +590,15 @@ def normalize_question_subject_case(subject: str) -> str:
     # Keep likely proper names unchanged: Ahmed -> Ahmed
     return subject
 
+def choose_do_aux(subject: str) -> str:
+    s = subject.lower().strip()
+    plural_heads = {"i", "you", "we", "they", "people"}
+    if s in plural_heads:
+        return "Do"
+    if s.startswith(("the ", "a ", "an ")):
+        return "Does"
+    return "Does"
+
 def proposition_to_question(proposition: str) -> str:
     p = proposition.strip().rstrip(".")
     lower = p.lower()
@@ -617,16 +646,24 @@ def proposition_to_question(proposition: str) -> str:
 
     words = p.split()
 
-    # find first likely third-person verb ending in s after at least one subject word
+        # find first likely third-person verb ending in s after at least one subject word
     for i in range(1, len(words)):
         word = words[i]
         lw = word.lower()
 
-        if lw.endswith("s") and lw not in {"is", "was", "has"}:
+        if lw.endswith("s") and lw not in {"is", "was", "has"} and not lw.endswith("ss"):
             subject = " ".join(words[:i])
             verb = base_verb_from_third_person(word)
             rest = " ".join(words[i + 1:])
-            return f"Does {normalize_question_subject_case(subject)} {verb}{(' ' + rest) if rest else ''}?"
+            subject_norm = normalize_question_subject_case(subject)
+            aux = choose_do_aux(subject_norm)
+            return f"{aux} {subject_norm} {verb}{(' ' + rest) if rest else ''}?"
+
+    if words:
+        subject = words[0]
+        rest = " ".join(words[1:])
+        aux = choose_do_aux(subject)
+        return f"{aux} {subject}{(' ' + rest) if rest else ''}?"
 
     return f"Does {p}?"
 
@@ -651,7 +688,13 @@ def deterministic_conditional_rewrite(sentence: str) -> Optional[str]:
         if left.lower().startswith("if ") and right:
             condition = left[3:].strip()
             return f"If {condition}, then {right}."
-
+        # Case: If X then Y  -> If X, then Y
+    if " then " in lowered:
+        parts = re.split(r"\s+then\s+", s, maxsplit=1, flags=re.IGNORECASE)
+        if len(parts) == 2 and parts[0].lower().startswith("if ") and parts[1].strip():
+            condition = parts[0][3:].strip()
+            consequence = parts[1].strip()
+            return f"If {condition}, then {consequence}."
     return None
 
 def is_quantified_or_general_statement(sentence: str) -> bool:
@@ -818,13 +861,36 @@ def detect_question_form_starts(raw_input: str) -> List[Tuple[str, str]]:
         found.append((kind, word))
 
     return found
-    
+
+def propagate_plural_subject_in_conditional(sentence: str) -> str:
+    s = sentence.strip().rstrip(".")
+
+    parts = re.split(r",\s*then\s*", s, maxsplit=1, flags=re.IGNORECASE)
+    if len(parts) != 2:
+        return sentence
+
+    left, consequent = parts[0].strip(), parts[1].strip()
+
+    if not left.lower().startswith("if "):
+        return sentence
+
+    antecedent = left[3:].strip()
+    ant_words = antecedent.split()
+
+    if not ant_words:
+        return sentence
+
+    subject = ant_words[0]
+
+    if consequent.lower().startswith("they "):
+        rest = consequent.split(maxsplit=1)[1] if len(consequent.split()) > 1 else ""
+        consequent = f"{subject} {rest}".strip()
+
+    return f"If {antecedent}, then {consequent}."
+
 def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
     if not raw_input or not raw_input.strip():
         return make_error("Empty input")
-
-    if not re.search(r"[.?!]", raw_input):
-        return make_error("Could not safely detect exactly one yes/no question from punctuation-free input")
 
     question_forms = detect_question_form_starts(raw_input)
 
@@ -841,6 +907,11 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
         return make_error("More than one question detected")
 
     questions, non_questions = detect_yes_no_questions(raw_input)
+    if len(questions) == 0 and yes_no_count == 1:
+        cleaned = raw_input.strip()
+        if first_word(cleaned) in AUXILIARIES:
+            questions = [cleaned]
+            non_questions = []
 
     # If any detected question entries themselves contain multiple
     # question sentences (e.g., detection produced a merged string),
@@ -891,20 +962,35 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
     if not candidate_premise_text:
         return make_error("No candidate premises found")
 
-    # If deterministic clause splitting already found candidate premises,
-    # keep them exactly as written. Do not let the LLM remove words like "If".
-    if non_questions:
-        raw_premises = non_questions
-    else:
-        segmentation = segment_premises_with_llm(candidate_premise_text)
+    # Premise segmentation:
+    # Task 3 must always use the LLM because sentence separation depends on
+    # English understanding, not punctuation.
+    segmentation = segment_premises_with_llm(candidate_premise_text)
 
-        if not segmentation.get("success"):
-            return make_error(segmentation.get("error", "Could not separate candidate premises"))
+    if not segmentation.get("success"):
+        return make_error(
+            segmentation.get(
+                "error",
+                "Could not separate candidate premises into proper English sentences",
+            )
+        )
 
-        raw_premises = segmentation.get("premises", [])
+    raw_premises = segmentation.get("premises", [])
+
+    
 
     if not raw_premises:
         return make_error("Could not separate candidate premises into proper English sentences")
+
+    premise_validation = validate_premises_with_llm(raw_premises)
+
+    if not premise_validation.get("success"):
+        return make_error(
+            premise_validation.get(
+                "error",
+                "One or more candidate premises are not proper English sentences",
+            )
+        )
 
     if contains_ambiguous_pronoun(raw_premises):
         return make_error("Ambiguous pronoun reference")
@@ -921,6 +1007,11 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
         deterministic_conditional = deterministic_conditional_rewrite(premise)
 
         if deterministic_conditional is not None:
+            deterministic_conditional = propagate_plural_subject_in_conditional(deterministic_conditional)
+
+            if " then " in deterministic_conditional.lower() and not deterministic_conditional.lower().startswith("if "):
+                return make_error("Malformed conditional statement")
+
             normalized_premises.append(deterministic_conditional)
             continue
 
@@ -940,6 +1031,17 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
             return make_error(normalized.get("error", "Unsupported statement pattern"))
 
         normalized_sentence = normalized["normalized_sentence"].strip().rstrip(".") + "."
+        rewritten_after_llm = deterministic_conditional_rewrite(normalized_sentence)
+        if rewritten_after_llm is not None:
+            normalized_sentence = rewritten_after_llm
+        normalized_sentence = propagate_plural_subject_in_conditional(normalized_sentence)
+
+        # Safety guard:
+        # A sentence containing "then" must be a proper conditional starting with "If".
+        # Reject malformed outputs like "The alarm rings then the guard wakes up."
+        if " then " in normalized_sentence.lower() and not normalized_sentence.lower().startswith("if "):
+            return make_error("Malformed conditional statement")
+
         normalized_premises.append(normalized_sentence)
 
     atom_table, metadata = create_atom_table(normalized_premises, raw_question)
