@@ -13,7 +13,9 @@ def apply_modus_ponens(a: str, b: str):
     return None
 
 
-def verify_symbolic_trace(symbolic_problem: Dict[str, Any], symbolic_trace: Dict[str, Any]) -> Dict[str, Any]:
+def verify_symbolic_trace(
+    symbolic_problem: Dict[str, Any], symbolic_trace: Dict[str, Any]
+) -> Dict[str, Any]:
     if not symbolic_problem:
         return {
             "verification_success": False,
@@ -42,13 +44,19 @@ def verify_symbolic_trace(symbolic_problem: Dict[str, Any], symbolic_trace: Dict
     if special_case == "Target Not Found in Premises":
         target_found_directly = target in premises.values()
 
-        final_answer_check = "consistent" if (answer == "not_entailed" and not target_found_directly) else "inconsistent"
+        final_answer_check = (
+            "consistent"
+            if (answer == "not_entailed" and not target_found_directly)
+            else "inconsistent"
+        )
 
         return {
             "verification_success": True,
             "verification_error": None,
             "verification_result": {
-                "validity": "valid" if final_answer_check == "consistent" else "invalid",
+                "validity": (
+                    "valid" if final_answer_check == "consistent" else "invalid"
+                ),
                 "step_results": [],
                 "final_answer_check": final_answer_check,
             },
@@ -128,11 +136,17 @@ def verify_symbolic_trace(symbolic_problem: Dict[str, Any], symbolic_trace: Dict
     if answer == "entailed":
         final_answer_check = "consistent" if target in derived_facts else "inconsistent"
     elif answer == "not_entailed":
-        final_answer_check = "consistent" if target not in derived_facts else "inconsistent"
+        final_answer_check = (
+            "consistent" if target not in derived_facts else "inconsistent"
+        )
     else:
         final_answer_check = "inconsistent"
 
-    overall_validity = "valid" if (all_steps_valid and final_answer_check == "consistent") else "invalid"
+    overall_validity = (
+        "valid"
+        if (all_steps_valid and final_answer_check == "consistent")
+        else "invalid"
+    )
 
     return {
         "verification_success": True,
