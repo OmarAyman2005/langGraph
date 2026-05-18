@@ -222,6 +222,21 @@ def detect_single_yes_no_question(raw_input: str) -> Dict[str, Any]:
         if error not in errors:
             errors.append(error)
 
+    # Resolve contradictory LLM outputs
+
+    if (
+        ERROR_NO_YES_NO in errors
+        and ERROR_MORE_THAN_ONE_YES_NO in errors
+    ):
+        errors.remove(ERROR_NO_YES_NO)
+
+    if (
+        ERROR_NON_YES_NO in errors
+        and len(valid_yes_no_questions) == 1
+        and len(valid_non_yes_no_questions) == 0
+    ):
+        errors.remove(ERROR_NON_YES_NO)
+
     if len(valid_yes_no_questions) == 0 and ERROR_NO_YES_NO not in errors:
         errors.append(ERROR_NO_YES_NO)
 

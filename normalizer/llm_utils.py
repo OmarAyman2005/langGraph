@@ -25,9 +25,18 @@ def call_llm_json(system_prompt: str, user_prompt: str) -> Dict[str, Any]:
             SystemMessage as _SystemMessage,
             HumanMessage as _HumanMessage,
         )
+        
         from langchain_ollama import ChatOllama as _ChatOllama
 
-        llm = _ChatOllama(model="llama3.1:8b", temperature=0)
+        from langchain_ollama import ChatOllama as _ChatOllama
+
+        from config import NORMALIZER_LLM_MODEL, NORMALIZER_TEMPERATURE
+
+
+        llm = _ChatOllama(
+            model=NORMALIZER_LLM_MODEL,
+            temperature=NORMALIZER_TEMPERATURE,
+        )
 
         response = llm.invoke(
             [
