@@ -6,7 +6,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from normalizer.case_unifier import unify_case
 
-
 TEST_CASES = [
     # --------------------------------------------------
     # VALID CASES
@@ -65,7 +64,6 @@ TEST_CASES = [
         "expected_success": True,
         "expected_output": "ahmed studies (today). does ahmed re-pass?",
     },
-
     # --------------------------------------------------
     # INVALID EMPTY INPUT
     # --------------------------------------------------
@@ -93,7 +91,6 @@ TEST_CASES = [
         "expected_success": False,
         "expected_error_contains": "Empty input",
     },
-
     # --------------------------------------------------
     # INVALID NON-ENGLISH CHARACTERS
     # --------------------------------------------------
@@ -121,7 +118,6 @@ TEST_CASES = [
         "expected_success": False,
         "expected_error_contains": "Non-English character(s) found: π",
     },
-
     # --------------------------------------------------
     # INVALID UNSUPPORTED ASCII SYMBOLS
     # --------------------------------------------------
@@ -149,7 +145,6 @@ TEST_CASES = [
         "expected_success": False,
         "expected_error_contains": "Unsupported character(s) found: _",
     },
-
     # --------------------------------------------------
     # MULTIPLE ERROR TYPES
     # --------------------------------------------------

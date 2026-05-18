@@ -1,7 +1,6 @@
 from typing import Any, Dict, List
 import string
 
-
 ALLOWED_PUNCTUATION = set(".,?!;:'\"()-")
 ALLOWED_WHITESPACE = set(" \t\n\r")
 
@@ -27,7 +26,9 @@ def _make_failure(
     non_english_characters = non_english_characters or []
     unsupported_characters = unsupported_characters or []
 
-    cleaned_errors = [error for error in errors if isinstance(error, str) and error.strip()]
+    cleaned_errors = [
+        error for error in errors if isinstance(error, str) and error.strip()
+    ]
 
     if not cleaned_errors:
         cleaned_errors = ["Case unification failed"]
@@ -133,14 +134,12 @@ def unify_case(raw_input: str) -> Dict[str, Any]:
 
     if non_english_characters:
         errors.append(
-            "Non-English character(s) found: "
-            + ", ".join(non_english_characters)
+            "Non-English character(s) found: " + ", ".join(non_english_characters)
         )
 
     if unsupported_characters:
         errors.append(
-            "Unsupported character(s) found: "
-            + ", ".join(unsupported_characters)
+            "Unsupported character(s) found: " + ", ".join(unsupported_characters)
         )
 
     if errors:

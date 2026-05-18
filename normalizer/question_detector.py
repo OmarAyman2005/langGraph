@@ -1,357 +1,243 @@
 import re
-from typing import List, Tuple, Dict, Any
+from typing import Any, Dict, List
 
-from normalizer.constants import AUXILIARIES, WH_WORDS
-
-
-def first_word(text: str) -> str:
-    words = re.findall(r"[A-Za-z]+", text.strip())
-    return words[0].lower() if words else ""
+from normalizer.llm_utils import call_llm_json
+from prompts import QUESTION_DETECTION_PROMPT
 
 
-def split_candidate_clauses(raw_input: str) -> List[str]:
+ERROR_NO_YES_NO = "No yes/no question detected"
+ERROR_MORE_THAN_ONE_YES_NO = "More than one yes/no question detected"
+ERROR_NON_YES_NO = "Non yes/no question detected"
+
+ALLOWED_ERRORS = {
+    ERROR_NO_YES_NO,
+    ERROR_MORE_THAN_ONE_YES_NO,
+    ERROR_NON_YES_NO,
+}
+
+
+def _make_failure(errors: List[str]) -> Dict[str, Any]:
+    cleaned_errors = []
+
+    for error in errors:
+        if isinstance(error, str) and error.strip() and error in ALLOWED_ERRORS:
+            if error not in cleaned_errors:
+                cleaned_errors.append(error)
+
+    if not cleaned_errors:
+        cleaned_errors = [ERROR_NO_YES_NO]
+
+    return {
+        "success": False,
+        "question": None,
+        "candidate_premise_text": None,
+        "errors": cleaned_errors,
+        "error": "\n".join(cleaned_errors),
+    }
+
+
+def _make_success(question: str, candidate_premise_text: str) -> Dict[str, Any]:
+    return {
+        "success": True,
+        "question": question.strip(),
+        "candidate_premise_text": candidate_premise_text.strip(),
+        "errors": [],
+        "error": None,
+    }
+
+
+def _call_question_detection_llm(raw_input: str) -> Dict[str, Any]:
+    user_prompt = f"""Input:
+{raw_input}
+"""
+    return call_llm_json(QUESTION_DETECTION_PROMPT, user_prompt)
+
+
+def _normalize_llm_result(result: Any) -> Dict[str, Any]:
     """
-    Deterministic clause detection.
-    Uses line breaks first, then punctuation as fallback.
+    Normalizes the LLM JSON output into a predictable structure.
+    N2 itself must only expose N2-specific errors.
     """
-    lines = [line.strip() for line in raw_input.splitlines() if line.strip()]
+    if not isinstance(result, dict):
+        return {
+            "success": False,
+            "yes_no_questions": [],
+            "non_yes_no_questions": [],
+            "errors": [ERROR_NO_YES_NO],
+        }
 
-    if len(lines) > 1:
-        return lines
+    yes_no_questions = result.get("yes_no_questions", [])
+    non_yes_no_questions = result.get("non_yes_no_questions", [])
+    errors = result.get("errors", [])
 
-    parts = re.split(r"[?.!]+", raw_input)
-    return [p.strip() for p in parts if p.strip()]
+    if not isinstance(yes_no_questions, list):
+        yes_no_questions = []
 
+    if not isinstance(non_yes_no_questions, list):
+        non_yes_no_questions = []
 
-def _is_likely_subject_start(word: str) -> bool:
-    """
-    Heuristic for whether a word can start a subject after an auxiliary.
+    if not isinstance(errors, list):
+        errors = []
 
-    Examples:
-    - Is Ahmed tired
-    - Is the ground wet
-    - Does Ahmed pass
-    - Will the machine start
-    """
-    if not word:
-        return False
-
-    lowered = word.lower()
-
-    if lowered in {
-        "i",
-        "you",
-        "he",
-        "she",
-        "it",
-        "we",
-        "they",
-        "this",
-        "that",
-        "these",
-        "those",
-        "the",
-        "a",
-        "an",
-    }:
-        return True
-
-    # Proper-name-like or normal noun-like word.
-    return bool(re.match(r"^[A-Za-z]+$", word))
-
-
-def _looks_like_inline_yes_no_question(words: List[str], start_index: int) -> bool:
-    """
-    Check whether words[start_index:] can plausibly begin with:
-    Auxiliary + Subject + Predicate/Rest
-
-    This is intentionally heuristic, because punctuation may be missing.
-    """
-    if start_index >= len(words):
-        return False
-
-    aux = words[start_index].lower()
-
-    if aux not in AUXILIARIES:
-        return False
-
-    # Need at least: auxiliary + subject + something
-    if start_index + 2 >= len(words):
-        return False
-
-    next_word = words[start_index + 1]
-
-    if not _is_likely_subject_start(next_word):
-        return False
-
-    return True
-
-
-def _tokenize_with_spans(text: str) -> List[Tuple[str, int, int]]:
-    """
-    Return alphabetic tokens with character spans.
-    """
-    return [(m.group(0), m.start(), m.end()) for m in re.finditer(r"[A-Za-z]+", text)]
-
-
-def detect_inline_question_sequences(raw_input: str) -> Tuple[List[str], List[Tuple[int, int]]]:
-    """
-    Detect yes/no question sequences anywhere in the raw input.
-
-    This supports punctuation-free cases like:
-    Ahmed Played Menna Cried if Ahmed Won Talaat Wins is Talaat winning
-
-    Detected question:
-    is Talaat winning
-    """
-    tokens = _tokenize_with_spans(raw_input)
-    words = [tok[0] for tok in tokens]
-
-    candidates: List[Tuple[str, int, int]] = []
-
-    for i, word in enumerate(words):
-        lowered = word.lower()
-
-        if lowered not in AUXILIARIES:
+    cleaned_yes_no_questions = []
+    for item in yes_no_questions:
+        if not isinstance(item, dict):
             continue
 
-        if not _looks_like_inline_yes_no_question(words, i):
+        text = item.get("text")
+
+        if isinstance(text, str) and text.strip():
+            cleaned_yes_no_questions.append({"text": text.strip()})
+
+    cleaned_non_yes_no_questions = []
+    for item in non_yes_no_questions:
+        if not isinstance(item, dict):
             continue
 
-        # If this auxiliary is preceded by a WH word nearby, it is not a yes/no question.
-        # Example: "what does Ahmed do"
-        previous_window = [w.lower() for w in words[max(0, i - 3):i]]
-        if any(w in WH_WORDS for w in previous_window):
-            continue
+        text = item.get("text")
 
-        start_char = tokens[i][1]
+        if isinstance(text, str) and text.strip():
+            cleaned_non_yes_no_questions.append({"text": text.strip()})
 
-        # By default, an inline detected question extends to the end of the prompt.
-        # This matches the normal use case where the question is the final sequence.
-        end_char = len(raw_input)
+    cleaned_errors = []
+    for error in errors:
+        if isinstance(error, str) and error.strip() in ALLOWED_ERRORS:
+            if error.strip() not in cleaned_errors:
+                cleaned_errors.append(error.strip())
 
-        question_text = raw_input[start_char:end_char].strip()
-
-        if question_text:
-            candidates.append((question_text, start_char, end_char))
-
-    # Keep only the most plausible inline candidate:
-    # the last auxiliary-led sequence in the prompt.
-    #
-    # This avoids incorrectly counting internal auxiliary words when a later one is
-    # the actual question.
-    if not candidates:
-        return [], []
-
-    last_question, start, end = candidates[-1]
-    return [last_question], [(start, end)]
+    return {
+        "success": len(cleaned_errors) == 0,
+        "yes_no_questions": cleaned_yes_no_questions,
+        "non_yes_no_questions": cleaned_non_yes_no_questions,
+        "errors": cleaned_errors,
+    }
 
 
-def detect_wh_question_sequences(raw_input: str) -> List[str]:
+def _find_question_span(raw_input: str, question_text: str) -> tuple[int, int] | None:
     """
-    Detect WH-style question sequences anywhere in the input.
+    Finds the detected question inside the input.
 
-    Examples:
-    - what does Ahmed do
-    - why is Ahmed tired
-    - how can Sara win
+    First tries exact case-insensitive matching.
+    Then tries word-based matching to tolerate punctuation differences.
     """
-    lowered_words = [w.lower() for w, _, _ in _tokenize_with_spans(raw_input)]
+    question_text = question_text.strip()
 
-    found = []
+    if not question_text:
+        return None
 
-    for i, word in enumerate(lowered_words):
-        if word not in WH_WORDS:
-            continue
+    exact_match = re.search(re.escape(question_text), raw_input, flags=re.IGNORECASE)
 
-        # WH followed shortly by an auxiliary strongly indicates a WH question.
-        lookahead = lowered_words[i + 1:i + 5]
-        if any(w in AUXILIARIES for w in lookahead):
-            found.append(word)
+    if exact_match:
+        return exact_match.start(), exact_match.end()
 
-    return found
+    question_words = re.findall(r"[A-Za-z]+", question_text.lower())
 
+    if not question_words:
+        return None
 
-def detect_yes_no_questions(raw_input: str) -> Tuple[List[str], List[str]]:
-    """
-    Detect yes/no questions and return:
-    - list of detected yes/no questions
-    - list of remaining candidate premise clauses
-    """
+    input_tokens = list(re.finditer(r"[A-Za-z]+", raw_input))
+    input_words = [token.group(0).lower() for token in input_tokens]
 
-    # 1. Explicit question-mark based detection.
-    explicit_iter = list(re.finditer(r"[^.?!\n]*\?", raw_input))
+    for i in range(0, len(input_words) - len(question_words) + 1):
+        if input_words[i : i + len(question_words)] == question_words:
+            start = input_tokens[i].start()
+            end = input_tokens[i + len(question_words) - 1].end()
+            return start, end
 
-    if explicit_iter:
-        questions = []
-        non_questions = []
-
-        qs = []
-        spans = []
-
-        for m in explicit_iter:
-            qtext = m.group(0).strip()
-            if qtext:
-                qs.append(qtext)
-                spans.append((m.start(), m.end()))
-
-        for q in qs:
-            if first_word(q) in AUXILIARIES:
-                questions.append(q)
-            else:
-                non_questions.append(q)
-
-        pieces = []
-        last = 0
-
-        for s, e in spans:
-            pieces.append(raw_input[last:s])
-            last = e
-
-        pieces.append(raw_input[last:])
-        remaining = " ".join(pieces).strip()
-
-        remaining_clauses = [
-            c.strip()
-            for c in split_candidate_clauses(remaining)
-            if c.strip()
-        ]
-
-        non_questions = remaining_clauses + non_questions
-
-        return questions, non_questions
-
-    # 2. Normal clause-start detection.
-    clauses = split_candidate_clauses(raw_input)
-
-    questions = []
-    non_questions = []
-
-    for clause in clauses:
-        fw = first_word(clause)
-        if fw in AUXILIARIES:
-            questions.append(clause.strip())
-        else:
-            non_questions.append(clause.strip())
-
-    if questions:
-        return questions, non_questions
-
-    # 3. Inline punctuation-free sequence detection.
-    inline_questions, spans = detect_inline_question_sequences(raw_input)
-
-    if inline_questions:
-        pieces = []
-        last = 0
-
-        for s, e in spans:
-            pieces.append(raw_input[last:s])
-            last = e
-
-        pieces.append(raw_input[last:])
-        remaining = " ".join(pieces).strip()
-
-        remaining_clauses = [
-            c.strip()
-            for c in split_candidate_clauses(remaining)
-            if c.strip()
-        ]
-
-        return inline_questions, remaining_clauses
-
-    return [], non_questions
+    return None
 
 
-def detect_question_form_starts(raw_input: str) -> List[Tuple[str, str]]:
-    """
-    Detect question-form starts anywhere in the prompt.
+def _remove_question_span(raw_input: str, question_text: str) -> str:
+    span = _find_question_span(raw_input, question_text)
 
-    Returns:
-    [("wh", "what"), ("yes_no", "does"), ...]
-    """
+    if span is None:
+        return raw_input.strip()
 
-    found: List[Tuple[str, str]] = []
+    start, end = span
 
-    # WH questions anywhere.
-    for wh in detect_wh_question_sequences(raw_input):
-        found.append(("wh", wh))
+    before = raw_input[:start]
+    after = raw_input[end:]
 
-    # Yes/no questions.
-    questions, _ = detect_yes_no_questions(raw_input)
+    remaining = before + " " + after
 
-    for q in questions:
-        fw = first_word(q)
-        if fw in AUXILIARIES:
-            found.append(("yes_no", fw))
+    # Remove orphan punctuation left behind after removing the question.
+    remaining = re.sub(r"\s+[?.!,]+\s*", " ", remaining)
 
-    return found
+    # Normalize whitespace only.
+    remaining = re.sub(r"\s+", " ", remaining).strip()
+
+    return remaining
+
+
+def _question_exists_in_input(raw_input: str, question_text: str) -> bool:
+    return _find_question_span(raw_input, question_text) is not None
 
 
 def detect_single_yes_no_question(raw_input: str) -> Dict[str, Any]:
-    if not raw_input or not raw_input.strip():
-        return {
-            "success": False,
-            "question": None,
-            "candidate_premise_text": None,
-            "error": "Empty input",
-        }
+    """
+    Normalizer Component N2: Question Detection.
 
-    question_forms = detect_question_form_starts(raw_input)
+    Main task is done by the LLM using QUESTION_DETECTION_PROMPT.
 
-    yes_no_count = sum(1 for kind, _ in question_forms if kind == "yes_no")
-    wh_count = sum(1 for kind, _ in question_forms if kind == "wh")
+    N2-specific errors only:
+    - No yes/no question detected
+    - More than one yes/no question detected
+    - Non yes/no question detected
+    """
+    text = raw_input or ""
+
+    try:
+        raw_result = _call_question_detection_llm(text)
+    except Exception:
+        return _make_failure([ERROR_NO_YES_NO])
+
+    result = _normalize_llm_result(raw_result)
+
+    yes_no_questions = result["yes_no_questions"]
+    non_yes_no_questions = result["non_yes_no_questions"]
+    llm_errors = result["errors"]
+
+    # Tiny safety check:
+    # Remove any question text that does not actually appear in the input.
+    valid_yes_no_questions = []
+
+    for question in yes_no_questions:
+        question_text = question["text"]
+
+        if _question_exists_in_input(text, question_text):
+            valid_yes_no_questions.append(question)
+
+    valid_non_yes_no_questions = []
+
+    for question in non_yes_no_questions:
+        question_text = question["text"]
+
+        if _question_exists_in_input(text, question_text):
+            valid_non_yes_no_questions.append(question)
 
     errors = []
 
-    if yes_no_count == 0:
-        errors.append("No yes/no question detected")
+    # Trust LLM errors, but recompute basic consistency from cleaned outputs.
+    for error in llm_errors:
+        if error not in errors:
+            errors.append(error)
 
-    if yes_no_count > 1:
-        errors.append("More than one yes/no question detected")
+    if len(valid_yes_no_questions) == 0 and ERROR_NO_YES_NO not in errors:
+        errors.append(ERROR_NO_YES_NO)
 
-    if wh_count > 0:
-        errors.append("Non yes/no question detected")
+    if len(valid_yes_no_questions) > 1 and ERROR_MORE_THAN_ONE_YES_NO not in errors:
+        errors.append(ERROR_MORE_THAN_ONE_YES_NO)
+
+    if len(valid_non_yes_no_questions) > 0 and ERROR_NON_YES_NO not in errors:
+        errors.append(ERROR_NON_YES_NO)
 
     if errors:
-        return {
-            "success": False,
-            "question": None,
-            "candidate_premise_text": None,
-            "error": "\n".join(errors),
-        }
+        return _make_failure(errors)
 
-    questions, non_questions = detect_yes_no_questions(raw_input)
+    question = valid_yes_no_questions[0]["text"]
+    candidate_premise_text = _remove_question_span(text, question)
 
-    if len(questions) == 0:
-        return {
-            "success": False,
-            "question": None,
-            "candidate_premise_text": None,
-            "error": "No yes/no question detected",
-        }
-
-    if len(questions) > 1:
-        return {
-            "success": False,
-            "question": None,
-            "candidate_premise_text": None,
-            "error": "More than one yes/no question detected",
-        }
-
-    raw_question = questions[0].strip()
-    candidate_premise_text = "\n".join(non_questions).strip()
-
-    if not candidate_premise_text:
-        return {
-            "success": False,
-            "question": None,
-            "candidate_premise_text": None,
-            "error": "No candidate premises found",
-        }
-
-    return {
-        "success": True,
-        "question": raw_question,
-        "candidate_premise_text": candidate_premise_text,
-        "error": None,
-    }
+    return _make_success(
+        question=question,
+        candidate_premise_text=candidate_premise_text,
+    )
