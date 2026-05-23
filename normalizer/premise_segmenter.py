@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from prompts import PREMISE_SEGMENTATION_PROMPT
+from prompts.normalizer.premise_segmentation_prompt import PREMISE_SEGMENTATION_PROMPT
 from normalizer.llm_utils import call_llm_json
 
 

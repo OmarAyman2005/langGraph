@@ -2,7 +2,7 @@ import re
 from typing import Any, Dict, List
 
 from normalizer.llm_utils import call_llm_json
-from prompts import QUESTION_DETECTION_PROMPT
+from prompts.normalizer.question_detection_prompt import QUESTION_DETECTION_PROMPT
 
 
 ERROR_NO_YES_NO = "No yes/no question detected"

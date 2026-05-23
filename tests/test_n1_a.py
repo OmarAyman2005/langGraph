@@ -6,153 +6,232 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from normalizer.case_unifier import unify_case
 
+
+"""
+Automated cumulative test for Normalizer Component N1: Character Adjuster / Case Unifier.
+
+N1 expected functionality:
+1. Reject empty input.
+2. Reject non-English / non-ASCII characters.
+3. Reject unsupported ASCII symbols.
+4. Allow English letters, digits, whitespace, and supported punctuation.
+5. Convert valid English input to lowercase without changing punctuation/spacing.
+"""
+
+
 TEST_CASES = [
-    # --------------------------------------------------
-    # VALID CASES
-    # --------------------------------------------------
+    # ==================================================
+    # VALID CASES — lowercase/case conversion
+    # ==================================================
     {
-        "name": "already lowercase",
+        "name": "already lowercase input stays the same",
         "input": "ahmed studies. does ahmed pass?",
         "expected_success": True,
         "expected_output": "ahmed studies. does ahmed pass?",
     },
     {
-        "name": "mixed case sentence",
+        "name": "mixed case input becomes lowercase",
         "input": "Ahmed Studies. Does Ahmed Pass?",
         "expected_success": True,
         "expected_output": "ahmed studies. does ahmed pass?",
     },
     {
-        "name": "uppercase sentence",
+        "name": "uppercase input becomes lowercase",
         "input": "AHMED STUDIES. DOES AHMED PASS?",
         "expected_success": True,
         "expected_output": "ahmed studies. does ahmed pass?",
     },
     {
-        "name": "preserve supported punctuation",
-        "input": "Ahmed studies, Sara sleeps! Does Ahmed pass?",
+        "name": "proper names become lowercase",
+        "input": "Sara Sleeps. Does Sara Dream?",
         "expected_success": True,
-        "expected_output": "ahmed studies, sara sleeps! does ahmed pass?",
+        "expected_output": "sara sleeps. does sara dream?",
+    },
+
+    # ==================================================
+    # VALID CASES — supported punctuation
+    # ==================================================
+    {
+        "name": "supported punctuation comma exclamation semicolon colon",
+        "input": "Ahmed studies, Sara sleeps! Does Ahmed pass; or fail: maybe?",
+        "expected_success": True,
+        "expected_output": "ahmed studies, sara sleeps! does ahmed pass; or fail: maybe?",
     },
     {
-        "name": "preserve line breaks",
+        "name": "supported apostrophe and double quote",
+        "input": "\"Ahmed doesn't study.\" Does Ahmed pass?",
+        "expected_success": True,
+        "expected_output": "\"ahmed doesn't study.\" does ahmed pass?",
+    },
+    {
+        "name": "supported parentheses and hyphen",
+        "input": "Ahmed studies (today). Does Ahmed re-pass?",
+        "expected_success": True,
+        "expected_output": "ahmed studies (today). does ahmed re-pass?",
+    },
+    {
+        "name": "all supported punctuation together",
+        "input": "A.,?!;:'\"()- Z",
+        "expected_success": True,
+        "expected_output": "a.,?!;:'\"()- z",
+    },
+
+    # ==================================================
+    # VALID CASES — whitespace and digits
+    # ==================================================
+    {
+        "name": "preserve newlines",
         "input": "Ahmed Studies.\nDoes Ahmed Pass?",
         "expected_success": True,
         "expected_output": "ahmed studies.\ndoes ahmed pass?",
     },
     {
-        "name": "allow numbers",
+        "name": "preserve tabs and carriage return",
+        "input": "Ahmed\tStudies.\r\nDoes\tAhmed\tPass?",
+        "expected_success": True,
+        "expected_output": "ahmed\tstudies.\r\ndoes\tahmed\tpass?",
+    },
+    {
+        "name": "allow digits",
         "input": "Ahmed has 2 books. Does Ahmed have 2 books?",
         "expected_success": True,
         "expected_output": "ahmed has 2 books. does ahmed have 2 books?",
     },
     {
-        "name": "allow contractions with apostrophe",
-        "input": "Ahmed doesn't study. Does Ahmed pass?",
+        "name": "valid input with leading and trailing whitespace is preserved",
+        "input": "  Ahmed Studies. Does Ahmed Pass?  ",
         "expected_success": True,
-        "expected_output": "ahmed doesn't study. does ahmed pass?",
+        "expected_output": "  ahmed studies. does ahmed pass?  ",
     },
+
+    # ==================================================
+    # INVALID CASES — empty / invalid type
+    # ==================================================
     {
-        "name": "allow double quotes",
-        "input": '"Ahmed studies." Does Ahmed pass?',
-        "expected_success": True,
-        "expected_output": '"ahmed studies." does ahmed pass?',
-    },
-    {
-        "name": "allow parentheses and hyphen",
-        "input": "Ahmed studies (today). Does Ahmed re-pass?",
-        "expected_success": True,
-        "expected_output": "ahmed studies (today). does ahmed re-pass?",
-    },
-    # --------------------------------------------------
-    # INVALID EMPTY INPUT
-    # --------------------------------------------------
-    {
-        "name": "empty string",
+        "name": "empty string rejected",
         "input": "",
         "expected_success": False,
         "expected_error_contains": "Empty input",
     },
     {
-        "name": "spaces only",
+        "name": "spaces only rejected",
         "input": "     ",
         "expected_success": False,
         "expected_error_contains": "Empty input",
     },
     {
-        "name": "newlines only",
-        "input": "\n\n\t",
+        "name": "newlines and tabs only rejected",
+        "input": "\n\n\t\r",
         "expected_success": False,
         "expected_error_contains": "Empty input",
     },
     {
-        "name": "none input",
+        "name": "none input rejected",
         "input": None,
         "expected_success": False,
         "expected_error_contains": "Empty input",
     },
-    # --------------------------------------------------
-    # INVALID NON-ENGLISH CHARACTERS
-    # --------------------------------------------------
     {
-        "name": "arabic character",
+        "name": "non-string input rejected",
+        "input": 123,
+        "expected_success": False,
+        "expected_error_contains": "Input must be a string",
+    },
+
+    # ==================================================
+    # INVALID CASES — non-English / non-ASCII
+    # ==================================================
+    {
+        "name": "arabic character rejected",
         "input": "Ahmed studies أ. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Non-English character(s) found: أ",
     },
     {
-        "name": "accented latin character",
+        "name": "accented latin character rejected",
         "input": "André studies. Does André pass?",
         "expected_success": False,
         "expected_error_contains": "Non-English character(s) found: é",
     },
     {
-        "name": "emoji character",
+        "name": "emoji rejected",
         "input": "Ahmed studies 😊. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Non-English character(s) found: 😊",
     },
     {
-        "name": "greek character",
+        "name": "greek character rejected",
         "input": "Ahmed studies π. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Non-English character(s) found: π",
     },
-    # --------------------------------------------------
-    # INVALID UNSUPPORTED ASCII SYMBOLS
-    # --------------------------------------------------
     {
-        "name": "unsupported at symbol",
+        "name": "en dash rejected as non-English/non-ASCII",
+        "input": "Ahmed studies – Sara sleeps. Does Ahmed pass?",
+        "expected_success": False,
+        "expected_error_contains": "Non-English character(s) found: –",
+    },
+    {
+        "name": "multiple unique non-English characters reported once each",
+        "input": "Ahmed é é studies أ أ. Does Ahmed pass 😊?",
+        "expected_success": False,
+        "expected_error_contains": "Non-English character(s) found: é, أ, 😊",
+    },
+
+    # ==================================================
+    # INVALID CASES — unsupported ASCII symbols
+    # ==================================================
+    {
+        "name": "at symbol rejected",
         "input": "Ahmed studies @ school. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Unsupported character(s) found: @",
     },
     {
-        "name": "unsupported hash and dollar",
+        "name": "hash and dollar rejected",
         "input": "Ahmed studies # math $ science. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Unsupported character(s) found: #, $",
     },
     {
-        "name": "unsupported slash",
+        "name": "slash rejected",
         "input": "Ahmed studies math/science. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Unsupported character(s) found: /",
     },
     {
-        "name": "unsupported underscore",
+        "name": "underscore rejected",
         "input": "Ahmed_studies. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Unsupported character(s) found: _",
     },
-    # --------------------------------------------------
-    # MULTIPLE ERROR TYPES
-    # --------------------------------------------------
     {
-        "name": "non-english and unsupported symbol together",
+        "name": "square brackets rejected",
+        "input": "Ahmed [studies]. Does Ahmed pass?",
+        "expected_success": False,
+        "expected_error_contains": "Unsupported character(s) found: [, ]",
+    },
+    {
+        "name": "plus equals less greater rejected",
+        "input": "Ahmed + Sara = success < maybe >. Does Ahmed pass?",
+        "expected_success": False,
+        "expected_error_contains": "Unsupported character(s) found: +, =, <, >",
+    },
+
+    # ==================================================
+    # INVALID CASES — multiple error categories
+    # ==================================================
+    {
+        "name": "non-English and unsupported symbol together",
         "input": "Ahmed studies 😊 @ school. Does Ahmed pass?",
         "expected_success": False,
         "expected_error_contains": "Non-English character(s) found: 😊\nUnsupported character(s) found: @",
+    },
+    {
+        "name": "multiple non-English and multiple unsupported symbols together",
+        "input": "Ahmed é studies أ @ school # today. Does Ahmed pass?",
+        "expected_success": False,
+        "expected_error_contains": "Non-English character(s) found: é, أ\nUnsupported character(s) found: @, #",
     },
 ]
 
@@ -160,28 +239,26 @@ TEST_CASES = [
 def assert_contains(actual: str | None, expected: str | None) -> bool:
     if expected is None:
         return True
-
     if actual is None:
         return False
-
     return expected in actual
 
 
-def run_tests():
+def run_tests() -> None:
     passed = 0
 
-    for case in TEST_CASES:
+    for index, case in enumerate(TEST_CASES, start=1):
         print("=" * 100)
-        print(f"TEST: {case['name']}")
+        print(f"TEST {index}/{len(TEST_CASES)}: {case['name']}")
         print("RAW INPUT:")
-        print(case["input"])
+        print(repr(case["input"]))
 
         result = unify_case(case["input"])
 
-        print("\nCASE UNIFICATION RESULT:")
+        print("\nN1 RESULT:")
         print(result)
 
-        actual_success = result["success"]
+        actual_success = result.get("success")
         expected_success = case["expected_success"]
 
         if actual_success != expected_success:
@@ -191,17 +268,28 @@ def run_tests():
 
         if expected_success is True:
             expected_output = case["expected_output"]
-            actual_output = result["case_unified_input"]
+            actual_output = result.get("case_unified_input")
 
             if actual_output != expected_output:
-                print("\nFAIL: wrong lowercase output")
-                print(f"Expected: {expected_output}")
-                print(f"Actual:   {actual_output}")
+                print("\nFAIL: wrong case-unified output")
+                print(f"Expected: {repr(expected_output)}")
+                print(f"Actual:   {repr(actual_output)}")
                 continue
 
             if result.get("errors") != []:
                 print("\nFAIL: success result should have empty errors list")
                 print(f"Actual errors: {result.get('errors')}")
+                continue
+
+            if result.get("error") is not None:
+                print("\nFAIL: success result should have error=None")
+                print(f"Actual error: {result.get('error')}")
+                continue
+
+            debug = result.get("debug", {})
+            if debug.get("case_unified_input") != expected_output:
+                print("\nFAIL: debug case_unified_input mismatch")
+                print(f"Debug: {debug}")
                 continue
 
             print("\nPASS")
@@ -217,8 +305,13 @@ def run_tests():
             continue
 
         if not isinstance(result.get("errors"), list) or not result.get("errors"):
-            print("\nFAIL: failure result should contain non-empty errors list")
+            print("\nFAIL: failure result should contain a non-empty errors list")
             print(f"Actual errors: {result.get('errors')}")
+            continue
+
+        if result.get("case_unified_input") is not None:
+            print("\nFAIL: failure result should have case_unified_input=None")
+            print(f"Actual case_unified_input: {result.get('case_unified_input')}")
             continue
 
         print("\nPASS")
@@ -226,6 +319,9 @@ def run_tests():
 
     print("=" * 100)
     print(f"PASSED {passed}/{len(TEST_CASES)}")
+
+    if passed != len(TEST_CASES):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
