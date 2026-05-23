@@ -6,17 +6,20 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from normalizer.case_unifier import unify_case
 from normalizer.question_detector import detect_single_yes_no_question
-from normalizer.premise_segmenter import segment_and_validate_premises
+from normalizer.premise_segmenter import (
+    segment_and_validate_premises,
+    build_normalized_prompt,
+)
 
 
-def read_multiline_input():
+def read_multiline_input() -> str:
     print("Manual Test: Normalizer N1 + N2 + N3")
-    print("N1: Case Unification")
-    print("N2: Question Detection")
-    print("N3: Premise Separation")
+    print("N1: Character Adjuster / Case Unifier")
+    print("N2: Question Detector")
+    print("N3: Premises Separator")
     print("Paste one raw input.")
     print("When finished, type END on a new line.")
-    print("=" * 100)
+    print("=" * 80)
 
     lines = []
 
@@ -29,61 +32,92 @@ def read_multiline_input():
     return "\n".join(lines)
 
 
-def main():
+def main() -> None:
     raw_input = read_multiline_input()
 
-    print("\n" + "=" * 100)
+    print("\n" + "=" * 80)
     print("RAW INPUT:")
     print(raw_input)
 
-    print("\n" + "-" * 100)
-    print("N1: CASE UNIFICATION")
-    n1 = unify_case(raw_input)
-    print(n1)
+    # -------------------------------
+    # N1
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N1 — CHARACTER ADJUSTER")
 
-    if not n1["success"]:
-        print("\nFINAL RESULT: FAILED at N1")
-        print(n1["error"])
-        return
+    n1_result = unify_case(raw_input)
 
-    print("\nCASE-UNIFIED INPUT:")
-    print(n1["case_unified_input"])
-
-    print("\n" + "-" * 100)
-    print("N2: QUESTION DETECTION")
-    n2 = detect_single_yes_no_question(n1["case_unified_input"])
-    print(n2)
-
-    if not n2["success"]:
-        print("\nFINAL RESULT: FAILED at N2")
-        print("ERRORS:")
-        for error in n2["errors"]:
+    if n1_result["success"] is False:
+        print("Status: FAILED")
+        print("Errors:")
+        for error in n1_result.get("errors", []):
             print(f"- {error}")
+
+        print("\nFinal Result: FAILED at N1")
         return
 
-    print("\nEXTRACTED QUESTION:")
-    print(n2["question"])
+    print("Status: PASSED")
+    print("Case-Unified Input:")
+    print(n1_result["case_unified_input"])
 
-    print("\nCANDIDATE PREMISE TEXT:")
-    print(n2["candidate_premise_text"])
+    # -------------------------------
+    # N2
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N2 — QUESTION DETECTOR")
 
-    print("\n" + "-" * 100)
-    print("N3: PREMISE SEPARATION")
-    n3 = segment_and_validate_premises(n2["candidate_premise_text"])
-    print(n3)
+    n2_result = detect_single_yes_no_question(n1_result["case_unified_input"])
 
-    if not n3["success"]:
-        print("\nFINAL RESULT: FAILED at N3")
-        print("ERRORS:")
-        for error in n3["errors"]:
+    if n2_result["success"] is False:
+        print("Status: FAILED")
+        print("Errors:")
+        for error in n2_result.get("errors", []):
             print(f"- {error}")
+
+        print("\nFinal Result: FAILED at N2")
         return
 
-    print("\nSEPARATED PREMISES:")
-    for i, premise in enumerate(n3["premises"], start=1):
+    print("Status: PASSED")
+    print("Extracted Question:")
+    print(n2_result["question"])
+
+    print("\nCandidate Premise Text:")
+    print(n2_result["candidate_premise_text"])
+
+    # -------------------------------
+    # N3
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N3 — PREMISES SEPARATOR")
+
+    n3_result = segment_and_validate_premises(
+        n2_result["candidate_premise_text"]
+    )
+
+    if n3_result["success"] is False:
+        print("Status: FAILED")
+        print("Errors:")
+        for error in n3_result.get("errors", []):
+            print(f"- {error}")
+
+        print("\nFinal Result: FAILED at N3")
+        return
+
+    print("Status: PASSED")
+
+    print("Separated Premises:")
+    for i, premise in enumerate(n3_result["premises"], start=1):
         print(f"{i}. {premise}")
 
-    print("\nFINAL RESULT: PASSED N1 + N2 + N3")
+    normalized_input = build_normalized_prompt(
+        premises=n3_result["premises"],
+        question=n2_result["question"],
+    )
+
+    print("\nNormalized Input:")
+    print(normalized_input)
+
+    print("\nFinal Result: PASSED N1 + N2 + N3")
 
 
 if __name__ == "__main__":

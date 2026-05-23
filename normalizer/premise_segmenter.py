@@ -1,164 +1,126 @@
 from typing import Any, Dict, List
 
-from prompts.normalizer.premise_segmentation_prompt import PREMISE_SEGMENTATION_PROMPT
-from normalizer.llm_utils import call_llm_json
+
+ERROR_NO_CANDIDATE_PREMISES = "No candidate premises found"
+ERROR_PREMISE_SEGMENTATION = "Candidate premises could not be separated using full stops"
 
 
 def _make_failure(errors: List[str]) -> Dict[str, Any]:
-    """
-    Standard failure output for the premise separation component.
-    """
     cleaned_errors = []
 
     for error in errors:
         if isinstance(error, str) and error.strip():
-            cleaned_errors.append(error.strip())
+            clean_error = error.strip()
+            if clean_error not in cleaned_errors:
+                cleaned_errors.append(clean_error)
 
     if not cleaned_errors:
-        cleaned_errors = ["Premise separation failed"]
+        cleaned_errors = [ERROR_PREMISE_SEGMENTATION]
 
     return {
         "success": False,
         "premises": [],
+        "normalized_input": None,
         "errors": cleaned_errors,
         "error": "\n".join(cleaned_errors),
     }
 
 
 def _make_success(premises: List[str]) -> Dict[str, Any]:
-    """
-    Standard success output for the premise separation component.
-    """
     return {
         "success": True,
         "premises": premises,
+        "normalized_input": None,
         "errors": [],
         "error": None,
     }
 
 
-def _basic_no_rest_check(candidate_premise_text: str) -> Dict[str, Any] | None:
+def _split_by_full_stop(candidate_premise_text: str) -> List[str]:
     """
-    Deterministic check for the no-rest case before calling the LLM.
+    Deterministically split candidate premise text into premise sentences.
+
+    Since the input is assumed to be well-punctuated, each premise sentence
+    must end with a full stop.
+
+    Example:
+        "ahmed studies. sara sleeps."
+        ->
+        ["ahmed studies.", "sara sleeps."]
     """
-    if not candidate_premise_text or not candidate_premise_text.strip():
-        return _make_failure(["No candidate premises found"])
 
-    return None
+    premises = []
+    current = []
+
+    for char in candidate_premise_text:
+        current.append(char)
+
+        if char == ".":
+            sentence = "".join(current).strip()
+            current = []
+
+            if sentence:
+                premises.append(sentence)
+
+    remaining = "".join(current).strip()
+
+    if remaining:
+        return []
+
+    return premises
 
 
-def segment_premises_with_llm(candidate_premise_text: str) -> Dict[str, Any]:
+def build_normalized_prompt(premises: List[str], question: str) -> str:
     """
-    Ask the LLM to separate candidate premise text into premise sentences
-    and validate that each separated premise is a complete proper English sentence.
+    Builds the normalized prompt format expected by the next pipeline component.
+
+    Output format:
+    Premises:
+    1. ...
+    2. ...
+
+    Question:
+    ...
     """
-    user_prompt = f"""Candidate premise text:
-{candidate_premise_text}
-"""
-    return call_llm_json(PREMISE_SEGMENTATION_PROMPT, user_prompt)
 
+    normalized_output = "Premises:\n"
 
-def _validate_llm_result_shape(result: Dict[str, Any]) -> Dict[str, Any] | None:
-    """
-    Validate that the LLM returned the exact expected JSON shape.
-    """
-    if not isinstance(result, dict):
-        return _make_failure(["Premise separation did not return a valid JSON object"])
+    for i, premise in enumerate(premises, start=1):
+        normalized_output += f"{i}. {premise}\n"
 
-    if "success" not in result:
-        return _make_failure(["Premise separation result missing success field"])
+    normalized_output += f"\nQuestion:\n{question.strip()}"
 
-    if not isinstance(result["success"], bool):
-        return _make_failure(["Premise separation success field must be boolean"])
-
-    if "premises" not in result:
-        return _make_failure(["Premise separation result missing premises field"])
-
-    if "errors" not in result:
-        return _make_failure(["Premise separation result missing errors field"])
-
-    if not isinstance(result["premises"], list):
-        return _make_failure(["Premise separation premises field must be a list"])
-
-    if not isinstance(result["errors"], list):
-        return _make_failure(["Premise separation errors field must be a list"])
-
-    if result["success"] is True:
-        if result["errors"] != []:
-            return _make_failure(
-                ["Premise separation success output must have empty errors list"]
-            )
-
-        if not result["premises"]:
-            return _make_failure(
-                ["Premise separation success output must include at least one premise"]
-            )
-
-        for premise in result["premises"]:
-            if not isinstance(premise, str) or not premise.strip():
-                return _make_failure(
-                    ["Premise separation returned an empty or invalid premise"]
-                )
-
-    if result["success"] is False:
-        if result["premises"] != []:
-            return _make_failure(
-                ["Premise separation failure output must have empty premises list"]
-            )
-
-        if not result["errors"]:
-            return _make_failure(
-                ["Premise separation failure output must include at least one error"]
-            )
-
-        for error in result["errors"]:
-            if not isinstance(error, str) or not error.strip():
-                return _make_failure(
-                    ["Premise separation returned an empty or invalid error"]
-                )
-
-    return None
+    return normalized_output
 
 
 def segment_and_validate_premises(candidate_premise_text: str) -> Dict[str, Any]:
     """
-    Main public function for Normalizer Mini-Task 2.
+    Normalizer Component N3: Premises Separator.
 
-    Input:
-        candidate_premise_text:
-            Candidate premise text to be separated and validated.
+    Planned deterministic functionality:
+    1. Receive candidate premise text from N2.
+    2. If there is no remaining text, fail with:
+       "No candidate premises found"
+    3. Split the candidate premise text into premise sentences using full stops.
+    4. Return the separated premises.
 
-    Output:
-        {
-            "success": True,
-            "premises": [...],
-            "errors": [],
-            "error": None
-        }
-
-        OR
-
-        {
-            "success": False,
-            "premises": [],
-            "errors": [...],
-            "error": "<errors joined by newline>"
-        }
+    Note:
+    The normalized prompt is built separately using build_normalized_prompt(),
+    because the question is produced by N2.
     """
-    no_rest_error = _basic_no_rest_check(candidate_premise_text)
-    if no_rest_error is not None:
-        return no_rest_error
 
-    try:
-        result = segment_premises_with_llm(candidate_premise_text.strip())
-    except Exception as e:
-        return _make_failure([f"Premise separation LLM call failed: {e}"])
+    if candidate_premise_text is None:
+        return _make_failure([ERROR_NO_CANDIDATE_PREMISES])
 
-    shape_error = _validate_llm_result_shape(result)
-    if shape_error is not None:
-        return shape_error
+    if not isinstance(candidate_premise_text, str):
+        return _make_failure([ERROR_PREMISE_SEGMENTATION])
 
-    if result["success"] is False:
-        return _make_failure(result["errors"])
+    if not candidate_premise_text.strip():
+        return _make_failure([ERROR_NO_CANDIDATE_PREMISES])
 
-    return _make_success(result["premises"])
+    premises = _split_by_full_stop(candidate_premise_text.strip())
+
+    if not premises:
+        return _make_failure([ERROR_PREMISE_SEGMENTATION])
+
+    return _make_success(premises)
