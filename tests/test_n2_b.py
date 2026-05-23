@@ -8,13 +8,13 @@ from normalizer.case_unifier import unify_case
 from normalizer.question_detector import detect_single_yes_no_question
 
 
-def main():
+def read_multiline_input() -> str:
     print("Manual Test: Normalizer N1 + N2")
-    print("N1: Case Unification")
-    print("N2: Question Detection")
+    print("N1: Character Adjuster / Case Unifier")
+    print("N2: Question Detector")
     print("Paste one raw input.")
     print("When finished, type END on a new line.")
-    print("=" * 100)
+    print("=" * 80)
 
     lines = []
 
@@ -24,48 +24,62 @@ def main():
             break
         lines.append(line)
 
-    raw_input = "\n".join(lines)
+    return "\n".join(lines)
 
-    print("\n" + "=" * 100)
+
+def main() -> None:
+    raw_input = read_multiline_input()
+
+    print("\n" + "=" * 80)
     print("RAW INPUT:")
     print(raw_input)
 
-    print("\n" + "-" * 100)
-    print("N1: CASE UNIFICATION")
+    # -------------------------------
+    # N1
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N1 — CHARACTER ADJUSTER")
 
     n1_result = unify_case(raw_input)
-    print(n1_result)
 
     if n1_result["success"] is False:
-        print("\nFINAL RESULT: FAILED at N1")
-        print("ERRORS:")
+        print("Status: FAILED")
+        print("Errors:")
         for error in n1_result.get("errors", []):
             print(f"- {error}")
+
+        print("\nFinal Result: FAILED at N1")
         return
 
-    print("\nCASE-UNIFIED INPUT:")
+    print("Status: PASSED")
+    print("Case-Unified Input:")
     print(n1_result["case_unified_input"])
 
-    print("\n" + "-" * 100)
-    print("N2: QUESTION DETECTION")
+    # -------------------------------
+    # N2
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N2 — QUESTION DETECTOR")
 
     n2_result = detect_single_yes_no_question(n1_result["case_unified_input"])
-    print(n2_result)
 
     if n2_result["success"] is False:
-        print("\nFINAL RESULT: FAILED at N2")
-        print("ERRORS:")
+        print("Status: FAILED")
+        print("Errors:")
         for error in n2_result.get("errors", []):
             print(f"- {error}")
+
+        print("\nFinal Result: FAILED at N2")
         return
 
-    print("\nEXTRACTED QUESTION:")
+    print("Status: PASSED")
+    print("Extracted Question:")
     print(n2_result["question"])
 
-    print("\nCANDIDATE PREMISE TEXT:")
+    print("\nCandidate Premise Text:")
     print(n2_result["candidate_premise_text"])
 
-    print("\nFINAL RESULT: PASSED N1 + N2")
+    print("\nFinal Result: PASSED N1 + N2")
 
 
 if __name__ == "__main__":

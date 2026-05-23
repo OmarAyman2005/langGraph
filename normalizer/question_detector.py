@@ -1,28 +1,77 @@
 import re
 from typing import Any, Dict, List
 
-from normalizer.llm_utils import call_llm_json
-from prompts.normalizer.question_detection_prompt import QUESTION_DETECTION_PROMPT
-
 
 ERROR_NO_YES_NO = "No yes/no question detected"
 ERROR_MORE_THAN_ONE_YES_NO = "More than one yes/no question detected"
 ERROR_NON_YES_NO = "Non yes/no question detected"
 
-ALLOWED_ERRORS = {
-    ERROR_NO_YES_NO,
-    ERROR_MORE_THAN_ONE_YES_NO,
-    ERROR_NON_YES_NO,
+AUXILIARIES = {
+    "is",
+    "are",
+    "am",
+    "was",
+    "were",
+    "do",
+    "does",
+    "did",
+    "has",
+    "have",
+    "had",
+    "will",
+    "would",
+    "can",
+    "could",
+    "shall",
+    "should",
+    "may",
+    "might",
+    "must",
 }
+
+BE_AUXILIARIES = {"is", "are", "am", "was", "were"}
+
+WH_WORDS = {
+    "what",
+    "who",
+    "whom",
+    "whose",
+    "where",
+    "when",
+    "why",
+    "how",
+    "which",
+}
+
+SENTENCE_BOUNDARIES = {".", "!", "?", "\n", "\r"}
+
+
+def _unique_in_order(items: List[str]) -> List[str]:
+    seen = set()
+    result = []
+
+    for item in items:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+
+    return result
 
 
 def _make_failure(errors: List[str]) -> Dict[str, Any]:
+    allowed = {
+        ERROR_NO_YES_NO,
+        ERROR_MORE_THAN_ONE_YES_NO,
+        ERROR_NON_YES_NO,
+    }
+
     cleaned_errors = []
 
     for error in errors:
-        if isinstance(error, str) and error.strip() and error in ALLOWED_ERRORS:
-            if error not in cleaned_errors:
-                cleaned_errors.append(error)
+        if isinstance(error, str) and error.strip() in allowed:
+            clean = error.strip()
+            if clean not in cleaned_errors:
+                cleaned_errors.append(clean)
 
     if not cleaned_errors:
         cleaned_errors = [ERROR_NO_YES_NO]
@@ -46,213 +95,182 @@ def _make_success(question: str, candidate_premise_text: str) -> Dict[str, Any]:
     }
 
 
-def _call_question_detection_llm(raw_input: str) -> Dict[str, Any]:
-    user_prompt = f"""Input:
-{raw_input}
-"""
-    return call_llm_json(QUESTION_DETECTION_PROMPT, user_prompt)
+def _tokenize(text: str) -> List[str]:
+    return [match.group(0).lower() for match in re.finditer(r"[A-Za-z0-9']+", text)]
 
 
-def _normalize_llm_result(result: Any) -> Dict[str, Any]:
+def _starts_with_wh_question(text: str) -> bool:
+    tokens = _tokenize(text)
+    return bool(tokens) and tokens[0] in WH_WORDS
+
+
+def _is_yes_no_question(question_text: str) -> bool:
+    q = question_text.strip().rstrip("?").strip()
+    tokens = _tokenize(q)
+
+    if len(tokens) < 3:
+        return False
+
+    first = tokens[0]
+
+    if first not in AUXILIARIES:
+        return False
+
+    if any(token in WH_WORDS for token in tokens):
+        return False
+
+    subject = tokens[1]
+    predicate = tokens[2:]
+
+    if not subject or not predicate:
+        return False
+
+    if first in BE_AUXILIARIES:
+        if any(token in BE_AUXILIARIES for token in predicate):
+            return False
+
+    return True
+
+
+def _classify_question_candidate(question_text: str) -> str:
     """
-    Normalizes the LLM JSON output into a predictable structure.
-    N2 itself must only expose N2-specific errors.
+    Returns:
+    - "yes_no"
+    - "non_yes_no"
     """
-    if not isinstance(result, dict):
-        return {
-            "success": False,
-            "yes_no_questions": [],
-            "non_yes_no_questions": [],
-            "errors": [ERROR_NO_YES_NO],
-        }
+    q = question_text.strip()
 
-    yes_no_questions = result.get("yes_no_questions", [])
-    non_yes_no_questions = result.get("non_yes_no_questions", [])
-    errors = result.get("errors", [])
+    if _is_yes_no_question(q):
+        return "yes_no"
 
-    if not isinstance(yes_no_questions, list):
-        yes_no_questions = []
-
-    if not isinstance(non_yes_no_questions, list):
-        non_yes_no_questions = []
-
-    if not isinstance(errors, list):
-        errors = []
-
-    cleaned_yes_no_questions = []
-    for item in yes_no_questions:
-        if not isinstance(item, dict):
-            continue
-
-        text = item.get("text")
-
-        if isinstance(text, str) and text.strip():
-            cleaned_yes_no_questions.append({"text": text.strip()})
-
-    cleaned_non_yes_no_questions = []
-    for item in non_yes_no_questions:
-        if not isinstance(item, dict):
-            continue
-
-        text = item.get("text")
-
-        if isinstance(text, str) and text.strip():
-            cleaned_non_yes_no_questions.append({"text": text.strip()})
-
-    cleaned_errors = []
-    for error in errors:
-        if isinstance(error, str) and error.strip() in ALLOWED_ERRORS:
-            if error.strip() not in cleaned_errors:
-                cleaned_errors.append(error.strip())
-
-    return {
-        "success": len(cleaned_errors) == 0,
-        "yes_no_questions": cleaned_yes_no_questions,
-        "non_yes_no_questions": cleaned_non_yes_no_questions,
-        "errors": cleaned_errors,
-    }
+    return "non_yes_no"
 
 
-def _find_question_span(raw_input: str, question_text: str) -> tuple[int, int] | None:
+def _find_question_start_for_chunk(chunk_before_qmark: str) -> int:
     """
-    Finds the detected question inside the input.
+    Given text before one '?', find where the actual question starts inside that chunk.
 
-    First tries exact case-insensitive matching.
-    Then tries word-based matching to tolerate punctuation differences.
+    Since inputs are well-punctuated, the question starts after the last sentence boundary
+    before the question mark.
     """
-    question_text = question_text.strip()
+    start = 0
 
-    if not question_text:
-        return None
+    for i in range(len(chunk_before_qmark) - 1, -1, -1):
+        if chunk_before_qmark[i] in SENTENCE_BOUNDARIES:
+            start = i + 1
+            break
 
-    exact_match = re.search(re.escape(question_text), raw_input, flags=re.IGNORECASE)
-
-    if exact_match:
-        return exact_match.start(), exact_match.end()
-
-    question_words = re.findall(r"[A-Za-z]+", question_text.lower())
-
-    if not question_words:
-        return None
-
-    input_tokens = list(re.finditer(r"[A-Za-z]+", raw_input))
-    input_words = [token.group(0).lower() for token in input_tokens]
-
-    for i in range(0, len(input_words) - len(question_words) + 1):
-        if input_words[i : i + len(question_words)] == question_words:
-            start = input_tokens[i].start()
-            end = input_tokens[i + len(question_words) - 1].end()
-            return start, end
-
-    return None
+    return start
 
 
-def _remove_question_span(raw_input: str, question_text: str) -> str:
-    span = _find_question_span(raw_input, question_text)
+def _extract_question_candidates(text: str) -> List[Dict[str, Any]]:
+    """
+    Extracts every candidate question ending with '?'.
 
-    if span is None:
-        return raw_input.strip()
+    Each candidate includes the '?' exactly as it appears.
+    """
+    candidates = []
 
-    start, end = span
+    for match in re.finditer(r"\?", text):
+        qmark_index = match.start()
+        chunk_before_qmark = text[:qmark_index]
 
-    before = raw_input[:start]
-    after = raw_input[end:]
+        start = _find_question_start_for_chunk(chunk_before_qmark)
+        end = qmark_index + 1
+
+        question_text = text[start:end].strip()
+
+        candidates.append(
+            {
+                "text": question_text,
+                "start": start,
+                "end": end,
+            }
+        )
+
+    return candidates
+
+
+def _remove_question_span(text: str, start: int, end: int) -> str:
+    before = text[:start]
+    after = text[end:]
 
     remaining = before + " " + after
 
-    # Remove orphan punctuation left behind after removing the question.
-    remaining = re.sub(r"\s+[?.!,]+\s*", " ", remaining)
-
-    # Normalize whitespace only.
+    # Keep punctuation as much as possible, only clean whitespace introduced by removal.
+    remaining = re.sub(r"\s+([.,!;:])", r"\1", remaining)
     remaining = re.sub(r"\s+", " ", remaining).strip()
 
     return remaining
 
 
-def _question_exists_in_input(raw_input: str, question_text: str) -> bool:
-    return _find_question_span(raw_input, question_text) is not None
-
-
 def detect_single_yes_no_question(raw_input: str) -> Dict[str, Any]:
     """
-    Normalizer Component N2: Question Detection.
+    Normalizer Component N2: deterministic question detector.
 
-    Main task is done by the LLM using QUESTION_DETECTION_PROMPT.
-
-    N2-specific errors only:
-    - No yes/no question detected
-    - More than one yes/no question detected
-    - Non yes/no question detected
+    Rules:
+    1. If there is no '?', fail with "No yes/no question detected".
+    2. Extract all question candidates ending with '?'.
+    3. Classify each candidate as:
+       - proper yes/no question
+       - non yes/no / malformed question
+    4. If zero proper yes/no questions exist:
+       "No yes/no question detected"
+    5. If more than one proper yes/no question exists:
+       "More than one yes/no question detected"
+    6. If any non yes/no / malformed question exists:
+       "Non yes/no question detected"
+    7. Success only if exactly one proper yes/no question exists and no non yes/no
+       question exists.
     """
+
     text = raw_input or ""
 
-    try:
-        raw_result = _call_question_detection_llm(text)
-    except Exception:
+    if "?" not in text:
         return _make_failure([ERROR_NO_YES_NO])
 
-    result = _normalize_llm_result(raw_result)
+    candidates = _extract_question_candidates(text)
 
-    yes_no_questions = result["yes_no_questions"]
-    non_yes_no_questions = result["non_yes_no_questions"]
-    llm_errors = result["errors"]
+    yes_no_questions = []
+    non_yes_no_questions = []
 
-    # Tiny safety check:
-    # Remove any question text that does not actually appear in the input.
-    valid_yes_no_questions = []
+    for candidate in candidates:
+        question_text = candidate["text"].strip()
 
-    for question in yes_no_questions:
-        question_text = question["text"]
+        if not question_text:
+            non_yes_no_questions.append(candidate)
+            continue
 
-        if _question_exists_in_input(text, question_text):
-            valid_yes_no_questions.append(question)
+        label = _classify_question_candidate(question_text)
 
-    valid_non_yes_no_questions = []
-
-    for question in non_yes_no_questions:
-        question_text = question["text"]
-
-        if _question_exists_in_input(text, question_text):
-            valid_non_yes_no_questions.append(question)
+        if label == "yes_no":
+            yes_no_questions.append(candidate)
+        else:
+            non_yes_no_questions.append(candidate)
 
     errors = []
 
-    # Trust LLM errors, but recompute basic consistency from cleaned outputs.
-    for error in llm_errors:
-        if error not in errors:
-            errors.append(error)
-
-    # Resolve contradictory LLM outputs
-
-    if (
-        ERROR_NO_YES_NO in errors
-        and ERROR_MORE_THAN_ONE_YES_NO in errors
-    ):
-        errors.remove(ERROR_NO_YES_NO)
-
-    if (
-        ERROR_NON_YES_NO in errors
-        and len(valid_yes_no_questions) == 1
-        and len(valid_non_yes_no_questions) == 0
-    ):
-        errors.remove(ERROR_NON_YES_NO)
-
-    if len(valid_yes_no_questions) == 0 and ERROR_NO_YES_NO not in errors:
+    if len(yes_no_questions) == 0:
         errors.append(ERROR_NO_YES_NO)
 
-    if len(valid_yes_no_questions) > 1 and ERROR_MORE_THAN_ONE_YES_NO not in errors:
+    if len(yes_no_questions) > 1:
         errors.append(ERROR_MORE_THAN_ONE_YES_NO)
 
-    if len(valid_non_yes_no_questions) > 0 and ERROR_NON_YES_NO not in errors:
+    if len(non_yes_no_questions) > 0:
         errors.append(ERROR_NON_YES_NO)
 
     if errors:
-        return _make_failure(errors)
+        return _make_failure(_unique_in_order(errors))
 
-    question = valid_yes_no_questions[0]["text"]
-    candidate_premise_text = _remove_question_span(text, question)
+    question = yes_no_questions[0]
+
+    candidate_premise_text = _remove_question_span(
+        text=text,
+        start=question["start"],
+        end=question["end"],
+    )
 
     return _make_success(
-        question=question,
+        question=question["text"],
         candidate_premise_text=candidate_premise_text,
     )
