@@ -11,14 +11,16 @@ from normalizer.premise_segmenter import (
     build_normalized_prompt,
 )
 from normalizer.sentence_pattern_matcher import match_sentence_patterns
+from normalizer.question_pattern_matcher import validate_question_pattern
 
 
 def read_multiline_input() -> str:
-    print("Manual Test: Normalizer N1 + N2 + N3 + N4")
+    print("Manual Test: Normalizer N1 + N2 + N3 + N4 + N5")
     print("N1: Character Adjuster / Case Unifier")
     print("N2: Question Detector")
     print("N3: Premises Separator")
     print("N4: Sentence Pattern Matcher")
+    print("N5: Question Pattern Matcher")
     print("Paste one raw input.")
     print("When finished, type END on a new line.")
     print("=" * 80)
@@ -138,6 +140,31 @@ def main() -> None:
     for i, premise in enumerate(n4_result["pattern_matched_premises"], start=1):
         print(f"{i}. {premise}")
 
+    # -------------------------------
+    # N5
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N5 — QUESTION PATTERN MATCHER")
+
+    n5_result = validate_question_pattern(n2_result["question"])
+
+    if n5_result["success"] is False:
+        print("Status: FAILED")
+        print("Errors:")
+        for error in n5_result.get("errors", []):
+            print(f"- {error}")
+
+        print("\nFinal Result: FAILED at N5")
+        return
+
+    print("Status: PASSED")
+    print("Target Candidate(s):")
+    for i, target in enumerate(n5_result["target_candidates"], start=1):
+        print(f"{i}. {target}")
+
+    print("\nPrimary Target:")
+    print(n5_result["primary_target"])
+
     normalized_input = build_normalized_prompt(
         premises=n4_result["pattern_matched_premises"],
         question=n2_result["question"],
@@ -146,7 +173,7 @@ def main() -> None:
     print("\nNormalized Input:")
     print(normalized_input)
 
-    print("\nFinal Result: PASSED N1 + N2 + N3 + N4")
+    print("\nFinal Result: PASSED N1 + N2 + N3 + N4 + N5")
 
 
 if __name__ == "__main__":

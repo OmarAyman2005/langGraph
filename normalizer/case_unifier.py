@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 import string
 
-ALLOWED_PUNCTUATION = set(".,?!;:'\"()-")
+ALLOWED_PUNCTUATION = set(".,?!;:\"()-")
 ALLOWED_WHITESPACE = set(" \t\n\r")
 
 

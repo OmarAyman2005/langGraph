@@ -58,10 +58,10 @@ TEST_CASES = [
         "expected_output": "ahmed studies, sara sleeps! does ahmed pass; or fail: maybe?",
     },
     {
-        "name": "supported apostrophe and double quote",
-        "input": "\"Ahmed doesn't study.\" Does Ahmed pass?",
-        "expected_success": True,
-        "expected_output": "\"ahmed doesn't study.\" does ahmed pass?",
+        "name": "apostrophe rejected",
+        "input": "Ahmed doesn't study. Does Ahmed pass?",
+        "expected_success": False,
+        "expected_error_contains": "Unsupported character(s) found: '",
     },
     {
         "name": "supported parentheses and hyphen",
@@ -71,9 +71,9 @@ TEST_CASES = [
     },
     {
         "name": "all supported punctuation together",
-        "input": "A.,?!;:'\"()- Z",
+        "input": "A.,?!;:\"()- Z",
         "expected_success": True,
-        "expected_output": "a.,?!;:'\"()- z",
+        "expected_output": "a.,?!;:\"()- z",
     },
 
     # ==================================================
