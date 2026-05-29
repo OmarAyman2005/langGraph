@@ -239,14 +239,30 @@ def _convert_modal_or_have_question(rest_words: List[str], aux: str) -> List[str
     Examples:
     can ahmed swim? -> ahmed can swim.
     has ahmed won? -> ahmed has won.
-    will sara travel? -> sara will travel.
+    will hla play well? -> hla will play well.
     """
 
-    split = _split_subject_and_verb_phrase(rest_words)
-    if split is None:
+    if len(rest_words) < 2:
         return []
 
-    subject, verb_phrase_words = split
+    # Determiner-led subject:
+    # will the machine start? -> the machine will start.
+    # will the backup server respond? -> the backup server will respond.
+    if rest_words[0].lower() in {"the", "a", "an"}:
+        if len(rest_words) < 3:
+            return []
+
+        subject = " ".join(rest_words[:2])
+        verb_phrase_words = rest_words[2:]
+    else:
+        # Single-token subject:
+        # will hla play well? -> hla will play well.
+        # can ahmed swim? -> ahmed can swim.
+        subject = rest_words[0]
+        verb_phrase_words = rest_words[1:]
+
+    if not subject or not verb_phrase_words:
+        return []
 
     target = " ".join([subject, aux] + verb_phrase_words)
     return [_ensure_period(target)]
@@ -255,6 +271,24 @@ def _convert_modal_or_have_question(rest_words: List[str], aux: str) -> List[str
 def question_to_target_candidates(question: str) -> List[str]:
     """
     Converts a yes/no question into declarative target proposition candidate(s).
+
+    Examples:
+    is ahmed happy?
+    -> ahmed is happy.
+
+    does ahmed pass?
+    -> ahmed passes.
+    -> ahmed does pass.
+
+    do they play?
+    -> they play.
+    -> they do play.
+
+    did ahmed win?
+    -> ahmed did win.
+
+    will hla play well?
+    -> hla will play well.
     """
 
     if not isinstance(question, str) or not question.strip():
@@ -279,7 +313,6 @@ def question_to_target_candidates(question: str) -> List[str]:
         return _convert_modal_or_have_question(rest_words, aux)
 
     return []
-
 
 def validate_question_pattern(question: str) -> Dict[str, Any]:
     """
