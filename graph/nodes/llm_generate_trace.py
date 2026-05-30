@@ -1,32 +1,34 @@
 from langchain_core.messages import SystemMessage, HumanMessage
-from langchain_ollama import ChatOllama
 
 from graph.state import GraphState
 from config import STATUS_GENERATED
-from prompts import SYSTEM_PROMPT
+from llm_response.llm_utils import generation_llm
+from prompts.llm_response_prompt import SYSTEM_PROMPT
 
 
 def llm_generate_trace_node(state: GraphState) -> GraphState:
-    llm = ChatOllama(model="llama3.1:8b")
+    """
+    LLM Response Generator node.
 
-    parsed_problem = state.get("parsed_problem", {})
-    premises_dict = parsed_problem.get("premises", {})
-    question = parsed_problem.get("question", "")
+    Input:
+    - normalized_input
 
-    premises = list(premises_dict.values())
+    Task:
+    - Send the normalized prompt directly to the generation LLM.
+    - Force the LLM to produce a strict reasoning trace.
 
-    premises_text = "\n".join(
-        [f"P{i+1}: {premise}" for i, premise in enumerate(premises)]
-    )
+    Output:
+    - raw_llm_output
+    - status = generated
+    """
 
-    human_prompt = f"""Premises:
-{premises_text}
+    normalized_input = state.get("normalized_input", "").strip()
 
-Conclusion:
-{question}
+    human_prompt = f"""Normalized problem:
+{normalized_input}
 """
 
-    response = llm.invoke(
+    response = generation_llm.invoke(
         [
             SystemMessage(content=SYSTEM_PROMPT),
             HumanMessage(content=human_prompt),
@@ -35,8 +37,6 @@ Conclusion:
 
     return {
         **state,
-        "premises": premises,
-        "question": question,
-        "raw_llm_output": response.content,
+        "raw_llm_output": response.content.strip(),
         "status": STATUS_GENERATED,
     }
