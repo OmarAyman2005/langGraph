@@ -1,6 +1,6 @@
 from graph.state import GraphState
 from config import STATUS_FAILED
-from parser.trace_parser import parse_normalized_prompt
+from parsers.normalized_prompt_parser import parse_normalized_prompt
 
 
 def parse_normalized_prompt_node(state: GraphState) -> GraphState:

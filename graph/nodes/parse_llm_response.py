@@ -1,6 +1,6 @@
 from graph.state import GraphState
 from config import STATUS_FAILED, STATUS_PARSED
-from parser.trace_parser import parse_llm_response
+from parsers.llm_response_parser import parse_llm_response
 
 
 def parse_llm_response_node(state: GraphState) -> GraphState:
