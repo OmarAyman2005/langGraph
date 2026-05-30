@@ -3,87 +3,164 @@ from typing import Any, Dict
 from normalizer.case_unifier import unify_case
 from normalizer.errors import make_error
 from normalizer.question_detector import detect_single_yes_no_question
-from normalizer.premise_segmenter import segment_and_validate_premises
-from normalizer.pattern_normalizer import normalize_sentence_patterns
-from normalizer.atom_extractor import create_atom_table, proposition_to_question
-from normalizer.atom_unifier import (
-    analyze_atom_relations_with_llm,
-    build_atom_mapping,
-    rebuild_premise,
+from normalizer.premise_segmenter import (
+    build_normalized_prompt,
+    segment_and_validate_premises,
 )
+from normalizer.sentence_pattern_matcher import match_sentence_patterns
+from normalizer.question_pattern_matcher import validate_question_pattern
+from normalizer.subject_propagator import propagate_subjects
+from normalizer.atom_extractor import extract_atoms_from_premises
+from normalizer.target_atom_extractor import extract_target_atoms_from_question
+from normalizer.semantic_relation_handler import handle_semantic_relations
 
 
 def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
-    case_result = unify_case(raw_input)
+    """
+    Full Normalizer Pipeline.
 
-    if not case_result["success"]:
-        return make_error(case_result["error"])
+    Current finalized normalizer order:
 
-    case_unified_input = case_result["case_unified_input"]
+    N1 — Character Adjuster / Case Unifier
+    N2 — Question Detector
+    N3 — Premises Separator
+    N4 — Sentence Pattern Matcher
+    N5 — Question Pattern Matcher
+    N6 — Subject Propagation
+    N7 — Extracting Atoms From Premises
+    N8 — Extracting Target Atom(s) From Question
+    N9 — Semantic Relation Handler
 
-    question_result = detect_single_yes_no_question(case_unified_input)
+    Note:
+    N9 replaces the old separated synonym/antonym unifiers.
+    """
 
-    if not question_result["success"]:
-        return make_error(question_result["error"])
+    # ==================================================
+    # N1 — Character Adjuster / Case Unifier
+    # ==================================================
+    n1_result = unify_case(raw_input)
 
-    raw_question = question_result["question"]
-    candidate_premise_text = question_result["candidate_premise_text"]
+    if not n1_result["success"]:
+        return make_error(n1_result["error"])
 
-    premise_result = segment_and_validate_premises(candidate_premise_text)
+    case_unified_input = n1_result["case_unified_input"]
 
-    if not premise_result["success"]:
-        return make_error(premise_result["error"])
+    # ==================================================
+    # N2 — Question Detector
+    # ==================================================
+    n2_result = detect_single_yes_no_question(case_unified_input)
 
-    raw_premises = premise_result["premises"]
+    if not n2_result["success"]:
+        return make_error(n2_result["error"])
 
-    pattern_result = normalize_sentence_patterns(raw_premises)
+    detected_question = n2_result["question"]
+    candidate_premise_text = n2_result["candidate_premise_text"]
 
-    if not pattern_result["success"]:
-        return make_error(pattern_result["error"])
+    # ==================================================
+    # N3 — Premises Separator
+    # ==================================================
+    n3_result = segment_and_validate_premises(candidate_premise_text)
 
-    normalized_premises = pattern_result["premises"]
+    if not n3_result["success"]:
+        return make_error(n3_result["error"])
 
-    atom_table, metadata = create_atom_table(normalized_premises, raw_question)
+    separated_premises = n3_result["premises"]
 
-    relation_result = analyze_atom_relations_with_llm(atom_table)
+    # ==================================================
+    # N4 — Sentence Pattern Matcher
+    # ==================================================
+    n4_result = match_sentence_patterns(separated_premises)
 
-    if not relation_result.get("success"):
-        return make_error(relation_result.get("error", "Ambiguous atom relation"))
+    if not n4_result["success"]:
+        return make_error(n4_result["error"])
 
-    atom_mapping = build_atom_mapping(atom_table, relation_result)
+    pattern_matched_premises = n4_result["pattern_matched_premises"]
 
-    final_premises = []
+    # ==================================================
+    # N5 — Question Pattern Matcher
+    # ==================================================
+    n5_result = validate_question_pattern(detected_question)
 
-    for structure in metadata["premise_structures"]:
-        atoms = [atom_mapping[atom_id] for atom_id in structure["atom_ids"]]
-        final_premises.append(rebuild_premise(structure["pattern"], atoms))
+    if not n5_result["success"]:
+        return make_error(n5_result["error"])
 
-    question_candidates = metadata["question_atom_ids"]
+    # ==================================================
+    # N6 — Subject Propagation
+    # ==================================================
+    n6_result = propagate_subjects(
+        premises=pattern_matched_premises,
+        question=detected_question,
+    )
 
-    if not question_candidates:
-        return make_error("Could not extract target atom from question")
+    if not n6_result["success"]:
+        return make_error(n6_result["error"])
 
-    canonical_question_atom = atom_mapping[question_candidates[0]]
-    final_question = proposition_to_question(canonical_question_atom)
+    subject_propagated_premises = n6_result["subject_propagated_premises"]
+    subject_propagated_question = n6_result["subject_propagated_question"]
 
-    normalized_output = "Premises:\n"
+    half_normalized_prompt = build_normalized_prompt(
+        premises=subject_propagated_premises,
+        question=subject_propagated_question,
+    )
 
-    for i, premise in enumerate(final_premises, start=1):
-        normalized_output += f"{i}. {premise}\n"
+    # ==================================================
+    # N7 — Extracting Atoms From Premises
+    # ==================================================
+    n7_result = extract_atoms_from_premises(subject_propagated_premises)
 
-    normalized_output += f"\nQuestion:\n{final_question}"
+    if not n7_result["success"]:
+        return make_error(n7_result["error"])
+
+    # ==================================================
+    # N8 — Extracting Target Atom(s) From Question
+    # ==================================================
+    n8_result = extract_target_atoms_from_question(
+        question=subject_propagated_question,
+        existing_atom_table=n7_result["atom_table"],
+    )
+
+    if not n8_result["success"]:
+        return make_error(n8_result["error"])
+
+    # ==================================================
+    # N9 — Semantic Relation Handler
+    # ==================================================
+    n9_result = handle_semantic_relations(
+        atom_table=n8_result["atom_table"],
+        half_normalized_prompt=half_normalized_prompt,
+        premises=subject_propagated_premises,
+        question=subject_propagated_question,
+        target_atoms=n8_result["target_atoms"],
+    )
+
+    if not n9_result["success"]:
+        return make_error(n9_result["error"])
+
+    final_normalized_input = n9_result["semantic_unified_prompt"]
 
     return {
         "success": True,
-        "normalized_input": normalized_output,
+        "normalized_input": final_normalized_input,
         "error": None,
         "debug": {
-            "case_unification": case_result.get("debug", {}),
-            "question": raw_question,
-            "raw_premises": raw_premises,
-            "normalized_premises_before_atom_unification": normalized_premises,
-            "atom_table": atom_table,
-            "relation_result": relation_result,
-            "atom_mapping": atom_mapping,
+            "n1_case_unification": n1_result,
+            "n2_question_detection": n2_result,
+            "n3_premise_segmentation": n3_result,
+            "n4_sentence_pattern_matching": n4_result,
+            "n5_question_pattern_matching": n5_result,
+            "n6_subject_propagation": n6_result,
+            "n7_atom_extraction": n7_result,
+            "n8_target_atom_extraction": n8_result,
+            "n9_semantic_relation_handling": n9_result,
+            "half_normalized_prompt_before_semantic_handling": half_normalized_prompt,
+            "final_premises": n9_result["semantic_unified_premises"],
+            "final_question": n9_result["semantic_unified_question"],
+            "final_atom_table": n9_result["canonical_atom_table"],
+            "full_atom_table_after_semantic_handling": n9_result["atom_table"],
+            "atom_id_map": n9_result["atom_id_map"],
+            "semantic_pairs": n9_result["semantic_pairs"],
+            "synonym_pairs": n9_result["synonym_pairs"],
+            "antonym_pairs": n9_result["antonym_pairs"],
+            "semantic_comparisons": n9_result["comparisons"],
         },
     }
