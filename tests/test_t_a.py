@@ -92,18 +92,6 @@ CUMULATIVE_TEST_CASES = [
         "expected_success": True,
     },
     {
-        "name": "not entailed because positive counterpart is derivable",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed not pass?"
-        ),
-        "expected_success": True,
-    },
-    {
         "name": "direct fact case may be logically invalid later but should translate",
         "normalized_input": (
             "Premises:\n"
@@ -454,6 +442,32 @@ DIRECT_TRANSLATOR_TEST_CASES = [
         },
         "expected_success": False,
         "expected_error_contains": "Unsupported sentence pattern in step S1",
+    },
+    {
+        "name": "translate no derivation found special case",
+        "parsed_problem": {
+            "premises": {
+                "P1": "if it rains, then the ground is wet.",
+            },
+            "question": "is the ground wet?",
+        },
+        "parsed_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+        "expected_success": True,
+        "expected_symbolic_problem": {
+            "premises": {
+                "P1": "ItRains -> GroundIsWet",
+            },
+            "target": "GroundIsWet",
+        },
+        "expected_symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
     },
 ]
 

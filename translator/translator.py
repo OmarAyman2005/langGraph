@@ -20,6 +20,10 @@ UNSUPPORTED_ATOM_KEYWORDS = {
     "than",
 }
 
+ALLOWED_TRANSLATOR_SPECIAL_CASES = {
+    "Target Not Found in Premises",
+    "No Derivation Found",
+}
 
 class TranslationError(Exception):
     pass
@@ -433,7 +437,12 @@ def translate_trace(
     if answer not in {"entailed", "not_entailed"}:
         raise TranslationError("Parsed trace has invalid answer value.")
 
-    if special_case == "Target Not Found in Premises":
+    ALLOWED_TRANSLATOR_SPECIAL_CASES = {
+        "Target Not Found in Premises",
+        "No Derivation Found",
+    }
+
+    if special_case in ALLOWED_TRANSLATOR_SPECIAL_CASES:
         return {
             "answer": answer,
             "steps": [],

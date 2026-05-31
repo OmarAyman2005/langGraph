@@ -14,6 +14,12 @@ ALLOWED_RULES = {
 }
 
 SPECIAL_TARGET_NOT_FOUND = "Target Not Found in Premises"
+SPECIAL_NO_DERIVATION_FOUND = "No Derivation Found"
+
+ALLOWED_SPECIAL_CASES = {
+    SPECIAL_TARGET_NOT_FOUND,
+    SPECIAL_NO_DERIVATION_FOUND,
+}
 
 
 def _make_failure(error: str) -> Dict[str, Any]:
@@ -92,34 +98,22 @@ def parse_llm_response(raw_output: str) -> Dict[str, Any]:
     """
     Parser 2: LLM Response Parser.
 
-    Input example:
+    Supported normal format:
     Answer: entailed
     Steps:
-    S1: the ground is wet. [from: P1, P2] [rule: Modus Ponens]
+    S1: statement. [from: P1, P2] [rule: Modus Ponens]
 
-    Responsibilities:
-    1. Read and validate the Answer line.
-    2. Validate that answer is one of: entailed, not_entailed.
-    3. Read the Steps section.
-    4. Parse each step into:
-       - id
-       - statement
-       - supports
-       - rule
-    5. Validate schema compliance:
-       - Answer line exists.
-       - Steps section exists.
-       - Each step has all required parts.
-       - Step IDs are sequential: S1, S2, S3, ...
-       - Support references are syntactically well-formed.
-       - Step supports only refer to premises or earlier steps.
-       - Rule names are supported.
-    6. Support the special not-entailed case:
-       Target Not Found in Premises
+    Supported special cases:
+    Answer: not_entailed
+    Steps:
+    Target Not Found in Premises
 
-    Notes:
-    - This parser validates format/schema only.
-    - Logical correctness is left for the Translator + Verifier.
+    Answer: not_entailed
+    Steps:
+    No Derivation Found
+
+    This parser validates format/schema only.
+    Logical correctness is left for the Translator + Verifier.
     """
 
     if not isinstance(raw_output, str) or not raw_output.strip():
@@ -160,24 +154,27 @@ def parse_llm_response(raw_output: str) -> Dict[str, Any]:
         return _make_failure("No steps found after Steps section.")
 
     # ==================================================
-    # Special case: Target Not Found in Premises
+    # Special cases
     # ==================================================
-    if len(step_lines) == 1 and step_lines[0] == SPECIAL_TARGET_NOT_FOUND:
+    if len(step_lines) == 1 and step_lines[0] in ALLOWED_SPECIAL_CASES:
+        special_case = step_lines[0]
+
         if answer != "not_entailed":
             return _make_failure(
-                "Target Not Found in Premises can only be used with answer not_entailed."
+                f"{special_case} can only be used with answer not_entailed."
             )
 
         return _make_success(
             answer=answer,
             steps=[],
-            special_case=SPECIAL_TARGET_NOT_FOUND,
+            special_case=special_case,
         )
 
-    if SPECIAL_TARGET_NOT_FOUND in step_lines:
-        return _make_failure(
-            "Target Not Found in Premises must appear alone as the only step."
-        )
+    for special_case in ALLOWED_SPECIAL_CASES:
+        if special_case in step_lines:
+            return _make_failure(
+                f"{special_case} must appear alone as the only step."
+            )
 
     # ==================================================
     # Normal reasoning steps

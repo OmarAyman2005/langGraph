@@ -22,7 +22,7 @@ Do not wrap the answer in code fences.
 OUTPUT FORMAT
 ==================================================
 
-Your output must follow exactly one of these two formats.
+Your output must follow exactly one of these formats.
 
 Format A: normal reasoning trace
 
@@ -43,6 +43,12 @@ Format B: target not found case
 Answer: not_entailed
 Steps:
 Target Not Found in Premises
+
+Format C: no derivation found case
+
+Answer: not_entailed
+Steps:
+No Derivation Found
 
 ==================================================
 ANSWER LABELS
@@ -252,7 +258,7 @@ A step must never use a later step as support.
 NOT ENTAILED CASES
 ==================================================
 
-There are three main not_entailed cases.
+There are three valid not_entailed cases.
 
 Case 1: Target not found / unrelated
 
@@ -269,12 +275,28 @@ S1: Target Not Found in Premises
 
 Do not add any other steps.
 
-Case 2: Target is related to the premises but cannot be derived
+Case 2: Target is mentioned or related, but no derivation is possible
 
-If useful valid derivations can still be made from the premises, include those valid derivation steps.
-Do not include invalid steps.
-Do not use a wrong rule to force the target.
-Do not claim entailed unless the exact target is derived.
+Use this when the target or its related atom appears in the premises, but the target cannot be derived using the supported inference rules.
+
+Example:
+
+Premises:
+1. if it rains, then the ground is wet.
+
+Question:
+is the ground wet?
+
+Correct output:
+Answer: not_entailed
+Steps:
+No Derivation Found
+
+Use No Derivation Found only with Answer: not_entailed.
+Do not write:
+S1: No Derivation Found
+
+Do not add any other steps.
 
 Case 3: The opposite of the target is derivable
 
@@ -320,5 +342,6 @@ Before producing the final answer, check:
    S#: statement. [from: ...] [rule: ...]
 4. Every derived statement uses normalized wording.
 5. Every rule name is one of the supported rule names.
-6. There is no extra text before or after the trace.
+6. If using Target Not Found in Premises or No Derivation Found, it must appear alone after Steps:.
+7. There is no extra text before or after the trace.
 """

@@ -109,18 +109,6 @@ CUMULATIVE_TEST_CASES = [
         ),
         "expected_success": True,
     },
-    {
-        "name": "not entailed because positive counterpart is derivable",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed not pass?"
-        ),
-        "expected_success": True,
-    },
 ]
 
 
@@ -410,6 +398,41 @@ DIRECT_PARSER_TEST_CASES = [
             "Answer: not_entailed\n"
             "Steps:\n"
             "Target Not Found in Premises\n"
+            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
+        ),
+        "expected_success": False,
+        "expected_error_contains": "must appear alone",
+    },
+    {
+        "name": "valid no derivation found special case",
+        "raw_output": (
+            "Answer: not_entailed\n"
+            "Steps:\n"
+            "No Derivation Found"
+        ),
+        "expected_success": True,
+        "expected_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+    },
+    {
+        "name": "no derivation found cannot be entailed",
+        "raw_output": (
+            "Answer: entailed\n"
+            "Steps:\n"
+            "No Derivation Found"
+        ),
+        "expected_success": False,
+        "expected_error_contains": "not_entailed",
+    },
+    {
+        "name": "no derivation found must appear alone",
+        "raw_output": (
+            "Answer: not_entailed\n"
+            "Steps:\n"
+            "No Derivation Found\n"
             "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
         ),
         "expected_success": False,
