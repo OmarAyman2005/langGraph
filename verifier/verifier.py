@@ -14,6 +14,9 @@ SUPPORTED_RULES = {
 SPECIAL_TARGET_NOT_FOUND = "Target Not Found in Premises"
 SPECIAL_NO_DERIVATION_FOUND = "No Derivation Found"
 
+MAX_CLOSURE_ITERATIONS = 20
+MAX_CLOSURE_ITEMS = 200
+
 
 class VerifierError(Exception):
     pass
@@ -45,8 +48,10 @@ def is_negation(expr: str) -> bool:
 
 def strip_negation(expr: str) -> str:
     expr = clean_expr(expr)
+
     if expr.startswith("~"):
         return expr[1:].strip()
+
     return expr
 
 
@@ -96,6 +101,63 @@ def is_conjunction(expr: str) -> bool:
 
 def is_disjunction(expr: str) -> bool:
     return split_binary(expr, "|") is not None
+
+
+def is_literal(expr: str) -> bool:
+    """
+    A literal is an atomic proposition or its negation.
+
+    Examples:
+    - A
+    - ~A
+
+    Non-literals:
+    - A -> B
+    - A & B
+    - A | B
+    """
+
+    expr = clean_expr(expr)
+
+    if not expr:
+        return False
+
+    base = strip_negation(expr)
+
+    return (
+        split_binary(base, "->") is None
+        and split_binary(base, "&") is None
+        and split_binary(base, "|") is None
+    )
+
+
+def find_direct_contradiction(expressions: Set[str]) -> Optional[Tuple[str, str]]:
+    """
+    Detects direct contradiction among literals.
+
+    Example:
+    expressions = {"A", "~A"} => ("A", "~A")
+
+    This intentionally does not treat conditional structures like A -> B as
+    contradictory expressions. Only atomic literals are checked.
+    """
+
+    cleaned_literals = {
+        clean_expr(expr)
+        for expr in expressions
+        if isinstance(expr, str) and is_literal(expr)
+    }
+
+    for expr in cleaned_literals:
+        opposite = opposite_of(expr)
+
+        if opposite in cleaned_literals:
+            positive = strip_negation(expr)
+            negative = f"~{positive}"
+
+            return positive, negative
+
+    return None
 
 
 def extract_atoms(expr: str) -> Set[str]:
@@ -347,7 +409,11 @@ def derive_one_step_closure(expressions: Set[str]) -> Set[str]:
     """
     Computes one expansion round of derivable expressions.
 
-    Used for final answer checking, especially No Derivation Found.
+    Cycle-safe behavior:
+    - Circular conditionals can generate conditionals.
+    - Circular conditionals do not generate atomic facts unless an antecedent
+      fact is already available.
+    - Set-based storage prevents duplicate expressions from expanding forever.
     """
 
     new_expressions = set(expressions)
@@ -368,8 +434,9 @@ def derive_one_step_closure(expressions: Set[str]) -> Set[str]:
             if first == second:
                 continue
 
-            # Modus Ponens
+            # Modus Ponens and Modus Tollens
             cond = split_binary(first, "->")
+
             if cond is not None:
                 antecedent, consequent = cond
 
@@ -405,18 +472,37 @@ def derive_one_step_closure(expressions: Set[str]) -> Set[str]:
     return new_expressions
 
 
-def compute_closure(symbolic_premises: Dict[str, str], max_iterations: int = 20) -> Set[str]:
-    closure = set(symbolic_premises.values())
+def compute_closure(
+    symbolic_premises: Dict[str, str],
+    max_iterations: int = MAX_CLOSURE_ITERATIONS,
+    max_items: int = MAX_CLOSURE_ITEMS,
+) -> Tuple[Set[str], Optional[str]]:
+    """
+    Computes finite closure for final answer checking.
+
+    Safety behavior:
+    - Stops when closure reaches a fixed point.
+    - Fails if too many iterations are needed.
+    - Fails if too many expressions are generated.
+    """
+
+    closure = {clean_expr(expr) for expr in symbolic_premises.values()}
+
+    if len(closure) > max_items:
+        return closure, "Closure safety limit exceeded. Too many initial expressions."
 
     for _ in range(max_iterations):
         expanded = derive_one_step_closure(closure)
 
+        if len(expanded) > max_items:
+            return expanded, "Closure safety limit exceeded. Possible circular derivation."
+
         if expanded == closure:
-            break
+            return closure, None
 
         closure = expanded
 
-    return closure
+    return closure, "Closure safety iteration limit exceeded. Possible circular derivation."
 
 
 def verify_special_case(
@@ -487,6 +573,11 @@ def verify_symbolic_trace(
     """
     Verifier component.
 
+    Safety cases handled:
+    1. Direct contradiction detection.
+    2. Closure safety limits.
+    3. Cycle-safe behavior through set-based fixed-point closure.
+
     Input:
     - symbolic_problem:
       {
@@ -528,6 +619,13 @@ def verify_symbolic_trace(
     if not isinstance(target, str) or not target.strip():
         return make_failure("Symbolic problem is missing target.")
 
+    symbolic_premises = {
+        premise_id: clean_expr(expr)
+        for premise_id, expr in symbolic_premises.items()
+    }
+
+    target = clean_expr(target)
+
     answer = symbolic_trace.get("answer")
     steps = symbolic_trace.get("steps")
     special_case = symbolic_trace.get("special_case")
@@ -538,7 +636,25 @@ def verify_symbolic_trace(
     if not isinstance(steps, list):
         return make_failure("Symbolic trace steps must be a list.")
 
-    closure = compute_closure(symbolic_premises)
+    # ==================================================
+    # Closure computation with safety limits
+    # ==================================================
+    closure, closure_error = compute_closure(symbolic_premises)
+
+    if closure_error is not None:
+        return make_failure(closure_error)
+
+    # ==================================================
+    # Contradiction detection
+    # ==================================================
+    contradiction = find_direct_contradiction(closure)
+
+    if contradiction is not None:
+        positive, negative = contradiction
+
+        return make_failure(
+            f"Contradictory premises detected: {positive} and {negative}."
+        )
 
     # ==================================================
     # Special cases
@@ -594,6 +710,8 @@ def verify_symbolic_trace(
 
         if not isinstance(rule, str) or not rule.strip():
             return make_failure(f"Missing rule in step {step_id}.")
+
+        claimed_derived = clean_expr(claimed_derived)
 
         if rule not in SUPPORTED_RULES:
             return make_failure(f"Unsupported rule implementation: {rule}")

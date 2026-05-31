@@ -101,6 +101,10 @@ CUMULATIVE_TEST_CASES = [
     },
 ]
 
+CLOSURE_LIMIT_CYCLE_PREMISES = {
+    f"P{i + 1}": f"A{i} -> A{(i + 1) % 18}"
+    for i in range(18)
+}
 
 DIRECT_VERIFIER_TEST_CASES = [
     # ==================================================
@@ -572,6 +576,138 @@ DIRECT_VERIFIER_TEST_CASES = [
         },
         "expected_verification_success": False,
         "expected_error_contains": "Unsupported rule implementation",
+    },
+    {
+        "name": "system failure direct contradictory premises",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "AhmedStudies",
+                "P2": "~AhmedStudies",
+            },
+            "target": "SaraSleeps",
+        },
+        "symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "Target Not Found in Premises",
+        },
+        "expected_verification_success": False,
+        "expected_error_contains": "Contradictory premises detected",
+    },
+    {
+        "name": "system failure contradiction inside conjunction premise",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "AhmedStudies & ~AhmedStudies",
+            },
+            "target": "SaraSleeps",
+        },
+        "symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "Target Not Found in Premises",
+        },
+        "expected_verification_success": False,
+        "expected_error_contains": "Contradictory premises detected",
+    },
+    {
+        "name": "cycle-safe no derivation found without starting fact",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "A -> B",
+                "P2": "B -> A",
+            },
+            "target": "A",
+        },
+        "symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+        "expected_verification_success": True,
+        "expected_validity": "valid",
+        "expected_final_answer_check": "consistent",
+    },
+    {
+        "name": "cycle-safe derivation with starting fact",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "A -> B",
+                "P2": "B -> A",
+                "P3": "A",
+            },
+            "target": "B",
+        },
+        "symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "B",
+                    "supports": ["P1", "P3"],
+                    "rule": "Modus Ponens",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_verification_success": True,
+        "expected_validity": "valid",
+        "expected_final_answer_check": "consistent",
+    },
+    {
+        "name": "self-loop implication does not prove atom",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "A -> A",
+            },
+            "target": "A",
+        },
+        "symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "A",
+                    "supports": ["P1"],
+                    "rule": "Modus Ponens",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_verification_success": True,
+        "expected_validity": "invalid",
+        "expected_final_answer_check": "inconsistent",
+    },
+    {
+        "name": "self-loop no derivation found is valid",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "A -> A",
+            },
+            "target": "A",
+        },
+        "symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+        "expected_verification_success": True,
+        "expected_validity": "valid",
+        "expected_final_answer_check": "consistent",
+    },
+    {
+        "name": "system failure closure safety limit exceeded",
+        "symbolic_problem": {
+            "premises": CLOSURE_LIMIT_CYCLE_PREMISES,
+            "target": "A0",
+        },
+        "symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+        "expected_verification_success": False,
+        "expected_error_contains": "Closure safety limit exceeded",
     },
 ]
 
