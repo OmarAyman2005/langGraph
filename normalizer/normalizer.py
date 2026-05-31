@@ -10,9 +10,8 @@ from normalizer.premise_segmenter import (
 from normalizer.sentence_pattern_matcher import match_sentence_patterns
 from normalizer.question_pattern_matcher import validate_question_pattern
 from normalizer.subject_propagator import propagate_subjects
-from normalizer.atom_extractor import extract_atoms_from_premises
-from normalizer.target_atom_extractor import extract_target_atoms_from_question
-from normalizer.semantic_relation_handler import handle_semantic_relations
+from normalizer.synonym_words_unifier import unify_synonym_words
+from normalizer.antonym_words_unifier import unify_antonym_words
 
 
 def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
@@ -27,12 +26,14 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
     N4 — Sentence Pattern Matcher
     N5 — Question Pattern Matcher
     N6 — Subject Propagation
-    N7 — Extracting Atoms From Premises
-    N8 — Extracting Target Atom(s) From Question
-    N9 — Semantic Relation Handler
+    N7 — Synonym Words Unifier
+    N8 — Antonym Words Unifier
 
-    Note:
-    N9 replaces the old separated synonym/antonym unifiers.
+    Current semantic design:
+    - N7/N8 use NLTK WordNet only.
+    - No local synonym/antonym lists.
+    - No LLM calls for semantic unification.
+    - Old atom extraction / target atom extraction / semantic relation handler are removed.
     """
 
     # ==================================================
@@ -98,45 +99,30 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
     subject_propagated_premises = n6_result["subject_propagated_premises"]
     subject_propagated_question = n6_result["subject_propagated_question"]
 
-    half_normalized_prompt = build_normalized_prompt(
+    n6_normalized_prompt = build_normalized_prompt(
         premises=subject_propagated_premises,
         question=subject_propagated_question,
     )
 
     # ==================================================
-    # N7 — Extracting Atoms From Premises
+    # N7 — Synonym Words Unifier
     # ==================================================
-    n7_result = extract_atoms_from_premises(subject_propagated_premises)
+    n7_result = unify_synonym_words(n6_normalized_prompt)
 
     if not n7_result["success"]:
         return make_error(n7_result["error"])
 
+    n7_normalized_prompt = n7_result["text"]
+
     # ==================================================
-    # N8 — Extracting Target Atom(s) From Question
+    # N8 — Antonym Words Unifier
     # ==================================================
-    n8_result = extract_target_atoms_from_question(
-        question=subject_propagated_question,
-        existing_atom_table=n7_result["atom_table"],
-    )
+    n8_result = unify_antonym_words(n7_normalized_prompt)
 
     if not n8_result["success"]:
         return make_error(n8_result["error"])
 
-    # ==================================================
-    # N9 — Semantic Relation Handler
-    # ==================================================
-    n9_result = handle_semantic_relations(
-        atom_table=n8_result["atom_table"],
-        half_normalized_prompt=half_normalized_prompt,
-        premises=subject_propagated_premises,
-        question=subject_propagated_question,
-        target_atoms=n8_result["target_atoms"],
-    )
-
-    if not n9_result["success"]:
-        return make_error(n9_result["error"])
-
-    final_normalized_input = n9_result["semantic_unified_prompt"]
+    final_normalized_input = n8_result["text"]
 
     return {
         "success": True,
@@ -149,18 +135,11 @@ def normalize_raw_prompt(raw_input: str) -> Dict[str, Any]:
             "n4_sentence_pattern_matching": n4_result,
             "n5_question_pattern_matching": n5_result,
             "n6_subject_propagation": n6_result,
-            "n7_atom_extraction": n7_result,
-            "n8_target_atom_extraction": n8_result,
-            "n9_semantic_relation_handling": n9_result,
-            "half_normalized_prompt_before_semantic_handling": half_normalized_prompt,
-            "final_premises": n9_result["semantic_unified_premises"],
-            "final_question": n9_result["semantic_unified_question"],
-            "final_atom_table": n9_result["canonical_atom_table"],
-            "full_atom_table_after_semantic_handling": n9_result["atom_table"],
-            "atom_id_map": n9_result["atom_id_map"],
-            "semantic_pairs": n9_result["semantic_pairs"],
-            "synonym_pairs": n9_result["synonym_pairs"],
-            "antonym_pairs": n9_result["antonym_pairs"],
-            "semantic_comparisons": n9_result["comparisons"],
+            "n7_synonym_words_unifier": n7_result,
+            "n8_antonym_words_unifier": n8_result,
+            "normalized_prompt_after_n6": n6_normalized_prompt,
+            "normalized_prompt_after_n7": n7_normalized_prompt,
+            "final_normalized_prompt_after_n8": final_normalized_input,
+            "final_normalized_input": final_normalized_input,
         },
     }

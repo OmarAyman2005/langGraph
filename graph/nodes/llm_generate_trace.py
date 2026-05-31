@@ -3,7 +3,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from graph.state import GraphState
 from config import STATUS_GENERATED
 from llm_response.llm_utils import generation_llm
-from prompts.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_prompt import SYSTEM_PROMPT
 
 
 def llm_generate_trace_node(state: GraphState) -> GraphState:

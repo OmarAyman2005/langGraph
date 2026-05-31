@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from pprint import pprint
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -13,8 +14,8 @@ from normalizer.premise_segmenter import (
 from normalizer.sentence_pattern_matcher import match_sentence_patterns
 from normalizer.question_pattern_matcher import validate_question_pattern
 from normalizer.subject_propagator import propagate_subjects
-from normalizer.atom_extractor import extract_atoms_from_premises
-from normalizer.target_atom_extractor import extract_target_atoms_from_question
+from normalizer.synonym_words_unifier import unify_synonym_words
+from normalizer.antonym_words_unifier import unify_antonym_words
 
 
 def read_multiline_input() -> str:
@@ -25,8 +26,9 @@ def read_multiline_input() -> str:
     print("N4: Sentence Pattern Matcher")
     print("N5: Question Pattern Matcher")
     print("N6: Subject Propagation")
-    print("N7: Extracting Atoms From Premises")
-    print("N8: Extracting Target Atom(s) From Question")
+    print("N7: Synonym Words Unifier")
+    print("N8: Antonym Words Unifier")
+    print("Design: N7/N8 use NLTK WordNet only, no local lists, no LLM calls.")
     print("Paste one raw input.")
     print("When finished, type END on a new line.")
     print("=" * 80)
@@ -35,8 +37,10 @@ def read_multiline_input() -> str:
 
     while True:
         line = input()
+
         if line.strip() == "END":
             break
+
         lines.append(line)
 
     return "\n".join(lines)
@@ -49,6 +53,9 @@ def main() -> None:
     print("RAW INPUT:")
     print(raw_input)
 
+    # -------------------------------
+    # N1
+    # -------------------------------
     print("\n" + "-" * 80)
     print("N1 — CHARACTER ADJUSTER")
 
@@ -59,6 +66,7 @@ def main() -> None:
         print("Errors:")
         for error in n1_result.get("errors", []):
             print(f"- {error}")
+
         print("\nFinal Result: FAILED at N1")
         return
 
@@ -66,6 +74,9 @@ def main() -> None:
     print("Case-Unified Input:")
     print(n1_result["case_unified_input"])
 
+    # -------------------------------
+    # N2
+    # -------------------------------
     print("\n" + "-" * 80)
     print("N2 — QUESTION DETECTOR")
 
@@ -76,6 +87,7 @@ def main() -> None:
         print("Errors:")
         for error in n2_result.get("errors", []):
             print(f"- {error}")
+
         print("\nFinal Result: FAILED at N2")
         return
 
@@ -86,6 +98,9 @@ def main() -> None:
     print("\nCandidate Premise Text:")
     print(n2_result["candidate_premise_text"])
 
+    # -------------------------------
+    # N3
+    # -------------------------------
     print("\n" + "-" * 80)
     print("N3 — PREMISES SEPARATOR")
 
@@ -98,6 +113,7 @@ def main() -> None:
         print("Errors:")
         for error in n3_result.get("errors", []):
             print(f"- {error}")
+
         print("\nFinal Result: FAILED at N3")
         return
 
@@ -106,6 +122,9 @@ def main() -> None:
     for i, premise in enumerate(n3_result["premises"], start=1):
         print(f"{i}. {premise}")
 
+    # -------------------------------
+    # N4
+    # -------------------------------
     print("\n" + "-" * 80)
     print("N4 — SENTENCE PATTERN MATCHER")
 
@@ -131,6 +150,9 @@ def main() -> None:
     for i, premise in enumerate(n4_result["pattern_matched_premises"], start=1):
         print(f"{i}. {premise}")
 
+    # -------------------------------
+    # N5
+    # -------------------------------
     print("\n" + "-" * 80)
     print("N5 — QUESTION PATTERN MATCHER")
 
@@ -141,6 +163,7 @@ def main() -> None:
         print("Errors:")
         for error in n5_result.get("errors", []):
             print(f"- {error}")
+
         print("\nFinal Result: FAILED at N5")
         return
 
@@ -152,6 +175,12 @@ def main() -> None:
     for i, target in enumerate(n5_result["target_candidates"], start=1):
         print(f"{i}. {target}")
 
+    print("\nPrimary Target Before Subject Propagation:")
+    print(n5_result["primary_target"])
+
+    # -------------------------------
+    # N6
+    # -------------------------------
     print("\n" + "-" * 80)
     print("N6 — SUBJECT PROPAGATION")
 
@@ -176,6 +205,7 @@ def main() -> None:
         return
 
     print("Status: PASSED")
+
     print("Subject-Propagated Premises:")
     for i, premise in enumerate(n6_result["subject_propagated_premises"], start=1):
         print(f"{i}. {premise}")
@@ -183,60 +213,86 @@ def main() -> None:
     print("\nSubject-Propagated Question:")
     print(n6_result["subject_propagated_question"])
 
-    print("\n" + "-" * 80)
-    print("N7 — EXTRACTING ATOMS FROM PREMISES")
+    propagated_subjects = n6_result.get("propagated_subjects", [])
+    if propagated_subjects:
+        print("\nPropagated Subject(s):")
+        for subject in propagated_subjects:
+            print(f"- {subject}")
+    else:
+        print("\nPropagated Subject(s):")
+        print("- None")
 
-    n7_result = extract_atoms_from_premises(
-        n6_result["subject_propagated_premises"]
+    n6_normalized_input = build_normalized_prompt(
+        premises=n6_result["subject_propagated_premises"],
+        question=n6_result["subject_propagated_question"],
     )
+
+    print("\nNormalized Prompt After N6:")
+    print(n6_normalized_input)
+
+    # -------------------------------
+    # N7
+    # -------------------------------
+    print("\n" + "-" * 80)
+    print("N7 — SYNONYM WORDS UNIFIER")
+
+    n7_result = unify_synonym_words(n6_normalized_input)
 
     if n7_result["success"] is False:
         print("Status: FAILED")
-        print("Errors:")
-        for error in n7_result.get("errors", []):
-            print(f"- {error}")
+        print("Error:")
+        print(n7_result.get("error"))
+
+        print("\nFull N7 Result:")
+        pprint(n7_result)
+
         print("\nFinal Result: FAILED at N7")
         return
 
     print("Status: PASSED")
 
-    print("\nPremise Atom Table:")
-    for atom in n7_result["atom_table"]:
-        print(f"{atom['atom_id']}. {atom['atom_text']}")
+    print("\nSynonym Change(s):")
+    n7_changes = n7_result.get("changes", [])
 
+    if n7_changes:
+        pprint(n7_changes)
+    else:
+        print("- None")
+
+    print("\nNormalized Prompt After N7:")
+    print(n7_result["text"])
+
+    # -------------------------------
+    # N8
+    # -------------------------------
     print("\n" + "-" * 80)
-    print("N8 — EXTRACTING TARGET ATOM(S) FROM QUESTION")
+    print("N8 — ANTONYM WORDS UNIFIER")
 
-    n8_result = extract_target_atoms_from_question(
-        question=n6_result["subject_propagated_question"],
-        existing_atom_table=n7_result["atom_table"],
-    )
+    n8_result = unify_antonym_words(n7_result["text"])
 
     if n8_result["success"] is False:
         print("Status: FAILED")
-        print("Errors:")
-        for error in n8_result.get("errors", []):
-            print(f"- {error}")
+        print("Error:")
+        print(n8_result.get("error"))
+
+        print("\nFull N8 Result:")
+        pprint(n8_result)
+
         print("\nFinal Result: FAILED at N8")
         return
 
     print("Status: PASSED")
 
-    print("\nTarget Atom(s):")
-    for target in n8_result["target_atoms"]:
-        print(f"{target['atom_id']}. {target['atom_text']}")
+    print("\nAntonym Change(s):")
+    n8_changes = n8_result.get("changes", [])
 
-    print("\nFinal Atom Table:")
-    for atom in n8_result["atom_table"]:
-        print(f"{atom['atom_id']}. {atom['atom_text']}")
+    if n8_changes:
+        pprint(n8_changes)
+    else:
+        print("- None")
 
-    normalized_input = build_normalized_prompt(
-        premises=n6_result["subject_propagated_premises"],
-        question=n6_result["subject_propagated_question"],
-    )
-
-    print("\nNormalized Input:")
-    print(normalized_input)
+    print("\nNormalized Prompt So Far After N8:")
+    print(n8_result["text"])
 
     print("\nFinal Result: PASSED N1 + N2 + N3 + N4 + N5 + N6 + N7 + N8")
 

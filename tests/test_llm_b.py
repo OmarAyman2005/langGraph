@@ -10,7 +10,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from llm_response.llm_utils import generation_llm
 from parsers.normalized_prompt_parser import parse_normalized_prompt
-from prompts.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_prompt import SYSTEM_PROMPT
 
 
 ALLOWED_RULES = {

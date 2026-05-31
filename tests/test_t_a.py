@@ -9,7 +9,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from llm_response.llm_utils import generation_llm
 from parsers.normalized_prompt_parser import parse_normalized_prompt
 from parsers.llm_response_parser import parse_llm_response
-from prompts.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_prompt import SYSTEM_PROMPT
 from translator.translator import translate_problem_and_trace
 from tests.test_utils import pretty_json
 

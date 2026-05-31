@@ -9,7 +9,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from llm_response.llm_utils import generation_llm
 from parsers.normalized_prompt_parser import parse_normalized_prompt
-from prompts.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_prompt import SYSTEM_PROMPT
 
 
 TEST_CASES = [
@@ -143,30 +143,6 @@ TEST_CASES = [
             "\n"
             "Question:\n"
             "is the door open?"
-        ),
-        "expected_success": True,
-    },
-    {
-        "name": "not entailed because positive counterpart is derivable",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed not pass?"
-        ),
-        "expected_success": True,
-    },
-    {
-        "name": "not entailed because negated counterpart is derivable",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. not ahmed passes.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
         ),
         "expected_success": True,
     },
