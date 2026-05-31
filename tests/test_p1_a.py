@@ -1,26 +1,33 @@
+import json
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from normalizer.normalizer import normalize_raw_prompt
 from parsers.normalized_prompt_parser import parse_normalized_prompt
+
+
+def pretty_json(data) -> str:
+    return json.dumps(data, indent=4, ensure_ascii=False)
 
 
 TEST_CASES = [
     # ==================================================
-    # VALID NORMALIZED PROMPTS
+    # VALID RAW INPUTS — FULL NORMALIZER + PARSER 1
     # ==================================================
     {
         "name": "single fact premise",
-        "normalized_input": (
+        "raw_input": "Ahmed studies. Does Ahmed study?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
             "1. ahmed studies.\n"
             "\n"
             "Question:\n"
             "does ahmed study?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
                 "P1": "ahmed studies.",
@@ -30,7 +37,9 @@ TEST_CASES = [
     },
     {
         "name": "two fact premises",
-        "normalized_input": (
+        "raw_input": "Ahmed studies. Sara sleeps. Does Ahmed study?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
             "1. ahmed studies.\n"
             "2. sara sleeps.\n"
@@ -38,7 +47,6 @@ TEST_CASES = [
             "Question:\n"
             "does ahmed study?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
                 "P1": "ahmed studies.",
@@ -49,7 +57,9 @@ TEST_CASES = [
     },
     {
         "name": "conditional and fact premises",
-        "normalized_input": (
+        "raw_input": "If Ahmed studies, then Ahmed passes. Ahmed studies. Does Ahmed pass?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
             "1. if ahmed studies, then ahmed passes.\n"
             "2. ahmed studies.\n"
@@ -57,7 +67,6 @@ TEST_CASES = [
             "Question:\n"
             "does ahmed pass?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
                 "P1": "if ahmed studies, then ahmed passes.",
@@ -68,14 +77,15 @@ TEST_CASES = [
     },
     {
         "name": "negated premise",
-        "normalized_input": (
+        "raw_input": "Ahmed does not study. Does Ahmed study?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
             "1. not ahmed studies.\n"
             "\n"
             "Question:\n"
             "does ahmed study?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
                 "P1": "not ahmed studies.",
@@ -85,14 +95,15 @@ TEST_CASES = [
     },
     {
         "name": "conjunction premise",
-        "normalized_input": (
+        "raw_input": "Ahmed studies and Sara sleeps. Does Ahmed study?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
             "1. ahmed studies and sara sleeps.\n"
             "\n"
             "Question:\n"
             "does ahmed study?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
                 "P1": "ahmed studies and sara sleeps.",
@@ -102,14 +113,15 @@ TEST_CASES = [
     },
     {
         "name": "disjunction premise",
-        "normalized_input": (
+        "raw_input": "Ahmed studies or Sara sleeps. Does Ahmed study?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
             "1. ahmed studies or sara sleeps.\n"
             "\n"
             "Question:\n"
             "does ahmed study?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
                 "P1": "ahmed studies or sara sleeps.",
@@ -118,355 +130,137 @@ TEST_CASES = [
         },
     },
     {
-        "name": "semantic synonym normalized output",
-        "normalized_input": (
+        "name": "subject propagation",
+        "raw_input": "Ahmed starts. He begins. Does he begin?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
-            "1. the door is closed.\n"
+            "1. ahmed starts.\n"
+            "2. ahmed starts.\n"
             "\n"
             "Question:\n"
-            "is the door closed?"
+            "does ahmed start?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
-                "P1": "the door is closed.",
+                "P1": "ahmed starts.",
+                "P2": "ahmed starts.",
             },
-            "question": "is the door closed?",
+            "question": "does ahmed start?",
         },
     },
     {
-        "name": "semantic antonym normalized output",
-        "normalized_input": (
+        "name": "synonym unification with be adjective",
+        "raw_input": "The box is big. The bag is large. Is the bag large?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
-            "1. the door is open.\n"
+            "1. the box is big.\n"
+            "2. the bag is big.\n"
             "\n"
             "Question:\n"
-            "is the door not open?"
+            "is the bag big?"
         ),
+        "expected_problem": {
+            "premises": {
+                "P1": "the box is big.",
+                "P2": "the bag is big.",
+            },
+            "question": "is the bag big?",
+        },
+    },
+    {
+        "name": "synonym then antonym unification",
+        "raw_input": "The door is open. The window is shut. Is the window closed?",
         "expected_success": True,
+        "expected_normalized_input": (
+            "Premises:\n"
+            "1. the door is open.\n"
+            "2. not the window is open.\n"
+            "\n"
+            "Question:\n"
+            "is the window not open?"
+        ),
         "expected_problem": {
             "premises": {
                 "P1": "the door is open.",
+                "P2": "not the window is open.",
             },
-            "question": "is the door not open?",
+            "question": "is the window not open?",
         },
     },
     {
-        "name": "blank lines tolerated",
-        "normalized_input": (
-            "\n"
+        "name": "antonym unification with verb",
+        "raw_input": "Ahmed passes. Sara fails. Does Sara fail?",
+        "expected_success": True,
+        "expected_normalized_input": (
             "Premises:\n"
-            "\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "2. sara sleeps.\n"
+            "1. ahmed passes.\n"
+            "2. not sara passes.\n"
             "\n"
             "Question:\n"
-            "\n"
-            "does ahmed study?\n"
+            "does sara not pass?"
         ),
-        "expected_success": True,
         "expected_problem": {
             "premises": {
-                "P1": "ahmed studies.",
-                "P2": "sara sleeps.",
+                "P1": "ahmed passes.",
+                "P2": "not sara passes.",
             },
-            "question": "does ahmed study?",
-        },
-    },
-    {
-        "name": "extra spaces are cleaned",
-        "normalized_input": (
-            "Premises:\n"
-            "1.   ahmed   studies.   \n"
-            "2.   sara   sleeps.   \n"
-            "\n"
-            "Question:\n"
-            "   does   ahmed   study?   "
-        ),
-        "expected_success": True,
-        "expected_problem": {
-            "premises": {
-                "P1": "ahmed studies.",
-                "P2": "sara sleeps.",
-            },
-            "question": "does ahmed study?",
+            "question": "does sara not pass?",
         },
     },
 
     # ==================================================
-    # INVALID STRUCTURE CASES
+    # INVALID RAW INPUTS — EXPECT NORMALIZER FAILURE
     # ==================================================
     {
-        "name": "empty normalized prompt",
-        "normalized_input": "",
+        "name": "empty raw input",
+        "raw_input": "",
         "expected_success": False,
-        "expected_error_contains": "Empty normalized prompt",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "Empty input",
     },
     {
-        "name": "missing premises section",
-        "normalized_input": (
-            "Question:\n"
-            "does ahmed study?"
-        ),
+        "name": "no question mark",
+        "raw_input": "Ahmed studies. Sara sleeps.",
         "expected_success": False,
-        "expected_error_contains": "Question section appears before Premises section",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No yes/no question detected",
     },
     {
-        "name": "missing question section",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies."
-        ),
+        "name": "question only",
+        "raw_input": "Does Ahmed pass?",
         "expected_success": False,
-        "expected_error_contains": "Missing Question section",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No candidate premises found",
     },
-    {
-        "name": "duplicate premises section",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "Premises:\n"
-            "2. sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Duplicate Premises section",
-    },
-    {
-        "name": "duplicate question section",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?\n"
-            "\n"
-            "Question:\n"
-            "does sara sleep?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Duplicate Question section",
-    },
-    {
-        "name": "premises section after question section",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?\n"
-            "\n"
-            "Premises:\n"
-            "2. sara sleeps."
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Premises section appears after Question section",
-    },
-    {
-        "name": "question section before premises section",
-        "normalized_input": (
-            "Question:\n"
-            "does ahmed study?\n"
-            "\n"
-            "Premises:\n"
-            "1. ahmed studies."
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Question section appears before Premises section",
-    },
-    {
-        "name": "unexpected content before sections",
-        "normalized_input": (
-            "hello\n"
-            "\n"
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Unexpected content before sections",
-    },
-    {
-        "name": "no premises",
-        "normalized_input": (
-            "Premises:\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "No premises found",
-    },
-    {
-        "name": "missing question content",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Missing question content",
-    },
-    {
-        "name": "multiple question lines",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?\n"
-            "does sara sleep?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Multiple question lines found",
-    },
-
-    # ==================================================
-    # INVALID PREMISE NUMBERING CASES
-    # ==================================================
-    {
-        "name": "malformed premise line missing numbering dot",
-        "normalized_input": (
-            "Premises:\n"
-            "1 ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Malformed premise line",
-    },
-    {
-        "name": "malformed premise line missing space after dot",
-        "normalized_input": (
-            "Premises:\n"
-            "1.ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Malformed premise line",
-    },
-    {
-        "name": "premise numbering starts from zero",
-        "normalized_input": (
-            "Premises:\n"
-            "0. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Invalid premise numbering",
-    },
-    {
-        "name": "premise numbering skips number",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "3. sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Invalid premise numbering",
-    },
-    {
-        "name": "premise numbering repeats number",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "1. sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Invalid premise numbering",
-    },
-    {
-        "name": "empty premise content",
-        "normalized_input": (
-            "Premises:\n"
-            "1. \n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Malformed premise line",
-    },
-
-    # ==================================================
-    # INVALID DOMAIN RECOVERABILITY CASES
-    # ==================================================
     {
         "name": "unsupported quantified premise",
-        "normalized_input": (
-            "Premises:\n"
-            "1. all cats are animals.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
+        "raw_input": "All cats are animals. Ahmed studies. Does Ahmed study?",
         "expected_success": False,
-        "expected_error_contains": "Premise is not in a normalized recoverable form",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "One or more premises do not map into supported sentence patterns",
     },
     {
         "name": "unsupported comparison premise",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed is taller than sara.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
+        "raw_input": "Ahmed is taller than Sara. Ahmed studies. Does Ahmed study?",
         "expected_success": False,
-        "expected_error_contains": "Premise is not in a normalized recoverable form",
-    },
-    {
-        "name": "unsupported causal premise",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed passes because ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed pass?"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Premise is not in a normalized recoverable form",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "One or more premises do not map into supported sentence patterns",
     },
     {
         "name": "unsupported wh question",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "what does ahmed do?"
-        ),
+        "raw_input": "Ahmed studies. What does Ahmed do?",
         "expected_success": False,
-        "expected_error_contains": "Question is not in a normalized recoverable form",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No yes/no question detected",
     },
     {
-        "name": "unsupported question with conjunction target",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "is ahmed happy and sara calm?"
-        ),
+        "name": "unsupported conjunction target question",
+        "raw_input": "Ahmed studies. Is Ahmed happy and Sara calm?",
         "expected_success": False,
-        "expected_error_contains": "Question is not in a normalized recoverable form",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "Question target does not map into a supported atomic proposition",
     },
 ]
 
@@ -487,82 +281,108 @@ def print_test_header(index: int, total: int, name: str) -> None:
     print("-" * 100)
 
 
-def print_expected(case: dict) -> None:
-    print("\nExpected:")
-    if case["expected_success"] is True:
-        print("PARSER 1 SUCCESS")
-        print("Expected Parsed Problem:")
-        print(case["expected_problem"])
-    else:
-        print("PARSER 1 FAILURE")
-        print(f"Error contains: {case.get('expected_error_contains')}")
-
-
-def print_actual_success(problem: dict) -> None:
-    print("\nActual:")
-    print("PARSER 1 SUCCESS")
-    print("Parsed Problem:")
-    print(problem)
-
-
-def print_actual_failure(error: str | None) -> None:
-    print("\nActual:")
-    print("PARSER 1 FAILURE")
-    print(f"Error: {error}")
-
-
 def run_tests() -> None:
     passed = 0
     total = len(TEST_CASES)
 
     print("=" * 100)
-    print("Automated Test: Parser 1 — Normalized Prompt Parser")
-    print("Input assumption: examples are already normalized outputs from the Normalizer.")
+    print("Automated Test: Full Normalizer + Parser 1")
+    print("Pipeline: Raw Input → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8 → Parser 1")
     print("=" * 100)
 
     for index, case in enumerate(TEST_CASES, start=1):
         print_test_header(index, total, case["name"])
 
-        print("NORMALIZED INPUT:")
-        print(case["normalized_input"])
+        raw_input = case["raw_input"]
 
-        print_expected(case)
+        print("RAW INPUT:")
+        print(raw_input)
 
-        result = parse_normalized_prompt(case["normalized_input"])
+        # ==================================================
+        # Full Normalizer
+        # ==================================================
+        normalizer_result = normalize_raw_prompt(raw_input)
 
-        if result["prompt_parse_success"] is False:
-            actual_error = result.get("prompt_parse_error")
-            print_actual_failure(actual_error)
+        if normalizer_result["success"] is False:
+            print("\nNORMALIZER: FAILED")
+            print(normalizer_result.get("error"))
 
             success_ok = case["expected_success"] is False
-            error_ok = contains(actual_error, case.get("expected_error_contains"))
+            stage_ok = case.get("expected_stage") == "normalizer"
+            error_ok = contains(
+                normalizer_result.get("error"),
+                case.get("expected_error_contains"),
+            )
 
-            if success_ok and error_ok:
+            if success_ok and stage_ok and error_ok:
                 print("\nResult: PASS")
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print("\nDebug:")
-                print(result)
+                print("\nFull Normalizer Result:")
+                print(pretty_json(normalizer_result))
 
             continue
 
-        actual_problem = result["problem"]
-        print_actual_success(actual_problem)
+        normalized_input = normalizer_result["normalized_input"]
+
+        print("\nNORMALIZER: PASSED")
+        print("\nNORMALIZED INPUT:")
+        print(normalized_input)
+
+        # ==================================================
+        # Parser 1
+        # ==================================================
+        parser_1_result = parse_normalized_prompt(normalized_input)
+
+        if parser_1_result["prompt_parse_success"] is False:
+            print("\nPARSER 1: FAILED")
+            print(parser_1_result.get("prompt_parse_error"))
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "parser_1"
+            error_ok = contains(
+                parser_1_result.get("prompt_parse_error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Parser 1 Result:")
+                print(pretty_json(parser_1_result))
+
+            continue
+
+        parsed_problem = parser_1_result["problem"]
+
+        print("\nPARSER 1: PASSED")
+        print("\nParsed Problem:")
+        print(pretty_json(parsed_problem))
 
         success_ok = case["expected_success"] is True
-        problem_ok = actual_problem == case.get("expected_problem")
+        normalized_ok = normalized_input == case.get("expected_normalized_input")
+        problem_ok = parsed_problem == case.get("expected_problem")
 
-        if success_ok and problem_ok:
+        if success_ok and normalized_ok and problem_ok:
             print("\nResult: PASS")
             passed += 1
         else:
             print("\nResult: FAIL")
-            print("\nDebug:")
-            print("Expected problem:")
-            print(case.get("expected_problem"))
-            print("Actual problem:")
-            print(actual_problem)
+
+            print("\nExpected Normalized Input:")
+            print(case.get("expected_normalized_input"))
+
+            print("\nActual Normalized Input:")
+            print(normalized_input)
+
+            print("\nExpected Parsed Problem:")
+            print(pretty_json(case.get("expected_problem")))
+
+            print("\nActual Parsed Problem:")
+            print(pretty_json(parsed_problem))
 
     print("=" * 100)
     print(f"FINAL SUMMARY: PASSED {passed}/{total}")

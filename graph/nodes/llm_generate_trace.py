@@ -1,42 +1,36 @@
-from langchain_core.messages import SystemMessage, HumanMessage
+from typing import Any, Dict
 
-from graph.state import GraphState
-from config import STATUS_GENERATED
-from llm_response.llm_utils import generation_llm
-from llm_response.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_generator import generate_llm_response
 
 
-def llm_generate_trace_node(state: GraphState) -> GraphState:
+def llm_generate_trace_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    LLM Response Generator node.
+    LangGraph node wrapper for the LLM Response Generator.
 
-    Input:
+    Expected state input:
     - normalized_input
 
-    Task:
-    - Send the normalized prompt directly to the generation LLM.
-    - Force the LLM to produce a strict reasoning trace.
-
-    Output:
+    Added state output:
     - raw_llm_output
-    - status = generated
+    - llm_response_generation
     """
 
-    normalized_input = state.get("normalized_input", "").strip()
+    normalized_input = state.get("normalized_input")
 
-    human_prompt = f"""Normalized problem:
-{normalized_input}
-"""
+    generation_result = generate_llm_response(normalized_input)
 
-    response = generation_llm.invoke(
-        [
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=human_prompt),
-        ]
-    )
+    if generation_result["generation_success"] is False:
+        return {
+            **state,
+            "pipeline_status": "failed",
+            "error_component": "llm_response_generator",
+            "error_message": generation_result["generation_error"],
+            "raw_llm_output": None,
+            "llm_response_generation": generation_result,
+        }
 
     return {
         **state,
-        "raw_llm_output": response.content.strip(),
-        "status": STATUS_GENERATED,
+        "raw_llm_output": generation_result["raw_llm_output"],
+        "llm_response_generation": generation_result,
     }

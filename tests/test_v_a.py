@@ -2,15 +2,14 @@ import json
 import sys
 from pathlib import Path
 
-from langchain_core.messages import HumanMessage, SystemMessage
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from llm_response.llm_utils import generation_llm
+from normalizer.normalizer import normalize_raw_prompt
 from parsers.normalized_prompt_parser import parse_normalized_prompt
 from parsers.llm_response_parser import parse_llm_response
-from llm_response.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_generator import generate_raw_llm_response
 from translator.translator import translate_problem_and_trace
 from verifier.verifier import verify_symbolic_trace
 
@@ -20,59 +19,84 @@ def pretty_json(data) -> str:
 
 
 CUMULATIVE_TEST_CASES = [
+    # ==================================================
+    # INVALID RAW INPUTS — EXPECT NORMALIZER FAILURE
+    # ==================================================
     {
-        "name": "parser 1 failure",
-        "normalized_input": "",
+        "name": "empty raw input fails at normalizer",
+        "raw_input": "",
         "expected_success": False,
-        "expected_stage": "parser_1",
-        "expected_error_contains": "Empty normalized prompt",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "Empty input",
     },
     {
-        "name": "valid modus ponens full pipeline",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed pass?"
-        ),
+        "name": "missing question mark fails at normalizer",
+        "raw_input": "Ahmed studies. Sara sleeps.",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No yes/no question detected",
+    },
+    {
+        "name": "question only fails at normalizer",
+        "raw_input": "Does Ahmed pass?",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No candidate premises found",
+    },
+    {
+        "name": "unsupported premise fails at normalizer",
+        "raw_input": "All cats are animals. Ahmed studies. Does Ahmed study?",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "One or more premises do not map into supported sentence patterns",
+    },
+
+    # ==================================================
+    # VALID RAW INPUTS — FULL PIPELINE THROUGH VERIFIER
+    # ==================================================
+    {
+        "name": "modus ponens full pipeline",
+        "raw_input": "If Ahmed studies, then Ahmed passes. Ahmed studies. Does Ahmed pass?",
         "expected_success": True,
     },
     {
-        "name": "valid multi-step full pipeline",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if it rains, then the ground is wet.\n"
-            "2. if the ground is wet, then the match is cancelled.\n"
-            "3. it rains.\n"
-            "\n"
-            "Question:\n"
-            "is the match cancelled?"
-        ),
+        "name": "conjunction elimination full pipeline",
+        "raw_input": "Ahmed studies and Sara sleeps. Does Ahmed study?",
+        "expected_success": True,
+    },
+    {
+        "name": "disjunctive syllogism full pipeline",
+        "raw_input": "Ahmed studies or Sara sleeps. Ahmed does not study. Does Sara sleep?",
         "expected_success": True,
     },
     {
         "name": "target not found full pipeline",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if it rains, then the ground is wet.\n"
-            "2. it rains.\n"
-            "\n"
-            "Question:\n"
-            "is the sky blue?"
-        ),
+        "raw_input": "If it rains, then the ground is wet. It rains. Is the sky blue?",
         "expected_success": True,
     },
     {
-        "name": "direct fact full pipeline may be invalid explanation",
-        "normalized_input": (
-            "Premises:\n"
-            "1. the door is open.\n"
-            "\n"
-            "Question:\n"
-            "is the door open?"
-        ),
+        "name": "direct fact full pipeline may have invalid explanation",
+        "raw_input": "The door is open. Is the door open?",
+        "expected_success": True,
+    },
+    {
+        "name": "synonym unification before verifier",
+        "raw_input": "Ahmed starts. Sara begins. Does Sara begin?",
+        "expected_success": True,
+    },
+    {
+        "name": "antonym unification before verifier",
+        "raw_input": "The door is open. Is the door closed?",
+        "expected_success": True,
+    },
+    {
+        "name": "synonym then antonym unification before verifier",
+        "raw_input": "The door is open. The window is shut. Is the window closed?",
+        "expected_success": True,
+    },
+    {
+        "name": "verb antonym unification before verifier",
+        "raw_input": "Ahmed passes. Sara fails. Does Sara fail?",
         "expected_success": True,
     },
 ]
@@ -236,6 +260,60 @@ DIRECT_VERIFIER_TEST_CASES = [
         },
         "expected_verification_success": True,
         "expected_validity": "valid",
+        "expected_final_answer_check": "consistent",
+    },
+
+    # ==================================================
+    # NEW NORMALIZER-COMPATIBLE VERIFIER CASES
+    # ==================================================
+    {
+        "name": "valid normalized antonym output as direct premise",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "DoorIsOpen",
+                "P2": "~WindowIsOpen",
+            },
+            "target": "~WindowIsOpen",
+        },
+        "symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "~WindowIsOpen",
+                    "supports": ["P2"],
+                    "rule": "Conjunction Elimination",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_verification_success": True,
+        "expected_validity": "invalid",
+        "expected_final_answer_check": "consistent",
+    },
+    {
+        "name": "valid verb antonym target already in premises",
+        "symbolic_problem": {
+            "premises": {
+                "P1": "AhmedPasses",
+                "P2": "~SaraPasses",
+            },
+            "target": "~SaraPasses",
+        },
+        "symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "~SaraPasses",
+                    "supports": ["P1", "P2"],
+                    "rule": "Disjunctive Syllogism",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_verification_success": True,
+        "expected_validity": "invalid",
         "expected_final_answer_check": "consistent",
     },
 
@@ -509,38 +587,70 @@ def contains(actual: str | None, expected: str | None) -> bool:
 
 
 def call_llm_response_generator(normalized_input: str) -> str:
-    human_prompt = f"""Normalized problem:
-{normalized_input}
-"""
+    return generate_raw_llm_response(normalized_input)
 
-    response = generation_llm.invoke(
-        [
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=human_prompt),
-        ]
-    )
 
-    return response.content.strip()
+def print_test_header(index: int, total: int, name: str) -> None:
+    print("=" * 100)
+    print(f"TEST {index}/{total}: {name}")
+    print("-" * 100)
 
 
 def run_cumulative_tests() -> tuple[int, int]:
     print("=" * 100)
-    print("CUMULATIVE TESTS: Parser 1 + LLM Response Generator + Parser 2 + Translator + Verifier")
+    print("CUMULATIVE TESTS: Full Normalizer + Parser 1 + LLM Response Generator + Parser 2 + Translator + Verifier")
+    print(
+        "Pipeline: Raw Input → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8 "
+        "→ Parser 1 → LLM Response → Parser 2 → Translator → Verifier"
+    )
     print("=" * 100)
 
     passed = 0
     total = len(CUMULATIVE_TEST_CASES)
 
     for index, case in enumerate(CUMULATIVE_TEST_CASES, start=1):
-        print("=" * 100)
-        print(f"CUMULATIVE TEST {index}/{total}: {case['name']}")
-        print("-" * 100)
+        print_test_header(index, total, case["name"])
 
-        normalized_input = case["normalized_input"]
+        raw_input = case["raw_input"]
 
-        print("NORMALIZED INPUT:")
+        print("RAW INPUT:")
+        print(raw_input)
+
+        # ==================================================
+        # Full Normalizer
+        # ==================================================
+        normalizer_result = normalize_raw_prompt(raw_input)
+
+        if normalizer_result["success"] is False:
+            print("\nNORMALIZER: FAILED")
+            print(normalizer_result.get("error"))
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "normalizer"
+            error_ok = contains(
+                normalizer_result.get("error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Normalizer Result:")
+                print(pretty_json(normalizer_result))
+
+            continue
+
+        normalized_input = normalizer_result["normalized_input"]
+
+        print("\nNORMALIZER: PASSED")
+        print("\nNORMALIZED INPUT:")
         print(normalized_input)
 
+        # ==================================================
+        # Parser 1
+        # ==================================================
         parser_1_result = parse_normalized_prompt(normalized_input)
 
         if parser_1_result["prompt_parse_success"] is False:
@@ -559,30 +669,57 @@ def run_cumulative_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
+                print("\nFull Parser 1 Result:")
                 print(pretty_json(parser_1_result))
 
             continue
 
         print("\nPARSER 1: PASSED")
+        print("\nParsed Problem:")
         print(pretty_json(parser_1_result["problem"]))
 
+        # ==================================================
+        # LLM Response Generator
+        # ==================================================
         raw_llm_output = call_llm_response_generator(normalized_input)
 
+        print("\nLLM RESPONSE GENERATOR: GENERATED")
         print("\nRAW LLM OUTPUT:")
         print(raw_llm_output)
 
+        # ==================================================
+        # Parser 2
+        # ==================================================
         parser_2_result = parse_llm_response(raw_llm_output)
 
         if parser_2_result["response_parse_success"] is False:
             print("\nPARSER 2: FAILED")
             print(parser_2_result.get("response_parse_error"))
-            print("\nResult: PASS")
-            passed += 1
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "parser_2"
+            error_ok = contains(
+                parser_2_result.get("response_parse_error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Parser 2 Result:")
+                print(pretty_json(parser_2_result))
+
             continue
 
         print("\nPARSER 2: PASSED")
+        print("\nParsed Trace:")
         print(pretty_json(parser_2_result["trace"]))
 
+        # ==================================================
+        # Translator
+        # ==================================================
         translation_result = translate_problem_and_trace(
             parsed_problem=parser_1_result["problem"],
             parsed_trace=parser_2_result["trace"],
@@ -591,16 +728,34 @@ def run_cumulative_tests() -> tuple[int, int]:
         if translation_result["translation_success"] is False:
             print("\nTRANSLATOR: FAILED")
             print(translation_result.get("translation_error"))
-            print("\nResult: PASS")
-            passed += 1
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "translator"
+            error_ok = contains(
+                translation_result.get("translation_error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Translation Result:")
+                print(pretty_json(translation_result))
+
             continue
 
         print("\nTRANSLATOR: PASSED")
-        print("Symbolic Problem:")
+        print("\nSymbolic Problem:")
         print(pretty_json(translation_result["symbolic_problem"]))
-        print("Symbolic Trace:")
+
+        print("\nSymbolic Trace:")
         print(pretty_json(translation_result["symbolic_trace"]))
 
+        # ==================================================
+        # Verifier
+        # ==================================================
         verification_result = verify_symbolic_trace(
             symbolic_problem=translation_result["symbolic_problem"],
             symbolic_trace=translation_result["symbolic_trace"],
@@ -609,11 +764,26 @@ def run_cumulative_tests() -> tuple[int, int]:
         if verification_result["verification_success"] is False:
             print("\nVERIFIER SYSTEM FAILURE:")
             print(verification_result["verification_error"])
-            print("\nResult: PASS")
-            passed += 1
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "verifier"
+            error_ok = contains(
+                verification_result.get("verification_error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Verification Result:")
+                print(pretty_json(verification_result))
+
             continue
 
-        print("\nVERIFIER: PASSED")
+        print("\nVERIFIER: COMPLETED")
+        print("\nVerification Result:")
         print(pretty_json(verification_result["verification_result"]))
 
         if case["expected_success"] is True:
@@ -621,7 +791,7 @@ def run_cumulative_tests() -> tuple[int, int]:
             passed += 1
         else:
             print("\nResult: FAIL")
-            print("Expected failure but cumulative pipeline passed.")
+            print("Expected failure but full pipeline through Verifier passed.")
 
     return passed, total
 
@@ -635,9 +805,7 @@ def run_direct_verifier_tests() -> tuple[int, int]:
     total = len(DIRECT_VERIFIER_TEST_CASES)
 
     for index, case in enumerate(DIRECT_VERIFIER_TEST_CASES, start=1):
-        print("=" * 100)
-        print(f"DIRECT TEST {index}/{total}: {case['name']}")
-        print("-" * 100)
+        print_test_header(index, total, case["name"])
 
         print("SYMBOLIC PROBLEM:")
         print(pretty_json(case["symbolic_problem"]))

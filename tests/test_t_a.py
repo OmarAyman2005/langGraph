@@ -1,105 +1,97 @@
+import json
 import sys
 from pathlib import Path
 
-from langchain_core.messages import HumanMessage, SystemMessage
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from llm_response.llm_utils import generation_llm
+from normalizer.normalizer import normalize_raw_prompt
 from parsers.normalized_prompt_parser import parse_normalized_prompt
 from parsers.llm_response_parser import parse_llm_response
-from llm_response.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_generator import generate_raw_llm_response
 from translator.translator import translate_problem_and_trace
-from tests.test_utils import pretty_json
 
-CUMULATIVE_TEST_CASES = [
+
+TEST_CASES = [
+    # ==================================================
+    # INVALID RAW INPUTS — EXPECT NORMALIZER FAILURE
+    # ==================================================
     {
-        "name": "empty normalized prompt fails at parser 1",
-        "normalized_input": "",
+        "name": "empty raw input fails at normalizer",
+        "raw_input": "",
         "expected_success": False,
-        "expected_stage": "parser_1",
-        "expected_error_contains": "Empty normalized prompt",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "Empty input",
     },
     {
-        "name": "missing question section fails at parser 1",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies."
-        ),
+        "name": "missing question mark fails at normalizer",
+        "raw_input": "Ahmed studies. Sara sleeps.",
         "expected_success": False,
-        "expected_stage": "parser_1",
-        "expected_error_contains": "Missing Question section",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No yes/no question detected",
     },
+    {
+        "name": "question only fails at normalizer",
+        "raw_input": "Does Ahmed pass?",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No candidate premises found",
+    },
+    {
+        "name": "unsupported premise fails at normalizer",
+        "raw_input": "All cats are animals. Ahmed studies. Does Ahmed study?",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "One or more premises do not map into supported sentence patterns",
+    },
+
+    # ==================================================
+    # VALID RAW INPUTS — FULL PIPELINE THROUGH TRANSLATOR
+    # ==================================================
     {
         "name": "modus ponens entailed",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed pass?"
-        ),
-        "expected_success": True,
-    },
-    {
-        "name": "multi-step chain",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if it rains, then the ground is wet.\n"
-            "2. if the ground is wet, then the match is cancelled.\n"
-            "3. it rains.\n"
-            "\n"
-            "Question:\n"
-            "is the match cancelled?"
-        ),
+        "raw_input": "If Ahmed studies, then Ahmed passes. Ahmed studies. Does Ahmed pass?",
         "expected_success": True,
     },
     {
         "name": "conjunction elimination",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies and sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does sara sleep?"
-        ),
+        "raw_input": "Ahmed studies and Sara sleeps. Does Ahmed study?",
         "expected_success": True,
     },
     {
         "name": "disjunctive syllogism",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies or sara sleeps.\n"
-            "2. not sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
+        "raw_input": "Ahmed studies or Sara sleeps. Ahmed does not study. Does Sara sleep?",
         "expected_success": True,
     },
     {
         "name": "target not found special case",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if it rains, then the ground is wet.\n"
-            "2. it rains.\n"
-            "\n"
-            "Question:\n"
-            "is the sky blue?"
-        ),
+        "raw_input": "If it rains, then the ground is wet. It rains. Is the sky blue?",
         "expected_success": True,
     },
     {
         "name": "direct fact case may be logically invalid later but should translate",
-        "normalized_input": (
-            "Premises:\n"
-            "1. the door is open.\n"
-            "\n"
-            "Question:\n"
-            "is the door open?"
-        ),
+        "raw_input": "The door is open. Is the door open?",
+        "expected_success": True,
+    },
+    {
+        "name": "synonym unification before translator",
+        "raw_input": "Ahmed starts. Sara begins. Does Sara begin?",
+        "expected_success": True,
+    },
+    {
+        "name": "antonym unification before translator",
+        "raw_input": "The door is open. Is the door closed?",
+        "expected_success": True,
+    },
+    {
+        "name": "synonym then antonym unification before translator",
+        "raw_input": "The door is open. The window is shut. Is the window closed?",
+        "expected_success": True,
+    },
+    {
+        "name": "verb antonym unification before translator",
+        "raw_input": "Ahmed passes. Sara fails. Does Sara fail?",
         "expected_success": True,
     },
 ]
@@ -320,6 +312,32 @@ DIRECT_TRANSLATOR_TEST_CASES = [
         },
     },
     {
+        "name": "translate no derivation found special case",
+        "parsed_problem": {
+            "premises": {
+                "P1": "if it rains, then the ground is wet.",
+            },
+            "question": "is the ground wet?",
+        },
+        "parsed_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+        "expected_success": True,
+        "expected_symbolic_problem": {
+            "premises": {
+                "P1": "ItRains -> GroundIsWet",
+            },
+            "target": "GroundIsWet",
+        },
+        "expected_symbolic_trace": {
+            "answer": "not_entailed",
+            "steps": [],
+            "special_case": "No Derivation Found",
+        },
+    },
+    {
         "name": "translate not entailed because opposite is derivable",
         "parsed_problem": {
             "premises": {
@@ -356,6 +374,134 @@ DIRECT_TRANSLATOR_TEST_CASES = [
                     "derived": "AhmedPasses",
                     "supports": ["P1", "P2"],
                     "rule": "Modus Ponens",
+                }
+            ],
+            "special_case": None,
+        },
+    },
+
+    # ==================================================
+    # NEW NORMALIZER-COMPATIBLE TRANSLATION CASES
+    # ==================================================
+    {
+        "name": "translate normalized synonym output",
+        "parsed_problem": {
+            "premises": {
+                "P1": "ahmed starts.",
+                "P2": "sara starts.",
+            },
+            "question": "does sara start?",
+        },
+        "parsed_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "statement": "sara starts.",
+                    "supports": ["P1", "P2"],
+                    "rule": "Conjunction Introduction",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_success": True,
+        "expected_symbolic_problem": {
+            "premises": {
+                "P1": "AhmedStarts",
+                "P2": "SaraStarts",
+            },
+            "target": "SaraStarts",
+        },
+        "expected_symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "SaraStarts",
+                    "supports": ["P1", "P2"],
+                    "rule": "Conjunction Introduction",
+                }
+            ],
+            "special_case": None,
+        },
+    },
+    {
+        "name": "translate normalized antonym output",
+        "parsed_problem": {
+            "premises": {
+                "P1": "the door is open.",
+            },
+            "question": "is the door not open?",
+        },
+        "parsed_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "statement": "the door is not open.",
+                    "supports": ["P1"],
+                    "rule": "Modus Tollens",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_success": True,
+        "expected_symbolic_problem": {
+            "premises": {
+                "P1": "DoorIsOpen",
+            },
+            "target": "~DoorIsOpen",
+        },
+        "expected_symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "~DoorIsOpen",
+                    "supports": ["P1"],
+                    "rule": "Modus Tollens",
+                }
+            ],
+            "special_case": None,
+        },
+    },
+    {
+        "name": "translate normalized synonym then antonym output",
+        "parsed_problem": {
+            "premises": {
+                "P1": "the door is open.",
+                "P2": "not the window is open.",
+            },
+            "question": "is the window not open?",
+        },
+        "parsed_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "statement": "the window is not open.",
+                    "supports": ["P1", "P2"],
+                    "rule": "Modus Tollens",
+                }
+            ],
+            "special_case": None,
+        },
+        "expected_success": True,
+        "expected_symbolic_problem": {
+            "premises": {
+                "P1": "DoorIsOpen",
+                "P2": "~WindowIsOpen",
+            },
+            "target": "~WindowIsOpen",
+        },
+        "expected_symbolic_trace": {
+            "answer": "entailed",
+            "steps": [
+                {
+                    "id": "S1",
+                    "derived": "~WindowIsOpen",
+                    "supports": ["P1", "P2"],
+                    "rule": "Modus Tollens",
                 }
             ],
             "special_case": None,
@@ -443,33 +589,11 @@ DIRECT_TRANSLATOR_TEST_CASES = [
         "expected_success": False,
         "expected_error_contains": "Unsupported sentence pattern in step S1",
     },
-    {
-        "name": "translate no derivation found special case",
-        "parsed_problem": {
-            "premises": {
-                "P1": "if it rains, then the ground is wet.",
-            },
-            "question": "is the ground wet?",
-        },
-        "parsed_trace": {
-            "answer": "not_entailed",
-            "steps": [],
-            "special_case": "No Derivation Found",
-        },
-        "expected_success": True,
-        "expected_symbolic_problem": {
-            "premises": {
-                "P1": "ItRains -> GroundIsWet",
-            },
-            "target": "GroundIsWet",
-        },
-        "expected_symbolic_trace": {
-            "answer": "not_entailed",
-            "steps": [],
-            "special_case": "No Derivation Found",
-        },
-    },
 ]
+
+
+def pretty_json(data) -> str:
+    return json.dumps(data, indent=4, ensure_ascii=False)
 
 
 def contains(actual: str | None, expected: str | None) -> bool:
@@ -483,38 +607,70 @@ def contains(actual: str | None, expected: str | None) -> bool:
 
 
 def call_llm_response_generator(normalized_input: str) -> str:
-    human_prompt = f"""Normalized problem:
-{normalized_input}
-"""
+    return generate_raw_llm_response(normalized_input)
 
-    response = generation_llm.invoke(
-        [
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=human_prompt),
-        ]
-    )
 
-    return response.content.strip()
+def print_test_header(index: int, total: int, name: str) -> None:
+    print("=" * 100)
+    print(f"TEST {index}/{total}: {name}")
+    print("-" * 100)
 
 
 def run_cumulative_tests() -> tuple[int, int]:
     print("=" * 100)
-    print("CUMULATIVE TESTS: Parser 1 + LLM Response Generator + Parser 2 + Translator")
+    print("CUMULATIVE TESTS: Full Normalizer + Parser 1 + LLM Response Generator + Parser 2 + Translator")
+    print(
+        "Pipeline: Raw Input → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8 "
+        "→ Parser 1 → LLM Response → Parser 2 → Translator"
+    )
     print("=" * 100)
 
     passed = 0
-    total = len(CUMULATIVE_TEST_CASES)
+    total = len(TEST_CASES)
 
-    for index, case in enumerate(CUMULATIVE_TEST_CASES, start=1):
-        print("=" * 100)
-        print(f"CUMULATIVE TEST {index}/{total}: {case['name']}")
-        print("-" * 100)
+    for index, case in enumerate(TEST_CASES, start=1):
+        print_test_header(index, total, case["name"])
 
-        normalized_input = case["normalized_input"]
+        raw_input = case["raw_input"]
 
-        print("NORMALIZED INPUT:")
+        print("RAW INPUT:")
+        print(raw_input)
+
+        # ==================================================
+        # Full Normalizer
+        # ==================================================
+        normalizer_result = normalize_raw_prompt(raw_input)
+
+        if normalizer_result["success"] is False:
+            print("\nNORMALIZER: FAILED")
+            print(normalizer_result.get("error"))
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "normalizer"
+            error_ok = contains(
+                normalizer_result.get("error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Normalizer Result:")
+                print(pretty_json(normalizer_result))
+
+            continue
+
+        normalized_input = normalizer_result["normalized_input"]
+
+        print("\nNORMALIZER: PASSED")
+        print("\nNORMALIZED INPUT:")
         print(normalized_input)
 
+        # ==================================================
+        # Parser 1
+        # ==================================================
         parser_1_result = parse_normalized_prompt(normalized_input)
 
         if parser_1_result["prompt_parse_success"] is False:
@@ -533,18 +689,27 @@ def run_cumulative_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print(parser_1_result)
+                print("\nFull Parser 1 Result:")
+                print(pretty_json(parser_1_result))
 
             continue
 
         print("\nPARSER 1: PASSED")
+        print("\nParsed Problem:")
         print(pretty_json(parser_1_result["problem"]))
 
+        # ==================================================
+        # LLM Response Generator
+        # ==================================================
         raw_llm_output = call_llm_response_generator(normalized_input)
 
+        print("\nLLM RESPONSE GENERATOR: GENERATED")
         print("\nRAW LLM OUTPUT:")
         print(raw_llm_output)
 
+        # ==================================================
+        # Parser 2
+        # ==================================================
         parser_2_result = parse_llm_response(raw_llm_output)
 
         if parser_2_result["response_parse_success"] is False:
@@ -563,13 +728,18 @@ def run_cumulative_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print(parser_2_result)
+                print("\nFull Parser 2 Result:")
+                print(pretty_json(parser_2_result))
 
             continue
 
         print("\nPARSER 2: PASSED")
+        print("\nParsed Trace:")
         print(pretty_json(parser_2_result["trace"]))
 
+        # ==================================================
+        # Translator
+        # ==================================================
         translation_result = translate_problem_and_trace(
             parsed_problem=parser_1_result["problem"],
             parsed_trace=parser_2_result["trace"],
@@ -591,16 +761,19 @@ def run_cumulative_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print(translation_result)
+                print("\nFull Translation Result:")
+                print(pretty_json(translation_result))
 
             continue
 
         print("\nTRANSLATOR: PASSED")
-        print("Symbolic Problem:")
+        print("\nSymbolic Problem:")
         print(pretty_json(translation_result["symbolic_problem"]))
-        print("Symbolic Trace:")
+
+        print("\nSymbolic Trace:")
         print(pretty_json(translation_result["symbolic_trace"]))
-        print("Proposition Map:")
+
+        print("\nProposition Map:")
         print(pretty_json(translation_result["proposition_map"]))
 
         if case["expected_success"] is True:
@@ -608,7 +781,7 @@ def run_cumulative_tests() -> tuple[int, int]:
             passed += 1
         else:
             print("\nResult: FAIL")
-            print("Expected failure but cumulative pipeline passed.")
+            print("Expected failure but full pipeline through Translator passed.")
 
     return passed, total
 
@@ -622,9 +795,7 @@ def run_direct_translation_tests() -> tuple[int, int]:
     total = len(DIRECT_TRANSLATOR_TEST_CASES)
 
     for index, case in enumerate(DIRECT_TRANSLATOR_TEST_CASES, start=1):
-        print("=" * 100)
-        print(f"DIRECT TEST {index}/{total}: {case['name']}")
-        print("-" * 100)
+        print_test_header(index, total, case["name"])
 
         print("PARSED PROBLEM:")
         print(pretty_json(case["parsed_problem"]))
@@ -652,16 +823,19 @@ def run_direct_translation_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print(result)
+                print("\nFull Translation Result:")
+                print(pretty_json(result))
 
             continue
 
         print("\nTRANSLATOR: PASSED")
-        print("Symbolic Problem:")
+        print("\nSymbolic Problem:")
         print(pretty_json(result["symbolic_problem"]))
-        print("Symbolic Trace:")
+
+        print("\nSymbolic Trace:")
         print(pretty_json(result["symbolic_trace"]))
-        print("Proposition Map:")
+
+        print("\nProposition Map:")
         print(pretty_json(result["proposition_map"]))
 
         success_ok = case["expected_success"] is True
@@ -673,15 +847,18 @@ def run_direct_translation_tests() -> tuple[int, int]:
             passed += 1
         else:
             print("\nResult: FAIL")
-            print("Expected symbolic problem:")
+
+            print("\nExpected symbolic problem:")
             print(pretty_json(case.get("expected_symbolic_problem")))
-            print("Actual symbolic problem:")
-            print(result["symbolic_problem"])
+
+            print("\nActual symbolic problem:")
+            print(pretty_json(result["symbolic_problem"]))
 
             print("\nExpected symbolic trace:")
             print(pretty_json(case.get("expected_symbolic_trace")))
-            print("Actual symbolic trace:")
-            print(result["symbolic_trace"])
+
+            print("\nActual symbolic trace:")
+            print(pretty_json(result["symbolic_trace"]))
 
     return passed, total
 

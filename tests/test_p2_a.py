@@ -1,444 +1,103 @@
+import json
 import sys
 from pathlib import Path
 
-from langchain_core.messages import HumanMessage, SystemMessage
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from llm_response.llm_utils import generation_llm
+from normalizer.normalizer import normalize_raw_prompt
 from parsers.normalized_prompt_parser import parse_normalized_prompt
 from parsers.llm_response_parser import parse_llm_response
-from llm_response.llm_response_prompt import SYSTEM_PROMPT
+from llm_response.llm_response_generator import generate_raw_llm_response
 
 
-CUMULATIVE_TEST_CASES = [
+TEST_CASES = [
     # ==================================================
-    # PARSER 1 FAILURE REGRESSION CASES
+    # INVALID RAW INPUTS — EXPECT NORMALIZER FAILURE
     # ==================================================
     {
-        "name": "empty normalized prompt fails at parser 1",
-        "normalized_input": "",
+        "name": "empty raw input fails at normalizer",
+        "raw_input": "",
         "expected_success": False,
-        "expected_stage": "parser_1",
-        "expected_error_contains": "Empty normalized prompt",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "Empty input",
     },
     {
-        "name": "missing question section fails at parser 1",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies."
-        ),
+        "name": "missing question mark fails at normalizer",
+        "raw_input": "Ahmed studies. Sara sleeps.",
         "expected_success": False,
-        "expected_stage": "parser_1",
-        "expected_error_contains": "Missing Question section",
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No yes/no question detected",
+    },
+    {
+        "name": "question only fails at normalizer",
+        "raw_input": "Does Ahmed pass?",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "No candidate premises found",
+    },
+    {
+        "name": "unsupported premise fails at normalizer",
+        "raw_input": "All cats are animals. Ahmed studies. Does Ahmed study?",
+        "expected_success": False,
+        "expected_stage": "normalizer",
+        "expected_error_contains": "One or more premises do not map into supported sentence patterns",
     },
 
     # ==================================================
-    # PARSER 1 + LLM + PARSER 2 CASES
+    # VALID RAW INPUTS — FULL PIPELINE THROUGH PARSER 2
     # ==================================================
     {
         "name": "modus ponens entailed",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. ahmed studies.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed pass?"
-        ),
-        "expected_success": True,
-    },
-    {
-        "name": "modus tollens case may be logically invalid but should parse",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if ahmed studies, then ahmed passes.\n"
-            "2. not ahmed passes.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed not study?"
-        ),
-        "expected_success": True,
-    },
-    {
-        "name": "multi-step chain",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if it rains, then the ground is wet.\n"
-            "2. if the ground is wet, then the match is cancelled.\n"
-            "3. it rains.\n"
-            "\n"
-            "Question:\n"
-            "is the match cancelled?"
-        ),
+        "raw_input": "If Ahmed studies, then Ahmed passes. Ahmed studies. Does Ahmed pass?",
         "expected_success": True,
     },
     {
         "name": "conjunction elimination",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies and sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does sara sleep?"
-        ),
+        "raw_input": "Ahmed studies and Sara sleeps. Does Ahmed study?",
         "expected_success": True,
     },
     {
         "name": "disjunctive syllogism",
-        "normalized_input": (
-            "Premises:\n"
-            "1. ahmed studies or sara sleeps.\n"
-            "2. not sara sleeps.\n"
-            "\n"
-            "Question:\n"
-            "does ahmed study?"
-        ),
+        "raw_input": "Ahmed studies or Sara sleeps. Ahmed does not study. Does Sara sleep?",
         "expected_success": True,
     },
     {
         "name": "target not found special case",
-        "normalized_input": (
-            "Premises:\n"
-            "1. if it rains, then the ground is wet.\n"
-            "2. it rains.\n"
-            "\n"
-            "Question:\n"
-            "is the sky blue?"
-        ),
+        "raw_input": "If it rains, then the ground is wet. It rains. Is the sky blue?",
+        "expected_success": True,
+    },
+    {
+        "name": "direct fact case may be logically invalid later but should parse",
+        "raw_input": "The door is open. Is the door open?",
+        "expected_success": True,
+    },
+    {
+        "name": "synonym unification before parser 2",
+        "raw_input": "Ahmed starts. Sara begins. Does Sara begin?",
+        "expected_success": True,
+    },
+    {
+        "name": "antonym unification before parser 2",
+        "raw_input": "The door is open. Is the door closed?",
+        "expected_success": True,
+    },
+    {
+        "name": "synonym then antonym unification before parser 2",
+        "raw_input": "The door is open. The window is shut. Is the window closed?",
+        "expected_success": True,
+    },
+    {
+        "name": "verb antonym unification before parser 2",
+        "raw_input": "Ahmed passes. Sara fails. Does Sara fail?",
         "expected_success": True,
     },
 ]
 
 
-DIRECT_PARSER_TEST_CASES = [
-    # ==================================================
-    # VALID RAW LLM RESPONSES
-    # ==================================================
-    {
-        "name": "valid single step",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": True,
-        "expected_trace": {
-            "answer": "entailed",
-            "steps": [
-                {
-                    "id": "S1",
-                    "statement": "ahmed passes.",
-                    "supports": ["P1", "P2"],
-                    "rule": "Modus Ponens",
-                }
-            ],
-            "special_case": None,
-        },
-    },
-    {
-        "name": "valid multiple steps",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: the ground is wet. [from: P1, P3] [rule: Modus Ponens]\n"
-            "S2: the match is cancelled. [from: S1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": True,
-        "expected_trace": {
-            "answer": "entailed",
-            "steps": [
-                {
-                    "id": "S1",
-                    "statement": "the ground is wet.",
-                    "supports": ["P1", "P3"],
-                    "rule": "Modus Ponens",
-                },
-                {
-                    "id": "S2",
-                    "statement": "the match is cancelled.",
-                    "supports": ["S1", "P2"],
-                    "rule": "Modus Ponens",
-                },
-            ],
-            "special_case": None,
-        },
-    },
-    {
-        "name": "valid not entailed with derivation",
-        "raw_output": (
-            "Answer: not_entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": True,
-        "expected_trace": {
-            "answer": "not_entailed",
-            "steps": [
-                {
-                    "id": "S1",
-                    "statement": "ahmed passes.",
-                    "supports": ["P1", "P2"],
-                    "rule": "Modus Ponens",
-                }
-            ],
-            "special_case": None,
-        },
-    },
-    {
-        "name": "valid target not found special case",
-        "raw_output": (
-            "Answer: not_entailed\n"
-            "Steps:\n"
-            "Target Not Found in Premises"
-        ),
-        "expected_success": True,
-        "expected_trace": {
-            "answer": "not_entailed",
-            "steps": [],
-            "special_case": "Target Not Found in Premises",
-        },
-    },
-    {
-        "name": "valid from without colon tolerated",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": True,
-        "expected_trace": {
-            "answer": "entailed",
-            "steps": [
-                {
-                    "id": "S1",
-                    "statement": "ahmed passes.",
-                    "supports": ["P1", "P2"],
-                    "rule": "Modus Ponens",
-                }
-            ],
-            "special_case": None,
-        },
-    },
-
-    # ==================================================
-    # INVALID RAW LLM RESPONSES
-    # ==================================================
-    {
-        "name": "empty raw output",
-        "raw_output": "",
-        "expected_success": False,
-        "expected_error_contains": "Empty LLM output",
-    },
-    {
-        "name": "markdown code fence rejected",
-        "raw_output": (
-            "```text\n"
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]\n"
-            "```"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "markdown",
-    },
-    {
-        "name": "missing answer line",
-        "raw_output": (
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Answer line",
-    },
-    {
-        "name": "invalid answer value",
-        "raw_output": (
-            "Answer: maybe\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Answer line",
-    },
-    {
-        "name": "missing steps section",
-        "raw_output": (
-            "Answer: entailed\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Steps section",
-    },
-    {
-        "name": "no steps after steps section",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "No steps found",
-    },
-    {
-        "name": "malformed step missing from",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Malformed step format",
-    },
-    {
-        "name": "malformed step missing rule",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Malformed step format",
-    },
-    {
-        "name": "step numbering skips S1",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S2: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Invalid step numbering",
-    },
-    {
-        "name": "step numbering skips S2",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed studies. [from: P2] [rule: Conjunction Elimination]\n"
-            "S3: ahmed passes. [from: P1, S1] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Invalid step numbering",
-    },
-    {
-        "name": "invalid support lowercase p1",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: p1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Invalid support reference",
-    },
-    {
-        "name": "step references itself",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: S1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "earlier step",
-    },
-    {
-        "name": "step references future step",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: S2, P2] [rule: Modus Ponens]\n"
-            "S2: ahmed studies. [from: P1] [rule: Conjunction Elimination]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "earlier step",
-    },
-    {
-        "name": "unsupported rule rejected",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Magic Rule]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "Unsupported rule",
-    },
-    {
-        "name": "uppercase statement rejected",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: Ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "lowercase",
-    },
-    {
-        "name": "statement without period rejected",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "S1: ahmed passes [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "period",
-    },
-    {
-        "name": "target not found cannot be entailed",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "Target Not Found in Premises"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "not_entailed",
-    },
-    {
-        "name": "target not found must appear alone",
-        "raw_output": (
-            "Answer: not_entailed\n"
-            "Steps:\n"
-            "Target Not Found in Premises\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "must appear alone",
-    },
-    {
-        "name": "valid no derivation found special case",
-        "raw_output": (
-            "Answer: not_entailed\n"
-            "Steps:\n"
-            "No Derivation Found"
-        ),
-        "expected_success": True,
-        "expected_trace": {
-            "answer": "not_entailed",
-            "steps": [],
-            "special_case": "No Derivation Found",
-        },
-    },
-    {
-        "name": "no derivation found cannot be entailed",
-        "raw_output": (
-            "Answer: entailed\n"
-            "Steps:\n"
-            "No Derivation Found"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "not_entailed",
-    },
-    {
-        "name": "no derivation found must appear alone",
-        "raw_output": (
-            "Answer: not_entailed\n"
-            "Steps:\n"
-            "No Derivation Found\n"
-            "S1: ahmed passes. [from: P1, P2] [rule: Modus Ponens]"
-        ),
-        "expected_success": False,
-        "expected_error_contains": "must appear alone",
-    },
-]
+def pretty_json(data) -> str:
+    return json.dumps(data, indent=4, ensure_ascii=False)
 
 
 def contains(actual: str | None, expected: str | None) -> bool:
@@ -452,36 +111,65 @@ def contains(actual: str | None, expected: str | None) -> bool:
 
 
 def call_llm_response_generator(normalized_input: str) -> str:
-    human_prompt = f"""Normalized problem:
-{normalized_input}
-"""
-
-    response = generation_llm.invoke(
-        [
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=human_prompt),
-        ]
-    )
-
-    return response.content.strip()
+    return generate_raw_llm_response(normalized_input)
 
 
-def run_cumulative_tests() -> tuple[int, int]:
+def print_test_header(index: int, total: int, name: str) -> None:
     print("=" * 100)
-    print("CUMULATIVE TESTS: Parser 1 + LLM Response Generator + Parser 2")
-    print("=" * 100)
+    print(f"TEST {index}/{total}: {name}")
+    print("-" * 100)
 
+
+def run_tests() -> None:
     passed = 0
-    total = len(CUMULATIVE_TEST_CASES)
+    total = len(TEST_CASES)
 
-    for index, case in enumerate(CUMULATIVE_TEST_CASES, start=1):
-        print("=" * 100)
-        print(f"CUMULATIVE TEST {index}/{total}: {case['name']}")
-        print("-" * 100)
+    print("=" * 100)
+    print("Automated Test: Full Normalizer + Parser 1 + LLM Response Generator + Parser 2")
+    print(
+        "Pipeline: Raw Input → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8 "
+        "→ Parser 1 → LLM Response → Parser 2"
+    )
+    print("=" * 100)
 
-        normalized_input = case["normalized_input"]
+    for index, case in enumerate(TEST_CASES, start=1):
+        print_test_header(index, total, case["name"])
 
-        print("NORMALIZED INPUT:")
+        raw_input = case["raw_input"]
+
+        print("RAW INPUT:")
+        print(raw_input)
+
+        # ==================================================
+        # Full Normalizer
+        # ==================================================
+        normalizer_result = normalize_raw_prompt(raw_input)
+
+        if normalizer_result["success"] is False:
+            print("\nNORMALIZER: FAILED")
+            print(normalizer_result.get("error"))
+
+            success_ok = case["expected_success"] is False
+            stage_ok = case.get("expected_stage") == "normalizer"
+            error_ok = contains(
+                normalizer_result.get("error"),
+                case.get("expected_error_contains"),
+            )
+
+            if success_ok and stage_ok and error_ok:
+                print("\nResult: PASS")
+                passed += 1
+            else:
+                print("\nResult: FAIL")
+                print("\nFull Normalizer Result:")
+                print(pretty_json(normalizer_result))
+
+            continue
+
+        normalized_input = normalizer_result["normalized_input"]
+
+        print("\nNORMALIZER: PASSED")
+        print("\nNORMALIZED INPUT:")
         print(normalized_input)
 
         # ==================================================
@@ -505,18 +193,21 @@ def run_cumulative_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print(parser_1_result)
+                print("\nFull Parser 1 Result:")
+                print(pretty_json(parser_1_result))
 
             continue
 
         print("\nPARSER 1: PASSED")
-        print(parser_1_result["problem"])
+        print("\nParsed Problem:")
+        print(pretty_json(parser_1_result["problem"]))
 
         # ==================================================
         # LLM Response Generator
         # ==================================================
         raw_llm_output = call_llm_response_generator(normalized_input)
 
+        print("\nLLM RESPONSE GENERATOR: GENERATED")
         print("\nRAW LLM OUTPUT:")
         print(raw_llm_output)
 
@@ -541,98 +232,30 @@ def run_cumulative_tests() -> tuple[int, int]:
                 passed += 1
             else:
                 print("\nResult: FAIL")
-                print(parser_2_result)
+                print("\nFull Parser 2 Result:")
+                print(pretty_json(parser_2_result))
 
             continue
 
+        parsed_trace = parser_2_result["trace"]
+
         print("\nPARSER 2: PASSED")
-        print("Parsed Trace:")
-        print(parser_2_result["trace"])
+        print("\nParsed Trace:")
+        print(pretty_json(parsed_trace))
 
         if case["expected_success"] is True:
             print("\nResult: PASS")
             passed += 1
         else:
             print("\nResult: FAIL")
-            print("Expected failure but pipeline passed.")
-
-    return passed, total
-
-
-def run_direct_parser_tests() -> tuple[int, int]:
-    print("=" * 100)
-    print("DIRECT TESTS: Parser 2 Only")
-    print("=" * 100)
-
-    passed = 0
-    total = len(DIRECT_PARSER_TEST_CASES)
-
-    for index, case in enumerate(DIRECT_PARSER_TEST_CASES, start=1):
-        print("=" * 100)
-        print(f"DIRECT TEST {index}/{total}: {case['name']}")
-        print("-" * 100)
-
-        raw_output = case["raw_output"]
-
-        print("RAW LLM OUTPUT:")
-        print(raw_output)
-
-        result = parse_llm_response(raw_output)
-
-        if result["response_parse_success"] is False:
-            print("\nPARSER 2: FAILED")
-            print(result.get("response_parse_error"))
-
-            success_ok = case["expected_success"] is False
-            error_ok = contains(
-                result.get("response_parse_error"),
-                case.get("expected_error_contains"),
-            )
-
-            if success_ok and error_ok:
-                print("\nResult: PASS")
-                passed += 1
-            else:
-                print("\nResult: FAIL")
-                print(result)
-
-            continue
-
-        print("\nPARSER 2: PASSED")
-        print("Parsed Trace:")
-        print(result["trace"])
-
-        success_ok = case["expected_success"] is True
-        trace_ok = result["trace"] == case.get("expected_trace")
-
-        if success_ok and trace_ok:
-            print("\nResult: PASS")
-            passed += 1
-        else:
-            print("\nResult: FAIL")
-            print("Expected trace:")
-            print(case.get("expected_trace"))
-            print("Actual trace:")
-            print(result["trace"])
-
-    return passed, total
-
-
-def main() -> None:
-    cumulative_passed, cumulative_total = run_cumulative_tests()
-    direct_passed, direct_total = run_direct_parser_tests()
-
-    total_passed = cumulative_passed + direct_passed
-    total = cumulative_total + direct_total
+            print("Expected failure but full pipeline through Parser 2 passed.")
 
     print("=" * 100)
-    print(f"FINAL SUMMARY: PASSED {total_passed}/{total}")
-    print(f"- Cumulative: {cumulative_passed}/{cumulative_total}")
-    print(f"- Direct Parser 2: {direct_passed}/{direct_total}")
+    print(f"FINAL SUMMARY: PASSED {passed}/{total}")
 
-    if total_passed != total:
+    if passed != total:
         raise SystemExit(1)
 
 
 if __name__ == "__main__":
-    main()
+    run_tests()
