@@ -7,6 +7,27 @@ Purpose:
 - Keeps the earlier occurring word.
 - Rewrites later antonym atoms/questions as negations of the earlier word form.
 - Performs no LLM calls.
+
+Important behavior:
+- Exact same words do not trigger antonym unification.
+  Example: open / open -> no change.
+- Opposite words do trigger antonym unification.
+  Example: open / closed -> closed becomes not open.
+- Already-negated antonym cases are handled through double-negation cleanup.
+  Example:
+      sara is good.
+      is sara not bad?
+  becomes:
+      sara is good.
+      is sara good?
+- Rewritten premise sentences are passed through N4-style normalization so that:
+      ahmed is not strong.
+  becomes:
+      not ahmed is strong.
+- Double negation is cancelled when formed:
+      not not ahmed is strong.
+  becomes:
+      ahmed is strong.
 """
 
 from __future__ import annotations
@@ -19,6 +40,7 @@ from normalizer.semantic_lexicon import (
     get_best_base_form,
     wordnet_is_available,
 )
+from normalizer.sentence_pattern_matcher import normalize_single_sentence_pattern
 
 
 WORD_PATTERN = re.compile(r"\b[a-zA-Z]+\b")
@@ -74,6 +96,10 @@ BE_VERBS = {"is", "are", "am", "was", "were"}
 DO_AUXILIARIES = {"do", "does", "did"}
 
 
+# ==================================================
+# Result helpers
+# ==================================================
+
 def make_failure(error: str) -> Dict[str, Any]:
     return {
         "success": False,
@@ -92,8 +118,30 @@ def make_success(text: str, changes: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
+# ==================================================
+# Basic helpers
+# ==================================================
+
 def clean_word(word: str) -> str:
     return word.lower().strip()
+
+
+def clean_spaces(text: str) -> str:
+    text = re.sub(r"\s+", " ", text.strip())
+    text = re.sub(r"\s+([.?])", r"\1", text)
+    return text
+
+
+def ensure_period(text: str) -> str:
+    return clean_spaces(text).rstrip(".").strip() + "."
+
+
+def ensure_question_mark(text: str) -> str:
+    return clean_spaces(text).rstrip("?").strip() + "?"
+
+
+def strip_final_period_or_question(text: str) -> str:
+    return clean_spaces(text).rstrip(".?").strip()
 
 
 def is_ignored_word(word: str) -> bool:
@@ -241,6 +289,10 @@ def sentence_is_question(sentence_body: str) -> bool:
     return words[0] in BE_VERBS or words[0] in DO_AUXILIARIES
 
 
+# ==================================================
+# Morphology helpers
+# ==================================================
+
 def inflect_third_person_singular(base: str) -> str:
     base = clean_word(base)
 
@@ -300,23 +352,237 @@ def adapt_earlier_word_for_later_context(
     return earlier
 
 
-def replace_word_span(sentence_body: str, word_start: int, word_end: int, replacement_word: str) -> str:
+# ==================================================
+# Double-negation cleanup helpers
+# ==================================================
+
+def collapse_adjacent_double_not(text: str) -> str:
+    """
+    Removes directly adjacent double negation.
+
+    Examples:
+    not not ahmed is strong. -> ahmed is strong.
+    is sara not not good? -> is sara good?
+    """
+
+    updated = text
+
+    while re.search(r"\bnot\s+not\b", updated, flags=re.IGNORECASE):
+        updated = re.sub(
+            r"\bnot\s+not\s*",
+            "",
+            updated,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+        updated = clean_spaces(updated)
+
+    return updated
+
+
+def simplify_statement_double_negation(sentence_body: str) -> str:
+    """
+    Simplifies double negation in statement bodies.
+
+    Handles:
+    - not not ahmed is strong. -> ahmed is strong.
+    - not ahmed is not strong. -> ahmed is strong.
+
+    The second case is handled by using N4's sentence-pattern normalization:
+    inner: ahmed is not strong.
+    N4(inner): not ahmed is strong.
+    outer not + inner not cancel.
+    """
+
+    body = ensure_period(sentence_body)
+
+    # Direct adjacent case: not not X.
+    body = ensure_period(collapse_adjacent_double_not(body))
+
+    lowered = body.lower().strip()
+
+    # Outer negation case: not <inner>.
+    if lowered.startswith("not "):
+        inner = body.strip()[4:].strip()
+        inner = ensure_period(inner)
+
+        inner_normalized = normalize_single_sentence_pattern(inner)
+
+        # If the inner statement itself normalizes to not X, then:
+        # not (not X) => X
+        if (
+            isinstance(inner_normalized, str)
+            and inner_normalized.lower().startswith("not ")
+        ):
+            positive = inner_normalized.strip()[4:].strip()
+            positive = ensure_period(positive)
+            positive = collapse_adjacent_double_not(positive)
+            return ensure_period(positive)
+
+    return body
+
+
+def simplify_question_double_negation(question_body: str) -> str:
+    """
+    Simplifies double negation in question bodies.
+
+    Example:
+    is sara not not good? -> is sara good?
+    """
+
+    question = ensure_question_mark(question_body)
+    question = collapse_adjacent_double_not(question)
+    return ensure_question_mark(question)
+
+
+def normalize_rewritten_premise_sentence(sentence: str) -> str:
+    """
+    Applies N4-style normalization only to premise sentences.
+
+    This converts:
+    ahmed is not strong. -> not ahmed is strong.
+
+    Then applies double-negation cleanup:
+    not not ahmed is strong. -> ahmed is strong.
+    not ahmed is not strong. -> ahmed is strong.
+    """
+
+    prefix, body = strip_numbering_prefix(sentence.strip())
+
+    body = ensure_period(body)
+
+    # First cleanup possible double negation created by antonym unification.
+    body = simplify_statement_double_negation(body)
+
+    # Then call N4's pattern normalization on the affected premise body.
+    normalized_body = normalize_single_sentence_pattern(body)
+
+    if isinstance(normalized_body, str) and normalized_body.strip():
+        body = normalized_body
+
+    # Final cleanup in case N4 normalization exposed another double negation.
+    body = simplify_statement_double_negation(body)
+
+    return prefix + body
+
+
+def normalize_rewritten_question_sentence(sentence: str) -> str:
+    """
+    Applies only double-negation cleanup to questions.
+
+    Important:
+    We do NOT call N4 on questions.
+    The rest of the pipeline can handle questions like:
+    is khaled not tall?
+    """
+
+    return simplify_question_double_negation(sentence.strip())
+
+
+def postprocess_rewritten_text(text: str) -> str:
+    """
+    After antonym rewrites are applied, clean the normalized prompt.
+
+    Rules:
+    - Premise lines are passed through N4-style normalization.
+    - Question line is only double-negation-cleaned.
+    - Section labels and blank lines are preserved.
+    """
+
+    output_lines = []
+
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+
+        if not stripped:
+            output_lines.append(raw_line)
+            continue
+
+        if stripped.lower() in {"premises:", "question:"}:
+            output_lines.append(raw_line)
+            continue
+
+        leading_spaces = raw_line[: len(raw_line) - len(raw_line.lstrip())]
+
+        if stripped.endswith("?"):
+            processed = normalize_rewritten_question_sentence(stripped)
+        else:
+            processed = normalize_rewritten_premise_sentence(stripped)
+
+        output_lines.append(leading_spaces + processed)
+
+    return "\n".join(output_lines)
+
+
+# ==================================================
+# Rewrite helpers
+# ==================================================
+
+def replace_word_span(
+    sentence_body: str,
+    word_start: int,
+    word_end: int,
+    replacement_word: str,
+) -> str:
     return sentence_body[:word_start] + replacement_word + sentence_body[word_end:]
 
 
-def add_negation_to_statement(sentence_body: str) -> str:
+def add_antonym_negation_to_statement(
+    sentence_body: str,
+    replacement_word_start: int,
+) -> str:
+    """
+    Adds the antonym-negation layer to a statement.
+
+    For be-complement cases, this produces the natural intermediate form:
+        ahmed is strong. -> ahmed is not strong.
+        not ahmed is strong. -> not ahmed is not strong.
+
+    This allows the debug output to show the exact intermediate stage before
+    N4-style normalization.
+
+    For non-be/simple predicate cases, it falls back to the safer canonical
+    external negation:
+        sara passes. -> not sara passes.
+    """
+
     stripped = sentence_body.strip()
 
-    if stripped.startswith("not "):
+    words = list(WORD_PATTERN.finditer(stripped))
+
+    if not words:
         return stripped
 
+    word_values = [clean_word(match.group(0)) for match in words]
+
+    # Find be-verb positions.
+    be_indexes = [
+        index for index, word in enumerate(word_values)
+        if word in BE_VERBS
+    ]
+
+    # If this is a be-complement style sentence, insert "not" before the
+    # replacement complement word.
+    if be_indexes:
+        return (
+            stripped[:replacement_word_start]
+            + "not "
+            + stripped[replacement_word_start:]
+        )
+
+    # Fallback for non-be predicate forms.
     return "not " + stripped
 
-
-def add_negation_to_question(sentence_body: str) -> str:
+def add_antonym_negation_to_question(
+    sentence_body: str,
+    replacement_word_start: int,
+) -> str:
     """
-    is the door open? -> is the door not open?
-    does sara pass? -> does sara not pass?
+    Adds the antonym-negation layer to a yes/no question.
+
+    Examples:
+    is sara bad? -> is sara not good?
+    is sara not bad? -> is sara not not good?
     """
 
     stripped = sentence_body.strip()
@@ -326,23 +592,12 @@ def add_negation_to_question(sentence_body: str) -> str:
         punctuation = "?"
         stripped = stripped[:-1].strip()
 
-    words = list(WORD_PATTERN.finditer(stripped))
-
-    if not words:
-        return sentence_body
-
-    word_values = [clean_word(match.group(0)) for match in words]
-
-    if "not" in word_values:
-        return sentence_body
-
-    first_word = word_values[0]
-
-    if first_word in BE_VERBS or first_word in DO_AUXILIARIES:
-        last_match = words[-1]
-        return stripped[:last_match.start()] + "not " + stripped[last_match.start():] + punctuation
-
-    return sentence_body
+    return (
+        stripped[:replacement_word_start]
+        + "not "
+        + stripped[replacement_word_start:]
+        + punctuation
+    )
 
 
 def rewrite_sentence_with_antonym(
@@ -355,6 +610,19 @@ def rewrite_sentence_with_antonym(
 ) -> str:
     """
     Rewrites the whole atom/question containing the later antonym.
+
+    Stage 1 intentionally creates a natural intermediate form:
+    - Statement:
+        ahmed is weak.
+        -> ahmed is not strong.
+
+    - Already-negated statement:
+        not ahmed is weak.
+        -> not ahmed is not strong.
+
+    - Question:
+        is khaled short?
+        -> is khaled not tall?
     """
 
     original_sentence = sentence.strip()
@@ -378,13 +646,26 @@ def rewrite_sentence_with_antonym(
         replacement_word=replacement_word,
     )
 
+    # After replacement, the replacement word begins at the same local start.
+    replacement_word_start = local_word_start_in_body
+
     if sentence_is_question(replaced_body):
-        rewritten_body = add_negation_to_question(replaced_body)
+        rewritten_body = add_antonym_negation_to_question(
+            sentence_body=replaced_body,
+            replacement_word_start=replacement_word_start,
+        )
     else:
-        rewritten_body = add_negation_to_statement(replaced_body)
+        rewritten_body = add_antonym_negation_to_statement(
+            sentence_body=replaced_body,
+            replacement_word_start=replacement_word_start,
+        )
 
     return prefix + rewritten_body
 
+
+# ==================================================
+# Occurrence extraction and rewrite search
+# ==================================================
 
 def extract_word_occurrences(text: str) -> List[Dict[str, Any]]:
     occurrences = []
@@ -425,9 +706,10 @@ def find_antonym_rewrites(text: str) -> Tuple[List[Dict[str, Any]], List[Dict[st
     Finds later antonyms and rewrites their containing sentence/question.
 
     Important:
-    If a later occurrence is rewritten, it is not allowed to become the canonical
-    earlier word for later comparisons. This prevents:
-    open -> closed rewrite, then closed -> open rewrite in the question.
+    - Exact same words are ignored.
+      Example: open / open -> no rewrite.
+    - Already rewritten later occurrences are not allowed to become canonical
+      earlier words for later comparisons.
     """
 
     occurrences = extract_word_occurrences(text)
@@ -453,6 +735,8 @@ def find_antonym_rewrites(text: str) -> Tuple[List[Dict[str, Any]], List[Dict[st
 
             earlier_word = earlier_occurrence["word"]
 
+            # Exact same words are already unified.
+            # They must not trigger antonym unification.
             if earlier_word == later_word:
                 continue
 
@@ -481,7 +765,7 @@ def find_antonym_rewrites(text: str) -> Tuple[List[Dict[str, Any]], List[Dict[st
                         "position": later_occurrence["start"],
                         "role": later_role,
                         "original_sentence": later_occurrence["sentence"].strip(),
-                        "replacement_sentence": replacement_sentence,
+                        "replacement_sentence_before_postprocessing": replacement_sentence,
                         "reason": "wordnet_direct_antonym",
                     }
                 )
@@ -506,9 +790,140 @@ def apply_rewrites(text: str, rewrites: List[Dict[str, Any]]) -> str:
     return updated
 
 
+# ==================================================
+# Main N8 function
+# ==================================================
+def n4_style_normalize_premise_body_for_n8(body: str) -> str:
+    """
+    Applies N4-style premise normalization for N8 debug/use.
+
+    Handles normal cases:
+        ahmed is not strong.
+        -> not ahmed is strong.
+
+    Handles outer-not cases:
+        not ahmed is not strong.
+        -> not not ahmed is strong.
+    """
+
+    body = ensure_period(body)
+    stripped = body.strip()
+
+    # Special case:
+    # not <inner>
+    # If inner itself normalizes to not X, preserve the outer not:
+    # not ahmed is not strong.
+    # inner = ahmed is not strong.
+    # N4(inner) = not ahmed is strong.
+    # result = not not ahmed is strong.
+    if stripped.lower().startswith("not "):
+        inner = stripped[4:].strip()
+        inner = ensure_period(inner)
+
+        inner_normalized = normalize_single_sentence_pattern(inner)
+
+        if isinstance(inner_normalized, str) and inner_normalized.strip():
+            return ensure_period("not " + inner_normalized.rstrip(".").strip())
+
+        return body
+
+    normalized = normalize_single_sentence_pattern(body)
+
+    if isinstance(normalized, str) and normalized.strip():
+        return normalized
+
+    return body
+
+def postprocess_rewritten_text_stage_2_n4_only(text: str) -> str:
+    """
+    Stage 2:
+    Applies N4-style normalization only to premise lines.
+
+    Questions are not passed through N4.
+    """
+
+    output_lines = []
+
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+
+        if not stripped:
+            output_lines.append(raw_line)
+            continue
+
+        if stripped.lower() in {"premises:", "question:"}:
+            output_lines.append(raw_line)
+            continue
+
+        leading_spaces = raw_line[: len(raw_line) - len(raw_line.lstrip())]
+
+        # Questions are not passed through N4.
+        if stripped.endswith("?"):
+            output_lines.append(raw_line)
+            continue
+
+        prefix, body = strip_numbering_prefix(stripped)
+        processed_body = n4_style_normalize_premise_body_for_n8(body)
+        processed = prefix + processed_body
+
+        output_lines.append(leading_spaces + processed)
+
+    return "\n".join(output_lines)
+
+
+def postprocess_rewritten_text_stage_3_double_not_only(text: str) -> str:
+    """
+    Stage 3:
+    Removes double negation from premise and question lines.
+
+    Examples:
+        not not ahmed is strong. -> ahmed is strong.
+        is sara not not good? -> is sara good?
+    """
+
+    output_lines = []
+
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+
+        if not stripped:
+            output_lines.append(raw_line)
+            continue
+
+        if stripped.lower() in {"premises:", "question:"}:
+            output_lines.append(raw_line)
+            continue
+
+        leading_spaces = raw_line[: len(raw_line) - len(raw_line.lstrip())]
+
+        if stripped.endswith("?"):
+            processed = simplify_question_double_negation(stripped)
+        else:
+            prefix, body = strip_numbering_prefix(stripped)
+            body = collapse_adjacent_double_not(body)
+            body = ensure_period(body)
+            processed = prefix + body
+
+        output_lines.append(leading_spaces + processed)
+
+    return "\n".join(output_lines)
+
 def unify_antonym_words(text: str) -> Dict[str, Any]:
     """
     Main N8 function.
+
+    Debug stages:
+    - stage_1_after_antonym_replacement:
+      The prompt after replacing later antonym words with the earlier canonical word
+      and adding the antonym negation layer.
+
+    - stage_2_after_n4_premise_normalization:
+      The prompt after applying N4-style normalization to rewritten premise lines.
+
+    - stage_3_after_double_negation_cleanup:
+      The final prompt after cancelling double negations.
+
+    The returned "text" is always the final stage.
     """
 
     if not isinstance(text, str):
@@ -526,8 +941,40 @@ def unify_antonym_words(text: str) -> Dict[str, Any]:
     rewrites, changes = find_antonym_rewrites(text)
 
     if not rewrites:
-        return make_success(text=text, changes=[])
+        return {
+            "success": True,
+            "text": text,
+            "changes": [],
+            "error": None,
+            "debug": {
+                "triggered": False,
+                "stage_1_after_antonym_replacement": text,
+                "stage_2_after_n4_premise_normalization": text,
+                "stage_3_after_double_negation_cleanup": text,
+            },
+        }
 
-    updated_text = apply_rewrites(text, rewrites)
+    stage_1_text = apply_rewrites(text, rewrites)
 
-    return make_success(text=updated_text, changes=changes)
+    stage_2_text = postprocess_rewritten_text_stage_2_n4_only(stage_1_text)
+
+    stage_3_text = postprocess_rewritten_text_stage_3_double_not_only(stage_2_text)
+
+    for change in changes:
+        change["stage_1_after_antonym_replacement"] = stage_1_text
+        change["stage_2_after_n4_premise_normalization"] = stage_2_text
+        change["stage_3_after_double_negation_cleanup"] = stage_3_text
+        change["final_text_after_postprocessing"] = stage_3_text
+
+    return {
+        "success": True,
+        "text": stage_3_text,
+        "changes": changes,
+        "error": None,
+        "debug": {
+            "triggered": True,
+            "stage_1_after_antonym_replacement": stage_1_text,
+            "stage_2_after_n4_premise_normalization": stage_2_text,
+            "stage_3_after_double_negation_cleanup": stage_3_text,
+        },
+    }

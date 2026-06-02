@@ -39,6 +39,30 @@ def as_text(value: Any) -> str:
 
     return str(value)
 
+def format_component_output(value: Any, indent: str = "     ") -> str:
+    """
+    Formats Output_After_Component blocks so multiline outputs are visually
+    separated from field labels in the VSCode terminal.
+
+    Example:
+    Output_After_Component:
+
+         line 1
+         line 2
+    """
+
+    text = as_text(value)
+
+    if text is None:
+        text = "None"
+
+    lines = str(text).splitlines()
+
+    if not lines:
+        return indent + "None"
+
+    return "\n".join(indent + line for line in lines)
+
 
 def timed_call(func, *args, **kwargs) -> Tuple[Any, int]:
     start = time.perf_counter()
@@ -270,8 +294,15 @@ def print_score_component_trace(
     print(f"  Status: {status}")
     print(f"  Triggered: {triggered}")
     print(f"  {count_label}: {count_value}")
-    print("  Output_After_Component:")
-    print(f"  {get_output_or_not_modified(triggered, output)}")
+
+    if triggered == "No":
+        print("  Output_After_Component: WAS NOT MODIFIED")
+    else:
+        print("  Output_After_Component:")
+        print()
+        print(format_component_output(output))
+        print()
+
     print(f"  Error_Code: {error_code}")
     print(f"  Error_Message: {error_message}")
     print(f"  Runtime_ms: {runtime_ms}")
@@ -289,7 +320,9 @@ def print_non_score_component_trace(
     print(f"{name}:")
     print(f"  Status: {status}")
     print("  Output_After_Component:")
-    print(f"  {as_text(output)}")
+    print()
+    print(format_component_output(output))
+    print()
     print(f"  Error_Code: {error_code}")
     print(f"  Error_Message: {error_message}")
     print(f"  Runtime_ms: {runtime_ms}")
@@ -471,14 +504,23 @@ def print_normalizer_section(
     # N5
     n5_status = component_status("N5")
     n5_error_code, n5_error_message = component_error("N5")
-    print_non_score_component_trace(
-        name="N5_Question_Pattern_Matcher",
-        status=n5_status,
-        output=n5_output if n5_status == "success" else ("null" if n5_status == "failed" else "skipped_due_to_previous_failure"),
-        error_code=n5_error_code,
-        error_message=n5_error_message,
-        runtime_ms=0,
-    )
+    if n5_status == "success":
+        print(f"N5_Question_Pattern_Matcher:")
+        print(f"  Status: {n5_status}")
+        print("  Output_After_Component: WAS NOT MODIFIED")
+        print(f"  Error_Code: {n5_error_code}")
+        print(f"  Error_Message: {n5_error_message}")
+        print("  Runtime_ms: 0")
+        print()
+    else:
+        print_non_score_component_trace(
+            name="N5_Question_Pattern_Matcher",
+            status=n5_status,
+            output="null" if n5_status == "failed" else "skipped_due_to_previous_failure",
+            error_code=n5_error_code,
+            error_message=n5_error_message,
+            runtime_ms=0,
+        )
 
     # N6
     n6_status = component_status("N6")
@@ -516,13 +558,31 @@ def print_normalizer_section(
     n8_status = component_status("N8")
     n8_triggered = "N/A" if n8_status == "skipped" else get_triggered(counts["antonym"])
     n8_error_code, n8_error_message = component_error("N8")
+    n8_debug = debug.get("n8_antonym_words_unifier", {})
+    n8_stage_debug = n8_debug.get("debug", {}) if isinstance(n8_debug, dict) else {}
+
+    if n8_triggered == "Yes" and n8_stage_debug:
+        n8_output = (
+            "Here it 1st Does That:\n"
+            f"{n8_stage_debug.get('stage_1_after_antonym_replacement', 'N/A')}\n\n"
+            "THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:\n"
+            f"{n8_stage_debug.get('stage_2_after_n4_premise_normalization', 'N/A')}\n\n"
+            "THEN IT DOES THIS (Removes the Double not):\n"
+            f"{n8_stage_debug.get('stage_3_after_double_negation_cleanup', 'N/A')}"
+        )
+    else:
+        n8_output = debug.get(
+            "final_normalized_prompt_after_n8",
+            normalized_prompt if normalized_prompt else "See normalizer debug.",
+        )
+
     print_score_component_trace(
         name="N8_Antonym_Words_Unifier",
         status=n8_status,
         triggered=n8_triggered,
         count_label="Actual_Antonym_Unification_Count",
         count_value=counts["antonym"] if n8_status != "skipped" else 0,
-        output=debug.get("final_normalized_prompt_after_n8", normalized_prompt if normalized_prompt else "See normalizer debug."),
+        output=n8_output,
         error_code=n8_error_code,
         error_message=n8_error_message,
         runtime_ms=0,
