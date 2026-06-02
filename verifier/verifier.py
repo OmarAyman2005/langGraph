@@ -17,15 +17,48 @@ SPECIAL_NO_DERIVATION_FOUND = "No Derivation Found"
 MAX_CLOSURE_ITERATIONS = 20
 MAX_CLOSURE_ITEMS = 200
 
+# ==================================================
+# Verifier system-level error codes
+# ==================================================
+VF_CONTRADICTORY_PREMISES = "VF_CONTRADICTORY_PREMISES"
+VF_CLOSURE_LIMIT_EXCEEDED = "VF_CLOSURE_LIMIT_EXCEEDED"
+VF_MALFORMED_SYMBOLIC_INPUT = "VF_MALFORMED_SYMBOLIC_INPUT"
+VF_UNSUPPORTED_RULE_IMPLEMENTATION = "VF_UNSUPPORTED_RULE_IMPLEMENTATION"
+
+# ==================================================
+# Verifier step-level failure reason labels
+# ==================================================
+VF_STEP_UNKNOWN_SUPPORT = "VF_STEP_UNKNOWN_SUPPORT"
+VF_STEP_INSUFFICIENT_SUPPORTS = "VF_STEP_INSUFFICIENT_SUPPORTS"
+VF_STEP_RULE_NOT_APPLICABLE = "VF_STEP_RULE_NOT_APPLICABLE"
+VF_STEP_WRONG_DERIVED_STATEMENT = "VF_STEP_WRONG_DERIVED_STATEMENT"
+
+# ==================================================
+# Valid not_entailed reason labels
+# ==================================================
+NOT_ENTAILED_NA = "N/A"
+TARGET_NOT_FOUND_IN_PREMISES = "TARGET_NOT_FOUND_IN_PREMISES"
+NO_DERIVATION_FOUND = "NO_DERIVATION_FOUND"
+NEGATION_OF_TARGET_DERIVED = "NEGATION_OF_TARGET_DERIVED"
+
 
 class VerifierError(Exception):
     pass
 
 
-def make_failure(error: str) -> Dict[str, Any]:
+def make_failure(
+    error_message: str,
+    error_code: str = VF_MALFORMED_SYMBOLIC_INPUT,
+    error_type: str = "unintentional",
+) -> Dict[str, Any]:
     return {
         "verification_success": False,
-        "verification_error": error,
+        "verification_error": {
+            "error_code": error_code,
+            "error_message": error_message,
+            "error_type": error_type,
+            "failed_stage": "verifier",
+        },
         "verification_result": None,
     }
 
@@ -205,19 +238,36 @@ def get_support_expressions(
 
     for support in supports:
         if support not in available_knowledge:
-            return None, f"unknown_support: {support}"
+            return None, support
 
         expressions.append(available_knowledge[support])
 
     return expressions, None
 
 
+def make_validation_failure(
+    error_code: str,
+    expected: Optional[str] = None,
+    error_details: Optional[str] = None,
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
+    return False, error_code, expected, error_details
+
+
+def make_validation_success(
+    expected: Optional[str],
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
+    return True, "", expected, None
+
+
 def validate_modus_ponens(
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if len(support_exprs) != 2:
-        return False, "insufficient_supports", None
+        return make_validation_failure(
+            VF_STEP_INSUFFICIENT_SUPPORTS,
+            error_details="Modus Ponens requires exactly 2 supports.",
+        )
 
     for conditional_expr, antecedent_expr in [
         (support_exprs[0], support_exprs[1]),
@@ -234,19 +284,26 @@ def validate_modus_ponens(
             expected = consequent
 
             if claimed == expected:
-                return True, "", expected
+                return make_validation_success(expected)
 
-            return False, f"wrong_derived: expected {expected}", expected
+            return make_validation_failure(
+                VF_STEP_WRONG_DERIVED_STATEMENT,
+                expected=expected,
+                error_details=f"expected {expected}",
+            )
 
-    return False, "rule_not_applicable", None
+    return make_validation_failure(VF_STEP_RULE_NOT_APPLICABLE)
 
 
 def validate_modus_tollens(
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if len(support_exprs) != 2:
-        return False, "insufficient_supports", None
+        return make_validation_failure(
+            VF_STEP_INSUFFICIENT_SUPPORTS,
+            error_details="Modus Tollens requires exactly 2 supports.",
+        )
 
     for conditional_expr, negated_consequent_expr in [
         (support_exprs[0], support_exprs[1]),
@@ -263,25 +320,32 @@ def validate_modus_tollens(
             expected = opposite_of(antecedent)
 
             if claimed == expected:
-                return True, "", expected
+                return make_validation_success(expected)
 
-            return False, f"wrong_derived: expected {expected}", expected
+            return make_validation_failure(
+                VF_STEP_WRONG_DERIVED_STATEMENT,
+                expected=expected,
+                error_details=f"expected {expected}",
+            )
 
-    return False, "rule_not_applicable", None
+    return make_validation_failure(VF_STEP_RULE_NOT_APPLICABLE)
 
 
 def validate_hypothetical_syllogism(
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if len(support_exprs) != 2:
-        return False, "insufficient_supports", None
+        return make_validation_failure(
+            VF_STEP_INSUFFICIENT_SUPPORTS,
+            error_details="Hypothetical Syllogism requires exactly 2 supports.",
+        )
 
     first = split_binary(support_exprs[0], "->")
     second = split_binary(support_exprs[1], "->")
 
     if first is None or second is None:
-        return False, "rule_not_applicable", None
+        return make_validation_failure(VF_STEP_RULE_NOT_APPLICABLE)
 
     a, b = first
     c, d = second
@@ -296,20 +360,28 @@ def validate_hypothetical_syllogism(
 
     for expected in possible_expected:
         if claimed == expected:
-            return True, "", expected
+            return make_validation_success(expected)
 
     if possible_expected:
-        return False, f"wrong_derived: expected one of {possible_expected}", possible_expected[0]
+        expected = possible_expected[0]
+        return make_validation_failure(
+            VF_STEP_WRONG_DERIVED_STATEMENT,
+            expected=expected,
+            error_details=f"expected one of {possible_expected}",
+        )
 
-    return False, "rule_not_applicable", None
+    return make_validation_failure(VF_STEP_RULE_NOT_APPLICABLE)
 
 
 def validate_disjunctive_syllogism(
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if len(support_exprs) != 2:
-        return False, "insufficient_supports", None
+        return make_validation_failure(
+            VF_STEP_INSUFFICIENT_SUPPORTS,
+            error_details="Disjunctive Syllogism requires exactly 2 supports.",
+        )
 
     for disjunction_expr, negated_expr in [
         (support_exprs[0], support_exprs[1]),
@@ -326,47 +398,65 @@ def validate_disjunctive_syllogism(
             expected = right
 
             if claimed == expected:
-                return True, "", expected
+                return make_validation_success(expected)
 
-            return False, f"wrong_derived: expected {expected}", expected
+            return make_validation_failure(
+                VF_STEP_WRONG_DERIVED_STATEMENT,
+                expected=expected,
+                error_details=f"expected {expected}",
+            )
 
         if negated_expr == opposite_of(right):
             expected = left
 
             if claimed == expected:
-                return True, "", expected
+                return make_validation_success(expected)
 
-            return False, f"wrong_derived: expected {expected}", expected
+            return make_validation_failure(
+                VF_STEP_WRONG_DERIVED_STATEMENT,
+                expected=expected,
+                error_details=f"expected {expected}",
+            )
 
-    return False, "rule_not_applicable", None
+    return make_validation_failure(VF_STEP_RULE_NOT_APPLICABLE)
 
 
 def validate_conjunction_elimination(
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if len(support_exprs) != 1:
-        return False, "insufficient_supports", None
+        return make_validation_failure(
+            VF_STEP_INSUFFICIENT_SUPPORTS,
+            error_details="Conjunction Elimination requires exactly 1 support.",
+        )
 
     split = split_binary(support_exprs[0], "&")
 
     if split is None:
-        return False, "rule_not_applicable", None
+        return make_validation_failure(VF_STEP_RULE_NOT_APPLICABLE)
 
     left, right = split
 
     if claimed in {left, right}:
-        return True, "", claimed
+        return make_validation_success(claimed)
 
-    return False, f"wrong_derived: expected {left} or {right}", left
+    return make_validation_failure(
+        VF_STEP_WRONG_DERIVED_STATEMENT,
+        expected=left,
+        error_details=f"expected {left} or {right}",
+    )
 
 
 def validate_conjunction_introduction(
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if len(support_exprs) != 2:
-        return False, "insufficient_supports", None
+        return make_validation_failure(
+            VF_STEP_INSUFFICIENT_SUPPORTS,
+            error_details="Conjunction Introduction requires exactly 2 supports.",
+        )
 
     left, right = support_exprs
 
@@ -374,16 +464,20 @@ def validate_conjunction_introduction(
     expected_2 = f"{right} & {left}"
 
     if claimed in {expected_1, expected_2}:
-        return True, "", claimed
+        return make_validation_success(claimed)
 
-    return False, f"wrong_derived: expected {expected_1} or {expected_2}", expected_1
+    return make_validation_failure(
+        VF_STEP_WRONG_DERIVED_STATEMENT,
+        expected=expected_1,
+        error_details=f"expected {expected_1} or {expected_2}",
+    )
 
 
 def validate_step_by_rule(
     rule: str,
     support_exprs: List[str],
     claimed: str,
-) -> Tuple[bool, str, Optional[str]]:
+) -> Tuple[bool, str, Optional[str], Optional[str]]:
     if rule == "Modus Ponens":
         return validate_modus_ponens(support_exprs, claimed)
 
@@ -511,7 +605,7 @@ def verify_special_case(
     target: str,
     symbolic_premises: Dict[str, str],
     closure: Set[str],
-) -> Tuple[str, Optional[str], str]:
+) -> Tuple[str, str, str]:
     """
     Returns:
     - final_answer_check
@@ -520,7 +614,7 @@ def verify_special_case(
     """
 
     if answer != "not_entailed":
-        return "inconsistent", None, "invalid"
+        return "inconsistent", NOT_ENTAILED_NA, "invalid"
 
     if special_case == SPECIAL_TARGET_NOT_FOUND:
         vocab = premise_vocabulary(symbolic_premises)
@@ -528,42 +622,42 @@ def verify_special_case(
         opposite_target = strip_negation(opposite_of(target))
 
         if positive_target not in vocab and opposite_target not in vocab:
-            return "consistent", "target_not_found_in_premises", "valid"
+            return "consistent", TARGET_NOT_FOUND_IN_PREMISES, "valid"
 
-        return "inconsistent", "target_or_opposite_found_in_premise_vocabulary", "invalid"
+        return "inconsistent", NOT_ENTAILED_NA, "invalid"
 
     if special_case == SPECIAL_NO_DERIVATION_FOUND:
         if target not in closure:
-            return "consistent", "no_derivation_found", "valid"
+            return "consistent", NO_DERIVATION_FOUND, "valid"
 
-        return "inconsistent", "target_derivable_in_closure", "invalid"
+        return "inconsistent", NOT_ENTAILED_NA, "invalid"
 
-    return "inconsistent", None, "invalid"
+    return "inconsistent", NOT_ENTAILED_NA, "invalid"
 
 
 def final_answer_check_normal_trace(
     answer: str,
     target: str,
     available_values: Set[str],
-) -> Tuple[str, Optional[str]]:
+) -> Tuple[str, str]:
     if answer == "entailed":
         if target in available_values:
-            return "consistent", None
+            return "consistent", NOT_ENTAILED_NA
 
-        return "inconsistent", None
+        return "inconsistent", NOT_ENTAILED_NA
 
     if answer == "not_entailed":
         if target in available_values:
-            return "inconsistent", "target_derived"
+            return "inconsistent", NOT_ENTAILED_NA
 
         opposite_target = opposite_of(target)
 
         if opposite_target in available_values:
-            return "consistent", "opposite_derived"
+            return "consistent", NEGATION_OF_TARGET_DERIVED
 
-        return "consistent", "target_not_derived_after_valid_steps"
+        return "consistent", NOT_ENTAILED_NA
 
-    return "inconsistent", None
+    return "inconsistent", NOT_ENTAILED_NA
 
 
 def verify_symbolic_trace(
@@ -642,7 +736,11 @@ def verify_symbolic_trace(
     closure, closure_error = compute_closure(symbolic_premises)
 
     if closure_error is not None:
-        return make_failure(closure_error)
+        return make_failure(
+            closure_error,
+            error_code=VF_CLOSURE_LIMIT_EXCEEDED,
+            error_type="intentional",
+        )
 
     # ==================================================
     # Contradiction detection
@@ -653,7 +751,9 @@ def verify_symbolic_trace(
         positive, negative = contradiction
 
         return make_failure(
-            f"Contradictory premises detected: {positive} and {negative}."
+            f"Contradictory premises detected: {positive} and {negative}.",
+            error_code=VF_CONTRADICTORY_PREMISES,
+            error_type="intentional",
         )
 
     # ==================================================
@@ -677,11 +777,11 @@ def verify_symbolic_trace(
         return make_success(
             {
                 "validity": validity,
+                "answer_label": answer,
                 "step_results": [],
                 "final_answer_check": final_check,
-                "not_entailed_reason": reason,
+                "not_entailed_reason": reason if validity == "valid" else NOT_ENTAILED_NA,
                 "available_knowledge": dict(symbolic_premises),
-                "closure": sorted(closure),
             }
         )
 
@@ -714,21 +814,26 @@ def verify_symbolic_trace(
         claimed_derived = clean_expr(claimed_derived)
 
         if rule not in SUPPORTED_RULES:
-            return make_failure(f"Unsupported rule implementation: {rule}")
+            return make_failure(
+                f"Unsupported rule implementation: {rule}",
+                error_code=VF_UNSUPPORTED_RULE_IMPLEMENTATION,
+                error_type="unintentional",
+            )
 
-        support_exprs, support_error = get_support_expressions(
+        support_exprs, unknown_support = get_support_expressions(
             supports=supports,
             available_knowledge=available_knowledge,
         )
 
-        if support_error is not None:
+        if unknown_support is not None:
             all_steps_valid = False
 
             step_results.append(
                 {
                     "id": step_id,
                     "valid": False,
-                    "error": support_error,
+                    "error": VF_STEP_UNKNOWN_SUPPORT,
+                    "error_details": f"unknown support {unknown_support}",
                     "derived": claimed_derived,
                     "expected": None,
                 }
@@ -737,13 +842,17 @@ def verify_symbolic_trace(
             continue
 
         try:
-            is_valid, error, expected = validate_step_by_rule(
+            is_valid, error, expected, error_details = validate_step_by_rule(
                 rule=rule,
                 support_exprs=support_exprs,
                 claimed=claimed_derived,
             )
         except VerifierError as e:
-            return make_failure(str(e))
+            return make_failure(
+                str(e),
+                error_code=VF_UNSUPPORTED_RULE_IMPLEMENTATION,
+                error_type="unintentional",
+            )
 
         if is_valid:
             available_knowledge[step_id] = claimed_derived
@@ -753,6 +862,7 @@ def verify_symbolic_trace(
                     "id": step_id,
                     "valid": True,
                     "error": None,
+                    "error_details": None,
                     "derived": claimed_derived,
                     "expected": expected,
                 }
@@ -765,6 +875,7 @@ def verify_symbolic_trace(
                     "id": step_id,
                     "valid": False,
                     "error": error,
+                    "error_details": error_details,
                     "derived": claimed_derived,
                     "expected": expected,
                 }
@@ -780,13 +891,16 @@ def verify_symbolic_trace(
 
     validity = "valid" if all_steps_valid and final_check == "consistent" else "invalid"
 
+    if not (validity == "valid" and answer == "not_entailed"):
+        not_entailed_reason = NOT_ENTAILED_NA
+
     return make_success(
         {
             "validity": validity,
+            "answer_label": answer,
             "step_results": step_results,
             "final_answer_check": final_check,
             "not_entailed_reason": not_entailed_reason,
             "available_knowledge": available_knowledge,
-            "closure": sorted(closure),
         }
     )

@@ -243,10 +243,12 @@ def main() -> None:
 
     validity = verification_result["verification_result"]["validity"]
     final_answer_check = verification_result["verification_result"]["final_answer_check"]
+    not_entailed_reason = verification_result["verification_result"].get("not_entailed_reason", "N/A")
 
     print("\nFinal Verification Summary:")
     print(f"- Explanation Validity: {validity}")
     print(f"- Final Answer Check: {final_answer_check}")
+    print(f"- Not Entailed Reason: {not_entailed_reason}")
 
     print("\nFinal Result: PASSED Full Pipeline Through Verifier")
 

@@ -341,6 +341,7 @@ DIRECT_VERIFIER_TEST_CASES = [
         "expected_verification_success": True,
         "expected_validity": "valid",
         "expected_final_answer_check": "consistent",
+        "expected_not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
     },
     {
         "name": "valid not entailed no derivation found",
@@ -358,6 +359,7 @@ DIRECT_VERIFIER_TEST_CASES = [
         "expected_verification_success": True,
         "expected_validity": "valid",
         "expected_final_answer_check": "consistent",
+        "expected_not_entailed_reason": "NO_DERIVATION_FOUND",
     },
     {
         "name": "valid not entailed because opposite is derived",
@@ -383,6 +385,7 @@ DIRECT_VERIFIER_TEST_CASES = [
         "expected_verification_success": True,
         "expected_validity": "valid",
         "expected_final_answer_check": "consistent",
+        "expected_not_entailed_reason": "NEGATION_OF_TARGET_DERIVED",
     },
 
     # ==================================================
@@ -712,14 +715,22 @@ DIRECT_VERIFIER_TEST_CASES = [
 ]
 
 
-def contains(actual: str | None, expected: str | None) -> bool:
+def contains(actual, expected: str | None) -> bool:
     if expected is None:
         return True
 
     if actual is None:
         return False
 
-    return expected.lower() in actual.lower()
+    if isinstance(actual, dict):
+        actual_text = " ".join(
+            str(actual.get(key, ""))
+            for key in ["error_code", "error_message", "error_type", "failed_stage"]
+        )
+    else:
+        actual_text = str(actual)
+
+    return expected.lower() in actual_text.lower()
 
 
 def call_llm_response_generator(normalized_input: str) -> str:
@@ -980,7 +991,15 @@ def run_direct_verifier_tests() -> tuple[int, int]:
         validity_ok = result["verification_result"]["validity"] == case.get("expected_validity")
         final_ok = result["verification_result"]["final_answer_check"] == case.get("expected_final_answer_check")
 
-        if success_ok and validity_ok and final_ok:
+        expected_reason = case.get("expected_not_entailed_reason")
+        if expected_reason is None:
+            reason_ok = True
+        else:
+            reason_ok = result["verification_result"].get("not_entailed_reason") == expected_reason
+
+        closure_absent_ok = "closure" not in result["verification_result"]
+
+        if success_ok and validity_ok and final_ok and reason_ok and closure_absent_ok:
             print("\nResult: PASS")
             passed += 1
         else:
@@ -989,6 +1008,9 @@ def run_direct_verifier_tests() -> tuple[int, int]:
             print("Actual validity:", result["verification_result"]["validity"])
             print("Expected final check:", case.get("expected_final_answer_check"))
             print("Actual final check:", result["verification_result"]["final_answer_check"])
+            print("Expected not_entailed_reason:", expected_reason)
+            print("Actual not_entailed_reason:", result["verification_result"].get("not_entailed_reason"))
+            print("Closure absent:", closure_absent_ok)
 
     return passed, total
 
