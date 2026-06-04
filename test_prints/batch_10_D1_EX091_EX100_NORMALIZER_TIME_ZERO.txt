@@ -1,0 +1,3881 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 10: D1_EX091 to D1_EX100
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX091
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The speaker waits if the speaker smiles.
+if the speaker waits, then it reads.
+the speaker smiles.
+if the speaker jumps, then it sits.
+if the door opens, then it moves.
+either the speaker stands or the speaker waves.
+does the speaker jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: HS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the speaker waits if the speaker smiles.
+     if the speaker waits, then it reads.
+     the speaker smiles.
+     if the speaker jumps, then it sits.
+     if the door opens, then it moves.
+     either the speaker stands or the speaker waves.
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Detected_Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 3
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the speaker smiles, then the speaker waits.
+2. if the speaker waits, then the speaker reads.
+3. the speaker smiles.
+4. if the speaker jumps, then the speaker sits.
+5. if the door opens, then the door moves.
+6. the speaker stands or the speaker waves.
+
+Question:
+does the speaker jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the speaker smiles, then the speaker waits.",
+        "P2": "if the speaker waits, then the speaker reads.",
+        "P3": "the speaker smiles.",
+        "P4": "if the speaker jumps, then the speaker sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the speaker stands or the speaker waves."
+    },
+    "question": "does the speaker jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 9818
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SpeakerSmiles -> SpeakerWaits",
+            "P2": "SpeakerWaits -> SpeakerReads",
+            "P3": "SpeakerSmiles",
+            "P4": "SpeakerJumps -> SpeakerSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "SpeakerStands | SpeakerWaves"
+        },
+        "target": "SpeakerJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the speaker smiles": "SpeakerSmiles",
+        "the speaker waits": "SpeakerWaits",
+        "the speaker reads": "SpeakerReads",
+        "the speaker jumps": "SpeakerJumps",
+        "the speaker sits": "SpeakerSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the speaker stands": "SpeakerStands",
+        "the speaker waves": "SpeakerWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SpeakerSmiles -> SpeakerWaits",
+            "P2": "SpeakerWaits -> SpeakerReads",
+            "P3": "SpeakerSmiles",
+            "P4": "SpeakerJumps -> SpeakerSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "SpeakerStands | SpeakerWaves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 9818
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 9819
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX091
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The speaker waits if the speaker smiles.
+if the speaker waits, then it reads.
+the speaker smiles.
+if the speaker jumps, then it sits.
+if the door opens, then it moves.
+either the speaker stands or the speaker waves.
+does the speaker jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: HS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the speaker waits if the speaker smiles.
+     if the speaker waits, then it reads.
+     the speaker smiles.
+     if the speaker jumps, then it sits.
+     if the door opens, then it moves.
+     either the speaker stands or the speaker waves.
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Detected_Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker smiles, then the speaker waits.
+     2. if the speaker waits, then the speaker reads.
+     3. the speaker smiles.
+     4. if the speaker jumps, then the speaker sits.
+     5. if the door opens, then the door moves.
+     6. the speaker stands or the speaker waves.
+     
+     Question:
+     does the speaker jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 3
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the speaker smiles, then the speaker waits.
+2. if the speaker waits, then the speaker reads.
+3. the speaker smiles.
+4. if the speaker jumps, then the speaker sits.
+5. if the door opens, then the door moves.
+6. the speaker stands or the speaker waves.
+
+Question:
+does the speaker jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the speaker smiles, then the speaker waits.",
+        "P2": "if the speaker waits, then the speaker reads.",
+        "P3": "the speaker smiles.",
+        "P4": "if the speaker jumps, then the speaker sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the speaker stands or the speaker waves."
+    },
+    "question": "does the speaker jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 937
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SpeakerSmiles -> SpeakerWaits",
+            "P2": "SpeakerWaits -> SpeakerReads",
+            "P3": "SpeakerSmiles",
+            "P4": "SpeakerJumps -> SpeakerSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "SpeakerStands | SpeakerWaves"
+        },
+        "target": "SpeakerJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the speaker smiles": "SpeakerSmiles",
+        "the speaker waits": "SpeakerWaits",
+        "the speaker reads": "SpeakerReads",
+        "the speaker jumps": "SpeakerJumps",
+        "the speaker sits": "SpeakerSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the speaker stands": "SpeakerStands",
+        "the speaker waves": "SpeakerWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SpeakerSmiles -> SpeakerWaits",
+            "P2": "SpeakerWaits -> SpeakerReads",
+            "P3": "SpeakerSmiles",
+            "P4": "SpeakerJumps -> SpeakerSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "SpeakerStands | SpeakerWaves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 937
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 938
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX092
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the guard smiles or he waits.
+not the guard smiles.
+if the guard waits, then he reads.
+if the guard reads, then he writes.
+if the guard jumps, then he sits.
+the door moves if the door opens.
+either the guard stands or the guard waves.
+does the guard jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either the guard smiles or he waits.
+     not the guard smiles.
+     if the guard waits, then he reads.
+     if the guard reads, then he writes.
+     if the guard jumps, then he sits.
+     the door moves if the door opens.
+     either the guard stands or the guard waves.
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Detected_Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. the guard smiles or the guard waits.
+2. not the guard smiles.
+3. if the guard waits, then the guard reads.
+4. if the guard reads, then the guard writes.
+5. if the guard jumps, then the guard sits.
+6. if the door opens, then the door moves.
+7. the guard stands or the guard waves.
+
+Question:
+does the guard jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the guard smiles or the guard waits.",
+        "P2": "not the guard smiles.",
+        "P3": "if the guard waits, then the guard reads.",
+        "P4": "if the guard reads, then the guard writes.",
+        "P5": "if the guard jumps, then the guard sits.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the guard stands or the guard waves."
+    },
+    "question": "does the guard jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the guard waits. [from: P2, P3] [rule: Modus Tollens]
+S2: the guard reads. [from: S1, P4] [rule: Modus Ponens]
+S3: the guard writes. [from: S2, P4] [rule: Modus Ponens]
+S4: the guard sits. [from: P5, P7] [rule: Disjunctive Syllogism]
+S5: the guard jumps. [from: P4, P6] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 6009
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the guard waits.",
+            "supports": [
+                "P2",
+                "P3"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the guard reads.",
+            "supports": [
+                "S1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the guard writes.",
+            "supports": [
+                "S2",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the guard sits.",
+            "supports": [
+                "P5",
+                "P7"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S5",
+            "statement": "the guard jumps.",
+            "supports": [
+                "P4",
+                "P6"
+            ],
+            "rule": "Hypothetical Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "GuardSmiles | GuardWaits",
+            "P2": "~GuardSmiles",
+            "P3": "GuardWaits -> GuardReads",
+            "P4": "GuardReads -> GuardWrites",
+            "P5": "GuardJumps -> GuardSits",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "GuardStands | GuardWaves"
+        },
+        "target": "GuardJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "GuardWaits",
+                "supports": [
+                    "P2",
+                    "P3"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "GuardReads",
+                "supports": [
+                    "S1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "GuardWrites",
+                "supports": [
+                    "S2",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "GuardSits",
+                "supports": [
+                    "P5",
+                    "P7"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S5",
+                "derived": "GuardJumps",
+                "supports": [
+                    "P4",
+                    "P6"
+                ],
+                "rule": "Hypothetical Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the guard smiles": "GuardSmiles",
+        "the guard waits": "GuardWaits",
+        "the guard reads": "GuardReads",
+        "the guard writes": "GuardWrites",
+        "the guard jumps": "GuardJumps",
+        "the guard sits": "GuardSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the guard stands": "GuardStands",
+        "the guard waves": "GuardWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "GuardWaits",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "GuardReads",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "GuardWrites",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "GuardSits",
+                "expected": null
+            },
+            {
+                "id": "S5",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "GuardJumps",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "GuardSmiles | GuardWaits",
+            "P2": "~GuardSmiles",
+            "P3": "GuardWaits -> GuardReads",
+            "P4": "GuardReads -> GuardWrites",
+            "P5": "GuardJumps -> GuardSits",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "GuardStands | GuardWaves"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4, S5
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_RULE_NOT_APPLICABLE; S5: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 6009
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 6010
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX092
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the guard smiles or he waits.
+not the guard smiles.
+if the guard waits, then he reads.
+if the guard reads, then he writes.
+if the guard jumps, then he sits.
+the door moves if the door opens.
+either the guard stands or the guard waves.
+does the guard jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either the guard smiles or he waits.
+     not the guard smiles.
+     if the guard waits, then he reads.
+     if the guard reads, then he writes.
+     if the guard jumps, then he sits.
+     the door moves if the door opens.
+     either the guard stands or the guard waves.
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Detected_Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the guard smiles or the guard waits.
+     2. not the guard smiles.
+     3. if the guard waits, then the guard reads.
+     4. if the guard reads, then the guard writes.
+     5. if the guard jumps, then the guard sits.
+     6. if the door opens, then the door moves.
+     7. the guard stands or the guard waves.
+     
+     Question:
+     does the guard jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. the guard smiles or the guard waits.
+2. not the guard smiles.
+3. if the guard waits, then the guard reads.
+4. if the guard reads, then the guard writes.
+5. if the guard jumps, then the guard sits.
+6. if the door opens, then the door moves.
+7. the guard stands or the guard waves.
+
+Question:
+does the guard jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the guard smiles or the guard waits.",
+        "P2": "not the guard smiles.",
+        "P3": "if the guard waits, then the guard reads.",
+        "P4": "if the guard reads, then the guard writes.",
+        "P5": "if the guard jumps, then the guard sits.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the guard stands or the guard waves."
+    },
+    "question": "does the guard jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the guard waits. [from: P2, P3] [rule: Modus Tollens]
+S2: the guard reads. [from: S1, P4] [rule: Modus Ponens]
+S3: the guard writes. [from: S2, P4] [rule: Modus Ponens]
+S4: the guard jumps or the guard sits. [from: P5] 
+S5: the guard sits. [from: S4, P7] [rule: Disjunctive Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 5572
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S4: the guard jumps or the guard sits. [from: P5]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S4: the guard jumps or the guard sits. [from: P5]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 5572
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 5572
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX093
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the artist smiles or she waits.
+It is false that the artist smiles.
+if the artist waits, then she reads.
+if the artist reads, then she writes.
+if the artist jumps, then she sits.
+the door moves if the door opens.
+either the artist stands or the artist waves.
+does the artist jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either the artist smiles or she waits.
+     it is false that the artist smiles.
+     if the artist waits, then she reads.
+     if the artist reads, then she writes.
+     if the artist jumps, then she sits.
+     the door moves if the door opens.
+     either the artist stands or the artist waves.
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Detected_Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. the artist smiles or the artist waits.
+2. not the artist smiles.
+3. if the artist waits, then the artist reads.
+4. if the artist reads, then the artist writes.
+5. if the artist jumps, then the artist sits.
+6. if the door opens, then the door moves.
+7. the artist stands or the artist waves.
+
+Question:
+does the artist jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the artist smiles or the artist waits.",
+        "P2": "not the artist smiles.",
+        "P3": "if the artist waits, then the artist reads.",
+        "P4": "if the artist reads, then the artist writes.",
+        "P5": "if the artist jumps, then the artist sits.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the artist stands or the artist waves."
+    },
+    "question": "does the artist jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the artist waits. [from: P2] [rule: Disjunctive Syllogism]
+S2: the artist reads. [from: P3, S1] [rule: Modus Ponens]
+S3: the artist writes. [from: P4, S2] [rule: Modus Ponens]
+S4: the artist sits. [from: P5, P1] [rule: Disjunctive Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 5008
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the artist waits.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the artist reads.",
+            "supports": [
+                "P3",
+                "S1"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the artist writes.",
+            "supports": [
+                "P4",
+                "S2"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the artist sits.",
+            "supports": [
+                "P5",
+                "P1"
+            ],
+            "rule": "Disjunctive Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ArtistSmiles | ArtistWaits",
+            "P2": "~ArtistSmiles",
+            "P3": "ArtistWaits -> ArtistReads",
+            "P4": "ArtistReads -> ArtistWrites",
+            "P5": "ArtistJumps -> ArtistSits",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "ArtistStands | ArtistWaves"
+        },
+        "target": "ArtistJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ArtistWaits",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ArtistReads",
+                "supports": [
+                    "P3",
+                    "S1"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "ArtistWrites",
+                "supports": [
+                    "P4",
+                    "S2"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "ArtistSits",
+                "supports": [
+                    "P5",
+                    "P1"
+                ],
+                "rule": "Disjunctive Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the artist smiles": "ArtistSmiles",
+        "the artist waits": "ArtistWaits",
+        "the artist reads": "ArtistReads",
+        "the artist writes": "ArtistWrites",
+        "the artist jumps": "ArtistJumps",
+        "the artist sits": "ArtistSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the artist stands": "ArtistStands",
+        "the artist waves": "ArtistWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Disjunctive Syllogism requires exactly 2 supports.",
+                "derived": "ArtistWaits",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "ArtistReads",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "ArtistWrites",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "ArtistSits",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ArtistSmiles | ArtistWaits",
+            "P2": "~ArtistSmiles",
+            "P3": "ArtistWaits -> ArtistReads",
+            "P4": "ArtistReads -> ArtistWrites",
+            "P5": "ArtistJumps -> ArtistSits",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "ArtistStands | ArtistWaves"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 5008
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 5009
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX093
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the artist smiles or she waits.
+It is false that the artist smiles.
+if the artist waits, then she reads.
+if the artist reads, then she writes.
+if the artist jumps, then she sits.
+the door moves if the door opens.
+either the artist stands or the artist waves.
+does the artist jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either the artist smiles or she waits.
+     it is false that the artist smiles.
+     if the artist waits, then she reads.
+     if the artist reads, then she writes.
+     if the artist jumps, then she sits.
+     the door moves if the door opens.
+     either the artist stands or the artist waves.
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Detected_Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the artist smiles or the artist waits.
+     2. not the artist smiles.
+     3. if the artist waits, then the artist reads.
+     4. if the artist reads, then the artist writes.
+     5. if the artist jumps, then the artist sits.
+     6. if the door opens, then the door moves.
+     7. the artist stands or the artist waves.
+     
+     Question:
+     does the artist jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. the artist smiles or the artist waits.
+2. not the artist smiles.
+3. if the artist waits, then the artist reads.
+4. if the artist reads, then the artist writes.
+5. if the artist jumps, then the artist sits.
+6. if the door opens, then the door moves.
+7. the artist stands or the artist waves.
+
+Question:
+does the artist jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the artist smiles or the artist waits.",
+        "P2": "not the artist smiles.",
+        "P3": "if the artist waits, then the artist reads.",
+        "P4": "if the artist reads, then the artist writes.",
+        "P5": "if the artist jumps, then the artist sits.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the artist stands or the artist waves."
+    },
+    "question": "does the artist jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the artist waits. [from: P2] [rule: Disjunctive Syllogism]
+S2: the artist reads. [from: P3, S1] [rule: Modus Ponens]
+S3: the artist writes. [from: P4, S2] [rule: Modus Ponens]
+S4: the artist sits. [from: P5, P1] [rule: Disjunctive Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 4819
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the artist waits.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the artist reads.",
+            "supports": [
+                "P3",
+                "S1"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the artist writes.",
+            "supports": [
+                "P4",
+                "S2"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the artist sits.",
+            "supports": [
+                "P5",
+                "P1"
+            ],
+            "rule": "Disjunctive Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ArtistSmiles | ArtistWaits",
+            "P2": "~ArtistSmiles",
+            "P3": "ArtistWaits -> ArtistReads",
+            "P4": "ArtistReads -> ArtistWrites",
+            "P5": "ArtistJumps -> ArtistSits",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "ArtistStands | ArtistWaves"
+        },
+        "target": "ArtistJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ArtistWaits",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ArtistReads",
+                "supports": [
+                    "P3",
+                    "S1"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "ArtistWrites",
+                "supports": [
+                    "P4",
+                    "S2"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "ArtistSits",
+                "supports": [
+                    "P5",
+                    "P1"
+                ],
+                "rule": "Disjunctive Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the artist smiles": "ArtistSmiles",
+        "the artist waits": "ArtistWaits",
+        "the artist reads": "ArtistReads",
+        "the artist writes": "ArtistWrites",
+        "the artist jumps": "ArtistJumps",
+        "the artist sits": "ArtistSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the artist stands": "ArtistStands",
+        "the artist waves": "ArtistWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Disjunctive Syllogism requires exactly 2 supports.",
+                "derived": "ArtistWaits",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "ArtistReads",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "ArtistWrites",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "ArtistSits",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ArtistSmiles | ArtistWaits",
+            "P2": "~ArtistSmiles",
+            "P3": "ArtistWaits -> ArtistReads",
+            "P4": "ArtistReads -> ArtistWrites",
+            "P5": "ArtistJumps -> ArtistSits",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "ArtistStands | ArtistWaves"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4819
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 4820
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX094
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both the driver smiles and he waits.
+The driver reads if the driver smiles.
+if the driver reads, then he writes.
+if the driver jumps, then he sits.
+if the door opens, then it moves.
+either the driver stands or the driver waves.
+does the driver jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: CE+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the driver smiles and he waits.
+     the driver reads if the driver smiles.
+     if the driver reads, then he writes.
+     if the driver jumps, then he sits.
+     if the door opens, then it moves.
+     either the driver stands or the driver waves.
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Detected_Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 9
+
+Normalized_Prompt:
+Premises:
+1. the driver smiles and the driver waits.
+2. if the driver smiles, then the driver reads.
+3. if the driver reads, then the driver writes.
+4. if the driver jumps, then the driver sits.
+5. if the door opens, then the door moves.
+6. the driver stands or the driver waves.
+
+Question:
+does the driver jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the driver smiles and the driver waits.",
+        "P2": "if the driver smiles, then the driver reads.",
+        "P3": "if the driver reads, then the driver writes.",
+        "P4": "if the driver jumps, then the driver sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the driver stands or the driver waves."
+    },
+    "question": "does the driver jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 977
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DriverSmiles & DriverWaits",
+            "P2": "DriverSmiles -> DriverReads",
+            "P3": "DriverReads -> DriverWrites",
+            "P4": "DriverJumps -> DriverSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "DriverStands | DriverWaves"
+        },
+        "target": "DriverJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the driver smiles": "DriverSmiles",
+        "the driver waits": "DriverWaits",
+        "the driver reads": "DriverReads",
+        "the driver writes": "DriverWrites",
+        "the driver jumps": "DriverJumps",
+        "the driver sits": "DriverSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the driver stands": "DriverStands",
+        "the driver waves": "DriverWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DriverSmiles & DriverWaits",
+            "P2": "DriverSmiles -> DriverReads",
+            "P3": "DriverReads -> DriverWrites",
+            "P4": "DriverJumps -> DriverSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "DriverStands | DriverWaves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 977
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 978
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX094
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both the driver smiles and he waits.
+The driver reads if the driver smiles.
+if the driver reads, then he writes.
+if the driver jumps, then he sits.
+if the door opens, then it moves.
+either the driver stands or the driver waves.
+does the driver jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: CE+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the driver smiles and he waits.
+     the driver reads if the driver smiles.
+     if the driver reads, then he writes.
+     if the driver jumps, then he sits.
+     if the door opens, then it moves.
+     either the driver stands or the driver waves.
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Detected_Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the driver smiles and the driver waits.
+     2. if the driver smiles, then the driver reads.
+     3. if the driver reads, then the driver writes.
+     4. if the driver jumps, then the driver sits.
+     5. if the door opens, then the door moves.
+     6. the driver stands or the driver waves.
+     
+     Question:
+     does the driver jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 9
+
+Normalized_Prompt:
+Premises:
+1. the driver smiles and the driver waits.
+2. if the driver smiles, then the driver reads.
+3. if the driver reads, then the driver writes.
+4. if the driver jumps, then the driver sits.
+5. if the door opens, then the door moves.
+6. the driver stands or the driver waves.
+
+Question:
+does the driver jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the driver smiles and the driver waits.",
+        "P2": "if the driver smiles, then the driver reads.",
+        "P3": "if the driver reads, then the driver writes.",
+        "P4": "if the driver jumps, then the driver sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the driver stands or the driver waves."
+    },
+    "question": "does the driver jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 953
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DriverSmiles & DriverWaits",
+            "P2": "DriverSmiles -> DriverReads",
+            "P3": "DriverReads -> DriverWrites",
+            "P4": "DriverJumps -> DriverSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "DriverStands | DriverWaves"
+        },
+        "target": "DriverJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the driver smiles": "DriverSmiles",
+        "the driver waits": "DriverWaits",
+        "the driver reads": "DriverReads",
+        "the driver writes": "DriverWrites",
+        "the driver jumps": "DriverJumps",
+        "the driver sits": "DriverSits",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the driver stands": "DriverStands",
+        "the driver waves": "DriverWaves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DriverSmiles & DriverWaits",
+            "P2": "DriverSmiles -> DriverReads",
+            "P3": "DriverReads -> DriverWrites",
+            "P4": "DriverJumps -> DriverSits",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "DriverStands | DriverWaves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 953
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 954
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 9/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX095
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The player waits if the player smiles.
+If the player waits, then it reads.
+not the player reads.
+if the player jumps, then it sits.
+if the door opens, then it moves.
+if the bell rings, then it stops.
+either the player stands or the player waves.
+the player walks.
+does the player jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the player waits if the player smiles.
+     if the player waits, then it reads.
+     not the player reads.
+     if the player jumps, then it sits.
+     if the door opens, then it moves.
+     if the bell rings, then it stops.
+     either the player stands or the player waves.
+     the player walks.
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Detected_Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the player smiles, then the player waits.
+2. if the player waits, then the player reads.
+3. not the player reads.
+4. if the player jumps, then the player sits.
+5. if the door opens, then the door moves.
+6. if the bell rings, then the bell stops.
+7. the player stands or the player waves.
+8. the player walks.
+
+Question:
+does the player jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the player smiles, then the player waits.",
+        "P2": "if the player waits, then the player reads.",
+        "P3": "not the player reads.",
+        "P4": "if the player jumps, then the player sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "if the bell rings, then the bell stops.",
+        "P7": "the player stands or the player waves.",
+        "P8": "the player walks."
+    },
+    "question": "does the player jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the player sits. [from: P4] [rule: Modus Ponens]
+S2: if the player jumps, then the player sits. [from: S1, P7] [rule: Hypothetical Syllogism]
+S3: the player stands or the player waves. [from: P7] 
+S4: not the player stands. [from: S3, P8] [rule: Disjunctive Syllogism]
+S5: the player waves. [from: S3, S4] [rule: Conjunction Elimination]
+S6: if the player jumps, then the player sits. [from: S2] 
+S7: not the player jumps. [from: S6, P8] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 7740
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S3: the player stands or the player waves. [from: P7]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S3: the player stands or the player waves. [from: P7]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 7740
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 7740
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 10/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX095
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The player waits if the player smiles.
+If the player waits, then it reads.
+not the player reads.
+if the player jumps, then it sits.
+if the door opens, then it moves.
+if the bell rings, then it stops.
+either the player stands or the player waves.
+the player walks.
+does the player jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the player waits if the player smiles.
+     if the player waits, then it reads.
+     not the player reads.
+     if the player jumps, then it sits.
+     if the door opens, then it moves.
+     if the bell rings, then it stops.
+     either the player stands or the player waves.
+     the player walks.
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Detected_Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. if the player smiles, then the player waits.
+     2. if the player waits, then the player reads.
+     3. not the player reads.
+     4. if the player jumps, then the player sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the player stands or the player waves.
+     8. the player walks.
+     
+     Question:
+     does the player jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the player smiles, then the player waits.
+2. if the player waits, then the player reads.
+3. not the player reads.
+4. if the player jumps, then the player sits.
+5. if the door opens, then the door moves.
+6. if the bell rings, then the bell stops.
+7. the player stands or the player waves.
+8. the player walks.
+
+Question:
+does the player jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the player smiles, then the player waits.",
+        "P2": "if the player waits, then the player reads.",
+        "P3": "not the player reads.",
+        "P4": "if the player jumps, then the player sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "if the bell rings, then the bell stops.",
+        "P7": "the player stands or the player waves.",
+        "P8": "the player walks."
+    },
+    "question": "does the player jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the player sits. [from: P4] [rule: Modus Ponens]
+S2: if the player jumps, then the player sits. [from: S1, P7] [rule: Hypothetical Syllogism]
+S3: the player stands or the player waves. [from: P7] 
+S4: not the player stands. [from: S3, P8] [rule: Disjunctive Syllogism]
+S5: the player waves. [from: S3, S4] [rule: Conjunction Elimination]
+S6: if the player smiles, then the player waits. [from: P1] 
+S7: not the player smiles. [from: S6, P8] [rule: Modus Tollens]
+S8: the player waits. [from: S7, P2] [rule: Hypothetical Syllogism]
+S9: if the player waves, then the player waits. [from: S5, S8] [rule: Conjunction Introduction]
+S10: not the player jumps. [from: S9, P3] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 11073
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S3: the player stands or the player waves. [from: P7]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S3: the player stands or the player waves. [from: P7]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 11073
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 11073
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 11/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX096
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The teacher waits if the teacher smiles.
+If the teacher waits, then it reads.
+not the teacher reads.
+if the teacher jumps, then it sits.
+if the door opens, then it moves.
+if the bell rings, then it stops.
+either the teacher stands or the teacher waves.
+the teacher walks.
+does the teacher jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the teacher waits if the teacher smiles.
+     if the teacher waits, then it reads.
+     not the teacher reads.
+     if the teacher jumps, then it sits.
+     if the door opens, then it moves.
+     if the bell rings, then it stops.
+     either the teacher stands or the teacher waves.
+     the teacher walks.
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Detected_Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None

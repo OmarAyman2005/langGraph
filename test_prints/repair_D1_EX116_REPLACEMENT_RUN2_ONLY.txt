@@ -1,0 +1,300 @@
+====================================================================================================
+FINAL DATASET TEST A
+EX116 Replacement Test ù Run 2 only
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/1
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX116
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The candle glows if the candle burns.
+If the candle glows, then it warms.
+not the candle warms.
+if the door opens, then it moves.
+either the candle bends or the candle rings.
+the candle rests.
+does the candle burn?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the candle glows if the candle burns.
+     if the candle glows, then it warms.
+     not the candle warms.
+     if the door opens, then it moves.
+     either the candle bends or the candle rings.
+     the candle rests.
+     does the candle burn?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the candle burns, then the candle glows.
+     2. if the candle glows, then the candle warms.
+     3. not the candle warms.
+     4. if the door opens, then the door moves.
+     5. the candle bends or the candle rings.
+     6. the candle rests.
+     
+     Detected_Question:
+     does the candle burn?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the candle burns, then the candle glows.
+     2. if the candle glows, then the candle warms.
+     3. not the candle warms.
+     4. if the door opens, then the door moves.
+     5. the candle bends or the candle rings.
+     6. the candle rests.
+     
+     Question:
+     does the candle burn?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the candle burns, then the candle glows.
+     2. if the candle glows, then the candle warms.
+     3. not the candle warms.
+     4. if the door opens, then the door moves.
+     5. the candle bends or the candle rings.
+     6. the candle rests.
+     
+     Question:
+     does the candle burn?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the candle burns, then the candle glows.
+     2. if the candle glows, then the candle warms.
+     3. not the candle warms.
+     4. if the door opens, then the door moves.
+     5. the candle bends or the candle rings.
+     6. the candle rests.
+     
+     Question:
+     does the candle burn?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the candle burns, then the candle glows.
+2. if the candle glows, then the candle warms.
+3. not the candle warms.
+4. if the door opens, then the door moves.
+5. the candle bends or the candle rings.
+6. the candle rests.
+
+Question:
+does the candle burn?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the candle burns, then the candle glows.",
+        "P2": "if the candle glows, then the candle warms.",
+        "P3": "not the candle warms.",
+        "P4": "if the door opens, then the door moves.",
+        "P5": "the candle bends or the candle rings.",
+        "P6": "the candle rests."
+    },
+    "question": "does the candle burn?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the candle glows. [from: P1] [rule: Conjunction Introduction]
+S2: the candle warms. [from: S1, P2] [rule: Modus Ponens]
+S3: not the candle warms. [from: P3] 
+S4: the candle does not glow. [from: S2, S3] [rule: Disjunctive Syllogism]
+S5: the candle bends or the candle rings. [from: P5] 
+S6: the candle bends. [from: S4, S5] [rule: Disjunctive Syllogism]
+S7: not the candle burns. [from: S6, P1] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 9154
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S3: not the candle warms. [from: P3]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S3: not the candle warms. [from: P3]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 9154
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 9154
+
+================================================================================
+RUN END
+================================================================================
+

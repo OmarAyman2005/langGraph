@@ -1,0 +1,652 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 12B Restart: D1_EX115 Run 2 + D1_EX116 to D1_EX120
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/11
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX115
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both the clock smiles and it waits.
+The clock reads if the clock smiles.
+if the clock reads, then not the clock jumps.
+if the door opens, then it moves.
+either the clock stands or the clock waves.
+the clock walks.
+does the clock jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 4
+Inference_Rules: CE+MP
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the clock smiles and it waits.
+     the clock reads if the clock smiles.
+     if the clock reads, then not the clock jumps.
+     if the door opens, then it moves.
+     either the clock stands or the clock waves.
+     the clock walks.
+     does the clock jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the clock smiles and the clock waits.
+     2. if the clock smiles, then the clock reads.
+     3. if the clock reads, then not the clock jumps.
+     4. if the door opens, then the door moves.
+     5. the clock stands or the clock waves.
+     6. the clock walks.
+     
+     Detected_Question:
+     does the clock jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the clock smiles and the clock waits.
+     2. if the clock smiles, then the clock reads.
+     3. if the clock reads, then not the clock jumps.
+     4. if the door opens, then the door moves.
+     5. the clock stands or the clock waves.
+     6. the clock walks.
+     
+     Question:
+     does the clock jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the clock smiles and the clock waits.
+     2. if the clock smiles, then the clock reads.
+     3. if the clock reads, then not the clock jumps.
+     4. if the door opens, then the door moves.
+     5. the clock stands or the clock waves.
+     6. the clock walks.
+     
+     Question:
+     does the clock jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the clock smiles and the clock waits.
+     2. if the clock smiles, then the clock reads.
+     3. if the clock reads, then not the clock jumps.
+     4. if the door opens, then the door moves.
+     5. the clock stands or the clock waves.
+     6. the clock walks.
+     
+     Question:
+     does the clock jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. the clock smiles and the clock waits.
+2. if the clock smiles, then the clock reads.
+3. if the clock reads, then not the clock jumps.
+4. if the door opens, then the door moves.
+5. the clock stands or the clock waves.
+6. the clock walks.
+
+Question:
+does the clock jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the clock smiles and the clock waits.",
+        "P2": "if the clock smiles, then the clock reads.",
+        "P3": "if the clock reads, then not the clock jumps.",
+        "P4": "if the door opens, then the door moves.",
+        "P5": "the clock stands or the clock waves.",
+        "P6": "the clock walks."
+    },
+    "question": "does the clock jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the clock does not read. [from: P3] [rule: Hypothetical Syllogism]
+S2: the clock smiles. [from: P5, P6] [rule: Disjunctive Syllogism]
+S3: the clock reads. [from: S2, P2] [rule: Modus Ponens]
+S4: not the clock jumps. [from: S3, P3] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 6503
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the clock does not read.",
+            "supports": [
+                "P3"
+            ],
+            "rule": "Hypothetical Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the clock smiles.",
+            "supports": [
+                "P5",
+                "P6"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S3",
+            "statement": "the clock reads.",
+            "supports": [
+                "S2",
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "not the clock jumps.",
+            "supports": [
+                "S3",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ClockSmiles & ClockWaits",
+            "P2": "ClockSmiles -> ClockReads",
+            "P3": "ClockReads -> ~ClockJumps",
+            "P4": "DoorOpens -> DoorMoves",
+            "P5": "ClockStands | ClockWaves",
+            "P6": "ClockWalks"
+        },
+        "target": "ClockJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~ClockReads",
+                "supports": [
+                    "P3"
+                ],
+                "rule": "Hypothetical Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ClockSmiles",
+                "supports": [
+                    "P5",
+                    "P6"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S3",
+                "derived": "ClockReads",
+                "supports": [
+                    "S2",
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "~ClockJumps",
+                "supports": [
+                    "S3",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the clock smiles": "ClockSmiles",
+        "the clock waits": "ClockWaits",
+        "the clock reads": "ClockReads",
+        "the clock jumps": "ClockJumps",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the clock stands": "ClockStands",
+        "the clock waves": "ClockWaves",
+        "the clock walks": "ClockWalks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Hypothetical Syllogism requires exactly 2 supports.",
+                "derived": "~ClockReads",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "ClockSmiles",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "ClockReads",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "~ClockJumps",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ClockSmiles & ClockWaits",
+            "P2": "ClockSmiles -> ClockReads",
+            "P3": "ClockReads -> ~ClockJumps",
+            "P4": "DoorOpens -> DoorMoves",
+            "P5": "ClockStands | ClockWaves",
+            "P6": "ClockWalks"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_RULE_NOT_APPLICABLE; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 6503
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 6504
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/11
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX116
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The screen waits if the screen smiles.
+If the screen waits, then it reads.
+not the screen reads.
+if the door opens, then it moves.
+either the screen stands or the screen waves.
+the screen walks.
+does the screen smile?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the screen waits if the screen smiles.
+     if the screen waits, then it reads.
+     not the screen reads.
+     if the door opens, then it moves.
+     either the screen stands or the screen waves.
+     the screen walks.
+     does the screen smile?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the screen smiles, then the screen waits.
+     2. if the screen waits, then the screen reads.
+     3. not the screen reads.
+     4. if the door opens, then the door moves.
+     5. the screen stands or the screen waves.
+     6. the screen walks.
+     
+     Detected_Question:
+     does the screen smile?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the screen smiles, then the screen waits.
+     2. if the screen waits, then the screen reads.
+     3. not the screen reads.
+     4. if the door opens, then the door moves.
+     5. the screen stands or the screen waves.
+     6. the screen walks.
+     
+     Question:
+     does the screen smile?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the screen smiles, then the screen waits.
+     2. if the screen waits, then the screen reads.
+     3. not the screen reads.
+     4. if the door opens, then the door moves.
+     5. the screen stands or the screen waves.
+     6. the screen walks.
+     
+     Question:
+     does the screen smile?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the screen smiles, then the screen waits.
+     2. if the screen waits, then the screen reads.
+     3. not the screen reads.
+     4. if the door opens, then the door moves.
+     5. the screen stands or the screen waves.
+     6. the screen walks.
+     
+     Question:
+     does the screen smile?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the screen smiles, then the screen waits.
+2. if the screen waits, then the screen reads.
+3. not the screen reads.
+4. if the door opens, then the door moves.
+5. the screen stands or the screen waves.
+6. the screen walks.
+
+Question:
+does the screen smile?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------

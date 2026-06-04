@@ -1,0 +1,267 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 10B Restart: D1_EX096 to D1_EX100
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX096
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The teacher waits if the teacher smiles.
+If the teacher waits, then it reads.
+not the teacher reads.
+if the teacher jumps, then it sits.
+if the door opens, then it moves.
+if the bell rings, then it stops.
+either the teacher stands or the teacher waves.
+the teacher walks.
+does the teacher jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the teacher waits if the teacher smiles.
+     if the teacher waits, then it reads.
+     not the teacher reads.
+     if the teacher jumps, then it sits.
+     if the door opens, then it moves.
+     if the bell rings, then it stops.
+     either the teacher stands or the teacher waves.
+     the teacher walks.
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Detected_Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. if the teacher smiles, then the teacher waits.
+     2. if the teacher waits, then the teacher reads.
+     3. not the teacher reads.
+     4. if the teacher jumps, then the teacher sits.
+     5. if the door opens, then the door moves.
+     6. if the bell rings, then the bell stops.
+     7. the teacher stands or the teacher waves.
+     8. the teacher walks.
+     
+     Question:
+     does the teacher jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the teacher smiles, then the teacher waits.
+2. if the teacher waits, then the teacher reads.
+3. not the teacher reads.
+4. if the teacher jumps, then the teacher sits.
+5. if the door opens, then the door moves.
+6. if the bell rings, then the bell stops.
+7. the teacher stands or the teacher waves.
+8. the teacher walks.
+
+Question:
+does the teacher jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the teacher smiles, then the teacher waits.",
+        "P2": "if the teacher waits, then the teacher reads.",
+        "P3": "not the teacher reads.",
+        "P4": "if the teacher jumps, then the teacher sits.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "if the bell rings, then the bell stops.",
+        "P7": "the teacher stands or the teacher waves.",
+        "P8": "the teacher walks."
+    },
+    "question": "does the teacher jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the teacher sits. [from: P4] [rule: Modus Ponens]
+S2: if the teacher jumps, then the teacher sits. [from: S1] [rule: Conjunction Introduction]
+S3: the teacher stands or the teacher waves. [from: P7] [rule: None]
+S4: not the teacher stands. [from: S3, P8] [rule: Disjunctive Syllogism]
+S5: the teacher waves. [from: S3, P8] [rule: Disjunctive Syllogism]
+S6: if the teacher waves, then the teacher waits. [from: P1, S4, S5] [rule: Hypothetical Syllogism]
+S7: the teacher waits. [from: S6] [rule: Modus Ponens]
+S8: if the teacher waits, then the teacher reads. [from: P2] [rule: None]
+S9: not the teacher reads. [from: P3] [rule: None]
+S10: the teacher does not wait or the teacher does not read. [from: S7, S9] [rule: Disjunctive Syllogism]
+S11: if the door opens, then the door moves. [from: P5] [rule: None]
+S12: the bell rings or the door opens. [from: P6, S11] [rule: Hypothetical Syllogism]
+S13: not the bell rings. [from: S10, S12] [rule: Disjunctive Syllogism]
+S14: if the teacher jumps, then the teacher sits. [from: P4] [rule: None]
+S15: the teacher does not jump or the teacher sits. [from: S13, S14] [rule: Disjunctive Syllogism]
+S16: the teacher sits. [from: S15] [rule: Conjunction Elimination]
+S17: if the teacher jumps, then the teacher sits. [from: P4] [rule: None]
+S18: not the teacher jumps or the teacher sits. [from: S16, S17] [rule: Disjunctive Syllogism]

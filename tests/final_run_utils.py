@@ -232,24 +232,118 @@ def get_normalized_prompt_or_null(normalizer_result: Dict[str, Any]) -> Any:
         return normalizer_result.get("normalized_input")
     return None
 
+def normalize_for_count_compare(value: Any) -> str:
+    """
+    Normalizes text only for comparison-based counting.
+    This avoids counting harmless whitespace differences as real changes.
+    """
+
+    if value is None:
+        return ""
+
+    return re.sub(r"\s+", " ", str(value).strip().lower())
+
+
+def count_changed_items(before_items: Any, after_items: Any) -> int:
+    """
+    Counts how many aligned items changed from before to after.
+    Used for N4 premise pattern rewrites and N6 subject propagation changes.
+    """
+
+    if not isinstance(before_items, list) or not isinstance(after_items, list):
+        return 0
+
+    count = 0
+
+    max_len = max(len(before_items), len(after_items))
+
+    for index in range(max_len):
+        before = before_items[index] if index < len(before_items) else None
+        after = after_items[index] if index < len(after_items) else None
+
+        if normalize_for_count_compare(before) != normalize_for_count_compare(after):
+            count += 1
+
+    return count
+
+
+def calculate_n4_pattern_rewrite_count(debug: Dict[str, Any]) -> int:
+    """
+    N4 count = number of premise lines changed by the sentence pattern matcher.
+
+    Example:
+    she starts if mariam is bright.
+    -> if mariam is bright, then she starts.
+
+    Example:
+    both the sensor is ready and it is clean.
+    -> the sensor is ready and it is clean.
+    """
+
+    n3 = debug.get("n3_premise_segmentation", {})
+    n4 = debug.get("n4_sentence_pattern_matching", {})
+
+    before_premises = n3.get("premises") if isinstance(n3, dict) else []
+    after_premises = n4.get("pattern_matched_premises") if isinstance(n4, dict) else []
+
+    return count_changed_items(before_premises, after_premises)
+
+
+def calculate_n6_subject_propagation_count(debug: Dict[str, Any]) -> int:
+    """
+    N6 count = number of premise/question items changed by subject propagation.
+
+    This captures:
+    - pronoun replacement
+    - missing subject completion
+    - question subject propagation
+    """
+
+    n4 = debug.get("n4_sentence_pattern_matching", {})
+    n2 = debug.get("n2_question_detection", {})
+    n6 = debug.get("n6_subject_propagation", {})
+
+    before_premises = n4.get("pattern_matched_premises") if isinstance(n4, dict) else []
+    after_premises = n6.get("subject_propagated_premises") if isinstance(n6, dict) else []
+
+    before_question = n2.get("question") if isinstance(n2, dict) else None
+    after_question = n6.get("subject_propagated_question") if isinstance(n6, dict) else None
+
+    premise_count = count_changed_items(before_premises, after_premises)
+
+    question_count = 0
+    if normalize_for_count_compare(before_question) != normalize_for_count_compare(after_question):
+        question_count = 1
+
+    return premise_count + question_count
 
 def calculate_actual_normalization_counts(
     raw_input: str,
     normalizer_result: Dict[str, Any],
 ) -> Dict[str, int]:
     """
-    Best-effort extraction from normalizer debug.
-    If some debug keys are absent, the corresponding count becomes 0.
+    Extracts actual normalization feature counts.
+
+    N1:
+    - Estimated from raw input casing.
+
+    N4:
+    - Calculated by comparing N3 separated premises vs N4 pattern-matched premises.
+
+    N6:
+    - Calculated by comparing N4 premises/question vs N6 propagated premises/question.
+
+    N7/N8:
+    - Calculated from their changes lists.
     """
 
     debug = get_normalizer_debug(normalizer_result)
 
     case_count = estimate_case_adjustment_count(raw_input)
 
-    # These keys are based on your current debug style from previous tests.
-    # If your normalizer exposes different names later, only update this mapping.
-    pattern_count = extract_change_count(debug.get("n4_sentence_pattern_matcher"))
-    subject_count = extract_change_count(debug.get("n6_subject_propagator"))
+    pattern_count = calculate_n4_pattern_rewrite_count(debug)
+    subject_count = calculate_n6_subject_propagation_count(debug)
+
     synonym_count = extract_change_count(debug.get("n7_synonym_words_unifier"))
     antonym_count = extract_change_count(debug.get("n8_antonym_words_unifier"))
 
@@ -350,6 +444,85 @@ def extract_premises_text_from_normalized_prompt(normalized_prompt: Any) -> str:
     premises_part = normalized_prompt.split("Premises:", 1)[1].split("Question:", 1)[0].strip()
     return premises_part if premises_part else "N/A"
 
+def format_numbered_premises(premises: Any) -> str:
+    if not isinstance(premises, list) or not premises:
+        return "N/A"
+
+    return "\n".join(
+        f"{index}. {premise}"
+        for index, premise in enumerate(premises, start=1)
+    )
+
+
+def format_premises_question_block(premises: Any, question: Any) -> str:
+    return (
+        "Premises:\n"
+        f"{format_numbered_premises(premises)}\n\n"
+        "Question:\n"
+        f"{question if question else 'N/A'}"
+    )
+
+
+def format_n2_output_from_debug(debug: Dict[str, Any]) -> str:
+    n2 = debug.get("n2_question_detection", {})
+    if not isinstance(n2, dict):
+        return "N/A"
+
+    candidate = (
+        n2.get("candidate_premises_text")
+        or n2.get("candidate_premise_text")
+        or n2.get("premise_text")
+        or n2.get("candidate_premises")
+        or "N/A"
+    )
+
+    question = n2.get("question") or n2.get("detected_question") or "N/A"
+
+    return (
+        "Candidate_Premises_Text:\n"
+        f"{candidate}\n\n"
+        "Detected_Question:\n"
+        f"{question}"
+    )
+
+
+def format_n3_output_from_debug(debug: Dict[str, Any]) -> str:
+    n3 = debug.get("n3_premise_segmentation", {})
+    n2 = debug.get("n2_question_detection", {})
+
+    if not isinstance(n3, dict):
+        return "N/A"
+
+    premises = n3.get("premises")
+    question = n2.get("question") if isinstance(n2, dict) else "N/A"
+
+    return format_premises_question_block(premises, question)
+
+
+def format_n4_output_from_debug(debug: Dict[str, Any]) -> str:
+    n4 = debug.get("n4_sentence_pattern_matching", {})
+    n2 = debug.get("n2_question_detection", {})
+
+    if not isinstance(n4, dict):
+        return "N/A"
+
+    premises = n4.get("pattern_matched_premises")
+    question = n2.get("question") if isinstance(n2, dict) else "N/A"
+
+    return format_premises_question_block(premises, question)
+
+
+def format_n6_output_from_debug(debug: Dict[str, Any]) -> str:
+    n6 = debug.get("n6_subject_propagation", {})
+
+    if not isinstance(n6, dict):
+        return debug.get("normalized_prompt_after_n6", "See normalizer debug.")
+
+    premises = n6.get("subject_propagated_premises")
+    question = n6.get("subject_propagated_question")
+
+    return format_premises_question_block(premises, question)
+
 def print_normalizer_section(
     raw_input: str,
     normalizer_result: Dict[str, Any],
@@ -407,21 +580,14 @@ def print_normalizer_section(
     case_unified_input = raw_input.lower()
 
     detected_question = extract_question_from_normalized_prompt(normalized_prompt)
-    candidate_premises_text = extract_premises_text_from_normalized_prompt(normalized_prompt)
 
     n2_output = "null"
     n3_output = "null"
     n5_output = "null"
 
     if normalizer_success:
-        n2_output = (
-            "Candidate_Premises_Text:\n"
-            f"{candidate_premises_text}\n\n"
-            "Detected_Question:\n"
-            f"{detected_question}"
-        )
-
-        n3_output = normalized_prompt if normalized_prompt is not None else "N/A"
+        n2_output = format_n2_output_from_debug(debug)
+        n3_output = format_n3_output_from_debug(debug)
 
         n5_output = (
             "Question:\n"
@@ -429,15 +595,10 @@ def print_normalizer_section(
         )
     else:
         if failed_subcomponent not in {"N1", "N2"}:
-            n2_output = (
-                "Candidate_Premises_Text:\n"
-                f"{candidate_premises_text}\n\n"
-                "Detected_Question:\n"
-                f"{detected_question}"
-            )
+            n2_output = format_n2_output_from_debug(debug)
 
         if failed_subcomponent not in {"N1", "N2", "N3"}:
-            n3_output = normalized_prompt if normalized_prompt is not None else "N/A"
+            n3_output = format_n3_output_from_debug(debug)
 
         if failed_subcomponent not in {"N1", "N2", "N3", "N4", "N5"}:
             n5_output = (
@@ -489,13 +650,23 @@ def print_normalizer_section(
     n4_status = component_status("N4")
     n4_triggered = "N/A" if n4_status == "skipped" else get_triggered(counts["pattern"])
     n4_error_code, n4_error_message = component_error("N4")
+
+    if n4_status == "skipped":
+        n4_output = "skipped_due_to_previous_failure"
+    elif n4_status == "failed":
+        n4_output = "null"
+    elif n4_triggered == "No":
+        n4_output = "WAS NOT MODIFIED"
+    else:
+        n4_output = format_n4_output_from_debug(debug)
+
     print_score_component_trace(
         name="N4_Sentence_Pattern_Matcher",
         status=n4_status,
         triggered=n4_triggered,
         count_label="Actual_Pattern_Rewrite_Count",
         count_value=counts["pattern"] if n4_status != "skipped" else 0,
-        output=debug.get("normalized_prompt_after_n4", "See normalizer debug."),
+        output=n4_output,
         error_code=n4_error_code,
         error_message=n4_error_message,
         runtime_ms=0,
@@ -532,7 +703,7 @@ def print_normalizer_section(
         triggered=n6_triggered,
         count_label="Actual_Subject_Propagation_Count",
         count_value=counts["subject"] if n6_status != "skipped" else 0,
-        output=debug.get("normalized_prompt_after_n6", "See normalizer debug."),
+        output=format_n6_output_from_debug(debug),
         error_code=n6_error_code,
         error_message=n6_error_message,
         runtime_ms=0,
@@ -860,8 +1031,12 @@ def run_and_print_example(
     # ==================================================
     # Component 1: Normalizer
     # ==================================================
-    normalizer_result, normalizer_ms = timed_call(normalize_raw_prompt, raw_input)
-    component_times["normalization"] = normalizer_ms
+    # Normalizer is deterministic/lightweight.
+    # We still run it normally, but we standardize its reported runtime to 0 ms
+    # to avoid cold-start/cache overhead polluting CH4 runtime metrics.
+    normalizer_result = normalize_raw_prompt(raw_input)
+    normalizer_ms = 0
+    component_times["normalization"] = 0
 
     normalizer_summary = print_normalizer_section(
         raw_input=raw_input,

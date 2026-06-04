@@ -1,0 +1,232 @@
+====================================================================================================
+FINAL DATASET TEST A ù N8 SPECIAL CASE
+Runs all examples stored inside this file.
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/1
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX011_REPLACEMENT_TEST
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both the robot is inactive and it is strong.
+is the robot inactive?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     both the robot is inactive and it is strong.
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the robot is inactive and the robot is strong.
+     
+     Detected_Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the robot is inactive and the robot is strong.
+     
+     Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the robot is inactive and the robot is strong.
+     
+     Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 3
+
+Normalized_Prompt:
+Premises:
+1. the robot is inactive and the robot is strong.
+
+Question:
+is the robot inactive?
+
+Normalizer_Runtime_ms: 1653
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the robot is inactive and the robot is strong."
+    },
+    "question": "is the robot inactive?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the robot is inactive. [from: P1] [rule: Conjunction Elimination]
+S2: the robot is inactive. [from: S1] [rule: Identity]
+
+LLM_Response_Error: None
+Runtime_ms: 2646
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Unsupported rule in S2: 'Identity'.
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Unsupported rule in S2: 'Identity'.
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1653
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2646
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4299
+
+================================================================================
+RUN END
+================================================================================
+

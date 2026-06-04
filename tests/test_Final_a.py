@@ -2,6 +2,14 @@ import sys
 from pathlib import Path
 
 
+# Force UTF-8 output so intentional D2 non-English / special-character tests print safely on Windows.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -9,27 +17,21 @@ from tests.final_run_utils import run_and_print_example
 
 
 # ============================================================
-# Temporary N8 special-case test
-# Purpose:
-# - Tests antonym unification in an already-negated premise:
-#   ahmed is not weak -> ahmed is strong
-# - Tests antonym unification in a question:
-#   is khaled short? -> is khaled not tall?
-# - Tests double-negation cleanup inside N8.
+# Batch 15A-2:
+# D2_EX027 and D2_EX028 verifier contradiction cases only.
+# Each D2 example is run ONCE only.
 # ============================================================
 
 EXAMPLES = [
     {
-        "Example_ID": "N8_SPECIAL_EX001",
-        "Dataset_Type": "MANUAL",
+        "Example_ID": "D2_EX027",
+        "Dataset_Type": "D2",
         "Run_ID": 1,
 
-        "Raw_Input": """sara is strong.
-ahmed is not weak.
-khaled is tall.
-is khaled short?""",
+        "Raw_Input": """Ahmed studies.
+Ahmed does not study.
+Does Ahmed study?""",
 
-        # D1 metadata
         "Expected_Entailment_Status": "N/A",
         "Expected_Not_Entailed_Type": "N/A",
         "Inference_Depth": "N/A",
@@ -42,18 +44,17 @@ is khaled short?""",
         "Antonym_Unification_Count": "N/A",
         "Normalization_Complexity_Score": "N/A",
 
-        # D2 metadata
-        "Expected_Component": "N/A",
+        "Expected_Component": "Verifier",
         "Expected_SubComponent": "N/A",
-        "Expected_Specific_Error": "N/A",
+        "Expected_Specific_Error": "VF_CONTRADICTORY_PREMISES",
     },
 ]
 
 
 def main() -> None:
     print("=" * 100)
-    print("FINAL DATASET TEST A — N8 SPECIAL CASE")
-    print("Runs all examples stored inside this file.")
+    print("FINAL DATASET TEST A")
+    print("Batch 15A-2: D2_EX027 to D2_EX028")
     print("=" * 100)
 
     for index, example in enumerate(EXAMPLES, start=1):
@@ -61,10 +62,7 @@ def main() -> None:
         print("#" * 100)
         print(f"EXAMPLE {index}/{len(EXAMPLES)}")
         print("#" * 100)
-        run_and_print_example(
-            example=example,
-            include_dataset_metadata=False,
-        )
+        run_and_print_example(example)
 
 
 if __name__ == "__main__":

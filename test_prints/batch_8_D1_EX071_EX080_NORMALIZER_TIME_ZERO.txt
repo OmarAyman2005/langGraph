@@ -1,0 +1,6992 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 8: D1_EX071 to D1_EX080
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX071
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either youssef smiles or he waits.
+not youssef smiles.
+if youssef waits, then he reads.
+if youssef reads, then he writes.
+if the camera opens, then it moves.
+either youssef jumps or youssef sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either youssef smiles or he waits.
+     not youssef smiles.
+     if youssef waits, then he reads.
+     if youssef reads, then he writes.
+     if the camera opens, then it moves.
+     either youssef jumps or youssef sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. youssef smiles or youssef waits.
+2. not youssef smiles.
+3. if youssef waits, then youssef reads.
+4. if youssef reads, then youssef writes.
+5. if the camera opens, then the camera moves.
+6. youssef jumps or youssef sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "youssef smiles or youssef waits.",
+        "P2": "not youssef smiles.",
+        "P3": "if youssef waits, then youssef reads.",
+        "P4": "if youssef reads, then youssef writes.",
+        "P5": "if the camera opens, then the camera moves.",
+        "P6": "youssef jumps or youssef sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1286
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "YoussefSmiles | YoussefWaits",
+            "P2": "~YoussefSmiles",
+            "P3": "YoussefWaits -> YoussefReads",
+            "P4": "YoussefReads -> YoussefWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "YoussefJumps | YoussefSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "youssef smiles": "YoussefSmiles",
+        "youssef waits": "YoussefWaits",
+        "youssef reads": "YoussefReads",
+        "youssef writes": "YoussefWrites",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "youssef jumps": "YoussefJumps",
+        "youssef sits": "YoussefSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "YoussefSmiles | YoussefWaits",
+            "P2": "~YoussefSmiles",
+            "P3": "YoussefWaits -> YoussefReads",
+            "P4": "YoussefReads -> YoussefWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "YoussefJumps | YoussefSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 1286
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 1287
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX071
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either youssef smiles or he waits.
+not youssef smiles.
+if youssef waits, then he reads.
+if youssef reads, then he writes.
+if the camera opens, then it moves.
+either youssef jumps or youssef sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either youssef smiles or he waits.
+     not youssef smiles.
+     if youssef waits, then he reads.
+     if youssef reads, then he writes.
+     if the camera opens, then it moves.
+     either youssef jumps or youssef sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. youssef smiles or youssef waits.
+     2. not youssef smiles.
+     3. if youssef waits, then youssef reads.
+     4. if youssef reads, then youssef writes.
+     5. if the camera opens, then the camera moves.
+     6. youssef jumps or youssef sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 4
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. youssef smiles or youssef waits.
+2. not youssef smiles.
+3. if youssef waits, then youssef reads.
+4. if youssef reads, then youssef writes.
+5. if the camera opens, then the camera moves.
+6. youssef jumps or youssef sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "youssef smiles or youssef waits.",
+        "P2": "not youssef smiles.",
+        "P3": "if youssef waits, then youssef reads.",
+        "P4": "if youssef reads, then youssef writes.",
+        "P5": "if the camera opens, then the camera moves.",
+        "P6": "youssef jumps or youssef sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 960
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "YoussefSmiles | YoussefWaits",
+            "P2": "~YoussefSmiles",
+            "P3": "YoussefWaits -> YoussefReads",
+            "P4": "YoussefReads -> YoussefWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "YoussefJumps | YoussefSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "youssef smiles": "YoussefSmiles",
+        "youssef waits": "YoussefWaits",
+        "youssef reads": "YoussefReads",
+        "youssef writes": "YoussefWrites",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "youssef jumps": "YoussefJumps",
+        "youssef sits": "YoussefSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "YoussefSmiles | YoussefWaits",
+            "P2": "~YoussefSmiles",
+            "P3": "YoussefWaits -> YoussefReads",
+            "P4": "YoussefReads -> YoussefWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "YoussefJumps | YoussefSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 960
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 961
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX072
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either layla smiles or she waits.
+It is false that layla smiles.
+if layla waits, then she reads.
+if layla reads, then she writes.
+the camera moves if the camera opens.
+either layla jumps or layla sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either layla smiles or she waits.
+     it is false that layla smiles.
+     if layla waits, then she reads.
+     if layla reads, then she writes.
+     the camera moves if the camera opens.
+     either layla jumps or layla sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 3
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 9
+
+Normalized_Prompt:
+Premises:
+1. layla smiles or layla waits.
+2. not layla smiles.
+3. if layla waits, then layla reads.
+4. if layla reads, then layla writes.
+5. if the camera opens, then the camera moves.
+6. layla jumps or layla sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "layla smiles or layla waits.",
+        "P2": "not layla smiles.",
+        "P3": "if layla waits, then layla reads.",
+        "P4": "if layla reads, then layla writes.",
+        "P5": "if the camera opens, then the camera moves.",
+        "P6": "layla jumps or layla sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 983
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "LaylaSmiles | LaylaWaits",
+            "P2": "~LaylaSmiles",
+            "P3": "LaylaWaits -> LaylaReads",
+            "P4": "LaylaReads -> LaylaWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "LaylaJumps | LaylaSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "layla smiles": "LaylaSmiles",
+        "layla waits": "LaylaWaits",
+        "layla reads": "LaylaReads",
+        "layla writes": "LaylaWrites",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "layla jumps": "LaylaJumps",
+        "layla sits": "LaylaSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "LaylaSmiles | LaylaWaits",
+            "P2": "~LaylaSmiles",
+            "P3": "LaylaWaits -> LaylaReads",
+            "P4": "LaylaReads -> LaylaWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "LaylaJumps | LaylaSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 983
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 984
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX072
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either layla smiles or she waits.
+It is false that layla smiles.
+if layla waits, then she reads.
+if layla reads, then she writes.
+the camera moves if the camera opens.
+either layla jumps or layla sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: DS+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 3
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either layla smiles or she waits.
+     it is false that layla smiles.
+     if layla waits, then she reads.
+     if layla reads, then she writes.
+     the camera moves if the camera opens.
+     either layla jumps or layla sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. layla smiles or layla waits.
+     2. not layla smiles.
+     3. if layla waits, then layla reads.
+     4. if layla reads, then layla writes.
+     5. if the camera opens, then the camera moves.
+     6. layla jumps or layla sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 3
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 9
+
+Normalized_Prompt:
+Premises:
+1. layla smiles or layla waits.
+2. not layla smiles.
+3. if layla waits, then layla reads.
+4. if layla reads, then layla writes.
+5. if the camera opens, then the camera moves.
+6. layla jumps or layla sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "layla smiles or layla waits.",
+        "P2": "not layla smiles.",
+        "P3": "if layla waits, then layla reads.",
+        "P4": "if layla reads, then layla writes.",
+        "P5": "if the camera opens, then the camera moves.",
+        "P6": "layla jumps or layla sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 958
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "LaylaSmiles | LaylaWaits",
+            "P2": "~LaylaSmiles",
+            "P3": "LaylaWaits -> LaylaReads",
+            "P4": "LaylaReads -> LaylaWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "LaylaJumps | LaylaSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "layla smiles": "LaylaSmiles",
+        "layla waits": "LaylaWaits",
+        "layla reads": "LaylaReads",
+        "layla writes": "LaylaWrites",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "layla jumps": "LaylaJumps",
+        "layla sits": "LaylaSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "LaylaSmiles | LaylaWaits",
+            "P2": "~LaylaSmiles",
+            "P3": "LaylaWaits -> LaylaReads",
+            "P4": "LaylaReads -> LaylaWrites",
+            "P5": "CameraOpens -> CameraMoves",
+            "P6": "LaylaJumps | LaylaSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 958
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 959
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX073
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both the sensor smiles and it waits.
+The sensor reads if the sensor smiles.
+if the sensor reads, then it writes.
+if the camera opens, then it moves.
+either the sensor jumps or the sensor sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: CE+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the sensor smiles and it waits.
+     the sensor reads if the sensor smiles.
+     if the sensor reads, then it writes.
+     if the camera opens, then it moves.
+     either the sensor jumps or the sensor sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 3
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. the sensor smiles and the sensor waits.
+2. if the sensor smiles, then the sensor reads.
+3. if the sensor reads, then the sensor writes.
+4. if the camera opens, then the camera moves.
+5. the sensor jumps or the sensor sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the sensor smiles and the sensor waits.",
+        "P2": "if the sensor smiles, then the sensor reads.",
+        "P3": "if the sensor reads, then the sensor writes.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the sensor jumps or the sensor sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 979
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SensorSmiles & SensorWaits",
+            "P2": "SensorSmiles -> SensorReads",
+            "P3": "SensorReads -> SensorWrites",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "SensorJumps | SensorSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the sensor smiles": "SensorSmiles",
+        "the sensor waits": "SensorWaits",
+        "the sensor reads": "SensorReads",
+        "the sensor writes": "SensorWrites",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the sensor jumps": "SensorJumps",
+        "the sensor sits": "SensorSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "SensorSmiles & SensorWaits",
+            "P2": "SensorSmiles -> SensorReads",
+            "P3": "SensorReads -> SensorWrites",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "SensorJumps | SensorSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 979
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 980
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX073
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both the sensor smiles and it waits.
+The sensor reads if the sensor smiles.
+if the sensor reads, then it writes.
+if the camera opens, then it moves.
+either the sensor jumps or the sensor sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: CE+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the sensor smiles and it waits.
+     the sensor reads if the sensor smiles.
+     if the sensor reads, then it writes.
+     if the camera opens, then it moves.
+     either the sensor jumps or the sensor sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the sensor smiles and the sensor waits.
+     2. if the sensor smiles, then the sensor reads.
+     3. if the sensor reads, then the sensor writes.
+     4. if the camera opens, then the camera moves.
+     5. the sensor jumps or the sensor sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 3
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. the sensor smiles and the sensor waits.
+2. if the sensor smiles, then the sensor reads.
+3. if the sensor reads, then the sensor writes.
+4. if the camera opens, then the camera moves.
+5. the sensor jumps or the sensor sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the sensor smiles and the sensor waits.",
+        "P2": "if the sensor smiles, then the sensor reads.",
+        "P3": "if the sensor reads, then the sensor writes.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the sensor jumps or the sensor sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 979
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SensorSmiles & SensorWaits",
+            "P2": "SensorSmiles -> SensorReads",
+            "P3": "SensorReads -> SensorWrites",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "SensorJumps | SensorSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the sensor smiles": "SensorSmiles",
+        "the sensor waits": "SensorWaits",
+        "the sensor reads": "SensorReads",
+        "the sensor writes": "SensorWrites",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the sensor jumps": "SensorJumps",
+        "the sensor sits": "SensorSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "SensorSmiles & SensorWaits",
+            "P2": "SensorSmiles -> SensorReads",
+            "P3": "SensorReads -> SensorWrites",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "SensorJumps | SensorSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 979
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 980
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX074
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The engine waits if the engine smiles.
+If the engine waits, then it reads.
+not the engine reads.
+if the camera opens, then it moves.
+either the engine jumps or the engine sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the engine waits if the engine smiles.
+     if the engine waits, then it reads.
+     not the engine reads.
+     if the camera opens, then it moves.
+     either the engine jumps or the engine sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the engine smiles, then the engine waits.
+2. if the engine waits, then the engine reads.
+3. not the engine reads.
+4. if the camera opens, then the camera moves.
+5. the engine jumps or the engine sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine smiles, then the engine waits.",
+        "P2": "if the engine waits, then the engine reads.",
+        "P3": "not the engine reads.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the engine jumps or the engine sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 997
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "EngineSmiles -> EngineWaits",
+            "P2": "EngineWaits -> EngineReads",
+            "P3": "~EngineReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "EngineJumps | EngineSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the engine smiles": "EngineSmiles",
+        "the engine waits": "EngineWaits",
+        "the engine reads": "EngineReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the engine jumps": "EngineJumps",
+        "the engine sits": "EngineSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "EngineSmiles -> EngineWaits",
+            "P2": "EngineWaits -> EngineReads",
+            "P3": "~EngineReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "EngineJumps | EngineSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 997
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 997
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX074
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The engine waits if the engine smiles.
+If the engine waits, then it reads.
+not the engine reads.
+if the camera opens, then it moves.
+either the engine jumps or the engine sits.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the engine waits if the engine smiles.
+     if the engine waits, then it reads.
+     not the engine reads.
+     if the camera opens, then it moves.
+     either the engine jumps or the engine sits.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the engine smiles, then the engine waits.
+     2. if the engine waits, then the engine reads.
+     3. not the engine reads.
+     4. if the camera opens, then the camera moves.
+     5. the engine jumps or the engine sits.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the engine smiles, then the engine waits.
+2. if the engine waits, then the engine reads.
+3. not the engine reads.
+4. if the camera opens, then the camera moves.
+5. the engine jumps or the engine sits.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine smiles, then the engine waits.",
+        "P2": "if the engine waits, then the engine reads.",
+        "P3": "not the engine reads.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the engine jumps or the engine sits."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 942
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "EngineSmiles -> EngineWaits",
+            "P2": "EngineWaits -> EngineReads",
+            "P3": "~EngineReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "EngineJumps | EngineSits"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the engine smiles": "EngineSmiles",
+        "the engine waits": "EngineWaits",
+        "the engine reads": "EngineReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the engine jumps": "EngineJumps",
+        "the engine sits": "EngineSits",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "EngineSmiles -> EngineWaits",
+            "P2": "EngineWaits -> EngineReads",
+            "P3": "~EngineReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "EngineJumps | EngineSits"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 942
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 942
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 9/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX075
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The robot waits if the robot smiles.
+If the robot waits, then it reads.
+not the robot reads.
+if the camera opens, then it moves.
+either the robot jumps or the robot sits.
+the robot stands.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the robot waits if the robot smiles.
+     if the robot waits, then it reads.
+     not the robot reads.
+     if the camera opens, then it moves.
+     either the robot jumps or the robot sits.
+     the robot stands.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the robot smiles, then the robot waits.
+2. if the robot waits, then the robot reads.
+3. not the robot reads.
+4. if the camera opens, then the camera moves.
+5. the robot jumps or the robot sits.
+6. the robot stands.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the robot smiles, then the robot waits.",
+        "P2": "if the robot waits, then the robot reads.",
+        "P3": "not the robot reads.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the robot jumps or the robot sits.",
+        "P6": "the robot stands."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 991
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "RobotSmiles -> RobotWaits",
+            "P2": "RobotWaits -> RobotReads",
+            "P3": "~RobotReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "RobotJumps | RobotSits",
+            "P6": "RobotStands"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the robot smiles": "RobotSmiles",
+        "the robot waits": "RobotWaits",
+        "the robot reads": "RobotReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the robot jumps": "RobotJumps",
+        "the robot sits": "RobotSits",
+        "the robot stands": "RobotStands",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "RobotSmiles -> RobotWaits",
+            "P2": "RobotWaits -> RobotReads",
+            "P3": "~RobotReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "RobotJumps | RobotSits",
+            "P6": "RobotStands"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 991
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 992
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 10/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX075
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The robot waits if the robot smiles.
+If the robot waits, then it reads.
+not the robot reads.
+if the camera opens, then it moves.
+either the robot jumps or the robot sits.
+the robot stands.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the robot waits if the robot smiles.
+     if the robot waits, then it reads.
+     not the robot reads.
+     if the camera opens, then it moves.
+     either the robot jumps or the robot sits.
+     the robot stands.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the robot smiles, then the robot waits.
+     2. if the robot waits, then the robot reads.
+     3. not the robot reads.
+     4. if the camera opens, then the camera moves.
+     5. the robot jumps or the robot sits.
+     6. the robot stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the robot smiles, then the robot waits.
+2. if the robot waits, then the robot reads.
+3. not the robot reads.
+4. if the camera opens, then the camera moves.
+5. the robot jumps or the robot sits.
+6. the robot stands.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the robot smiles, then the robot waits.",
+        "P2": "if the robot waits, then the robot reads.",
+        "P3": "not the robot reads.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the robot jumps or the robot sits.",
+        "P6": "the robot stands."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 911
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "RobotSmiles -> RobotWaits",
+            "P2": "RobotWaits -> RobotReads",
+            "P3": "~RobotReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "RobotJumps | RobotSits",
+            "P6": "RobotStands"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the robot smiles": "RobotSmiles",
+        "the robot waits": "RobotWaits",
+        "the robot reads": "RobotReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the robot jumps": "RobotJumps",
+        "the robot sits": "RobotSits",
+        "the robot stands": "RobotStands",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "RobotSmiles -> RobotWaits",
+            "P2": "RobotWaits -> RobotReads",
+            "P3": "~RobotReads",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "RobotJumps | RobotSits",
+            "P6": "RobotStands"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 911
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 912
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 11/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX076
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the door smiles or it waits.
+It is false that the door waits.
+if the door reads, then not the door smiles.
+if the camera opens, then it moves.
+either the door jumps or the door sits.
+the door stands.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 4
+Inference_Rules: DS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either the door smiles or it waits.
+     it is false that the door waits.
+     if the door reads, then not the door smiles.
+     if the camera opens, then it moves.
+     either the door jumps or the door sits.
+     the door stands.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. the door smiles or the door waits.
+2. not the door waits.
+3. if the door reads, then not the door smiles.
+4. if the camera opens, then the camera moves.
+5. the door jumps or the door sits.
+6. the door stands.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the door smiles or the door waits.",
+        "P2": "not the door waits.",
+        "P3": "if the door reads, then not the door smiles.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the door jumps or the door sits.",
+        "P6": "the door stands."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1004
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DoorSmiles | DoorWaits",
+            "P2": "~DoorWaits",
+            "P3": "DoorReads -> ~DoorSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "DoorJumps | DoorSits",
+            "P6": "DoorStands"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the door smiles": "DoorSmiles",
+        "the door waits": "DoorWaits",
+        "the door reads": "DoorReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the door jumps": "DoorJumps",
+        "the door sits": "DoorSits",
+        "the door stands": "DoorStands",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "DoorSmiles | DoorWaits",
+            "P2": "~DoorWaits",
+            "P3": "DoorReads -> ~DoorSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "DoorJumps | DoorSits",
+            "P6": "DoorStands"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 1004
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 1004
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 12/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX076
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the door smiles or it waits.
+It is false that the door waits.
+if the door reads, then not the door smiles.
+if the camera opens, then it moves.
+either the door jumps or the door sits.
+the door stands.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 4
+Inference_Rules: DS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either the door smiles or it waits.
+     it is false that the door waits.
+     if the door reads, then not the door smiles.
+     if the camera opens, then it moves.
+     either the door jumps or the door sits.
+     the door stands.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the door smiles or the door waits.
+     2. not the door waits.
+     3. if the door reads, then not the door smiles.
+     4. if the camera opens, then the camera moves.
+     5. the door jumps or the door sits.
+     6. the door stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. the door smiles or the door waits.
+2. not the door waits.
+3. if the door reads, then not the door smiles.
+4. if the camera opens, then the camera moves.
+5. the door jumps or the door sits.
+6. the door stands.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the door smiles or the door waits.",
+        "P2": "not the door waits.",
+        "P3": "if the door reads, then not the door smiles.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the door jumps or the door sits.",
+        "P6": "the door stands."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 947
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DoorSmiles | DoorWaits",
+            "P2": "~DoorWaits",
+            "P3": "DoorReads -> ~DoorSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "DoorJumps | DoorSits",
+            "P6": "DoorStands"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the door smiles": "DoorSmiles",
+        "the door waits": "DoorWaits",
+        "the door reads": "DoorReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the door jumps": "DoorJumps",
+        "the door sits": "DoorSits",
+        "the door stands": "DoorStands",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "DoorSmiles | DoorWaits",
+            "P2": "~DoorWaits",
+            "P3": "DoorReads -> ~DoorSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "DoorJumps | DoorSits",
+            "P6": "DoorStands"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 947
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 947
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 13/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX077
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the window smiles or it waits.
+It is false that the window waits.
+If the window reads, then not the window smiles.
+if the camera opens, then it moves.
+either the window jumps or the window sits.
+the window stands.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 4
+Inference_Rules: DS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 3
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 3
+  Output_After_Component:
+
+     either the window smiles or it waits.
+     it is false that the window waits.
+     if the window reads, then not the window smiles.
+     if the camera opens, then it moves.
+     either the window jumps or the window sits.
+     the window stands.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 3
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. the window smiles or the window waits.
+2. not the window waits.
+3. if the window reads, then not the window smiles.
+4. if the camera opens, then the camera moves.
+5. the window jumps or the window sits.
+6. the window stands.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the window smiles or the window waits.",
+        "P2": "not the window waits.",
+        "P3": "if the window reads, then not the window smiles.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the window jumps or the window sits.",
+        "P6": "the window stands."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 996
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "WindowSmiles | WindowWaits",
+            "P2": "~WindowWaits",
+            "P3": "WindowReads -> ~WindowSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "WindowJumps | WindowSits",
+            "P6": "WindowStands"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the window smiles": "WindowSmiles",
+        "the window waits": "WindowWaits",
+        "the window reads": "WindowReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the window jumps": "WindowJumps",
+        "the window sits": "WindowSits",
+        "the window stands": "WindowStands",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "WindowSmiles | WindowWaits",
+            "P2": "~WindowWaits",
+            "P3": "WindowReads -> ~WindowSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "WindowJumps | WindowSits",
+            "P6": "WindowStands"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 996
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 996
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 14/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX077
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the window smiles or it waits.
+It is false that the window waits.
+If the window reads, then not the window smiles.
+if the camera opens, then it moves.
+either the window jumps or the window sits.
+the window stands.
+does the lamp blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 4
+Inference_Rules: DS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 3
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 3
+  Output_After_Component:
+
+     either the window smiles or it waits.
+     it is false that the window waits.
+     if the window reads, then not the window smiles.
+     if the camera opens, then it moves.
+     either the window jumps or the window sits.
+     the window stands.
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Detected_Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the window smiles or the window waits.
+     2. not the window waits.
+     3. if the window reads, then not the window smiles.
+     4. if the camera opens, then the camera moves.
+     5. the window jumps or the window sits.
+     6. the window stands.
+     
+     Question:
+     does the lamp blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 3
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. the window smiles or the window waits.
+2. not the window waits.
+3. if the window reads, then not the window smiles.
+4. if the camera opens, then the camera moves.
+5. the window jumps or the window sits.
+6. the window stands.
+
+Question:
+does the lamp blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the window smiles or the window waits.",
+        "P2": "not the window waits.",
+        "P3": "if the window reads, then not the window smiles.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the window jumps or the window sits.",
+        "P6": "the window stands."
+    },
+    "question": "does the lamp blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 938
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "WindowSmiles | WindowWaits",
+            "P2": "~WindowWaits",
+            "P3": "WindowReads -> ~WindowSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "WindowJumps | WindowSits",
+            "P6": "WindowStands"
+        },
+        "target": "LampBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the window smiles": "WindowSmiles",
+        "the window waits": "WindowWaits",
+        "the window reads": "WindowReads",
+        "the camera opens": "CameraOpens",
+        "the camera moves": "CameraMoves",
+        "the window jumps": "WindowJumps",
+        "the window sits": "WindowSits",
+        "the window stands": "WindowStands",
+        "the lamp blinks": "LampBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "WindowSmiles | WindowWaits",
+            "P2": "~WindowWaits",
+            "P3": "WindowReads -> ~WindowSmiles",
+            "P4": "CameraOpens -> CameraMoves",
+            "P5": "WindowJumps | WindowSits",
+            "P6": "WindowStands"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 938
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 938
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 15/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX078
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both not the lamp smiles and the lamp waits.
+The lamp smiles or else the lamp reads.
+either not the lamp reads or the lamp writes.
+either not the lamp writes or the lamp walks.
+either not the lamp walks or the lamp rests.
+if the door opens, then it moves.
+either the lamp jumps or the lamp sits.
+the lamp stands.
+if the bell rings, then it stops.
+does the camera blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 5
+Inference_Rules: CE+DS
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both not the lamp smiles and the lamp waits.
+     the lamp smiles or else the lamp reads.
+     either not the lamp reads or the lamp writes.
+     either not the lamp writes or the lamp walks.
+     either not the lamp walks or the lamp rests.
+     if the door opens, then it moves.
+     either the lamp jumps or the lamp sits.
+     the lamp stands.
+     if the bell rings, then it stops.
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 6
+  Output_After_Component:
+
+     Premises:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 6
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. not the lamp smiles and the lamp waits.
+2. the lamp smiles or the lamp reads.
+3. not the lamp reads or the lamp writes.
+4. not the lamp writes or the lamp walks.
+5. not the lamp walks or the lamp rests.
+6. if the door opens, then the door moves.
+7. the lamp jumps or the lamp sits.
+8. the lamp stands.
+9. if the bell rings, then the bell stops.
+
+Question:
+does the camera blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "not the lamp smiles and the lamp waits.",
+        "P2": "the lamp smiles or the lamp reads.",
+        "P3": "not the lamp reads or the lamp writes.",
+        "P4": "not the lamp writes or the lamp walks.",
+        "P5": "not the lamp walks or the lamp rests.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the lamp jumps or the lamp sits.",
+        "P8": "the lamp stands.",
+        "P9": "if the bell rings, then the bell stops."
+    },
+    "question": "does the camera blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1030
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "~LampSmiles & LampWaits",
+            "P2": "LampSmiles | LampReads",
+            "P3": "~LampReads | LampWrites",
+            "P4": "~LampWrites | LampWalks",
+            "P5": "~LampWalks | LampRests",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "LampJumps | LampSits",
+            "P8": "LampStands",
+            "P9": "BellRings -> BellStops"
+        },
+        "target": "CameraBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the lamp smiles": "LampSmiles",
+        "the lamp waits": "LampWaits",
+        "the lamp reads": "LampReads",
+        "the lamp writes": "LampWrites",
+        "the lamp walks": "LampWalks",
+        "the lamp rests": "LampRests",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the lamp jumps": "LampJumps",
+        "the lamp sits": "LampSits",
+        "the lamp stands": "LampStands",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops",
+        "the camera blinks": "CameraBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "~LampSmiles & LampWaits",
+            "P2": "LampSmiles | LampReads",
+            "P3": "~LampReads | LampWrites",
+            "P4": "~LampWrites | LampWalks",
+            "P5": "~LampWalks | LampRests",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "LampJumps | LampSits",
+            "P8": "LampStands",
+            "P9": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 4
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 1
+LLM_Response_Time_ms: 1030
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 4
+Total_Runtime_ms: 1035
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 16/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX078
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both not the lamp smiles and the lamp waits.
+The lamp smiles or else the lamp reads.
+either not the lamp reads or the lamp writes.
+either not the lamp writes or the lamp walks.
+either not the lamp walks or the lamp rests.
+if the door opens, then it moves.
+either the lamp jumps or the lamp sits.
+the lamp stands.
+if the bell rings, then it stops.
+does the camera blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 5
+Inference_Rules: CE+DS
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both not the lamp smiles and the lamp waits.
+     the lamp smiles or else the lamp reads.
+     either not the lamp reads or the lamp writes.
+     either not the lamp writes or the lamp walks.
+     either not the lamp walks or the lamp rests.
+     if the door opens, then it moves.
+     either the lamp jumps or the lamp sits.
+     the lamp stands.
+     if the bell rings, then it stops.
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 6
+  Output_After_Component:
+
+     Premises:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. not the lamp smiles and the lamp waits.
+     2. the lamp smiles or the lamp reads.
+     3. not the lamp reads or the lamp writes.
+     4. not the lamp writes or the lamp walks.
+     5. not the lamp walks or the lamp rests.
+     6. if the door opens, then the door moves.
+     7. the lamp jumps or the lamp sits.
+     8. the lamp stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 6
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. not the lamp smiles and the lamp waits.
+2. the lamp smiles or the lamp reads.
+3. not the lamp reads or the lamp writes.
+4. not the lamp writes or the lamp walks.
+5. not the lamp walks or the lamp rests.
+6. if the door opens, then the door moves.
+7. the lamp jumps or the lamp sits.
+8. the lamp stands.
+9. if the bell rings, then the bell stops.
+
+Question:
+does the camera blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "not the lamp smiles and the lamp waits.",
+        "P2": "the lamp smiles or the lamp reads.",
+        "P3": "not the lamp reads or the lamp writes.",
+        "P4": "not the lamp writes or the lamp walks.",
+        "P5": "not the lamp walks or the lamp rests.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the lamp jumps or the lamp sits.",
+        "P8": "the lamp stands.",
+        "P9": "if the bell rings, then the bell stops."
+    },
+    "question": "does the camera blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 953
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "~LampSmiles & LampWaits",
+            "P2": "LampSmiles | LampReads",
+            "P3": "~LampReads | LampWrites",
+            "P4": "~LampWrites | LampWalks",
+            "P5": "~LampWalks | LampRests",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "LampJumps | LampSits",
+            "P8": "LampStands",
+            "P9": "BellRings -> BellStops"
+        },
+        "target": "CameraBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the lamp smiles": "LampSmiles",
+        "the lamp waits": "LampWaits",
+        "the lamp reads": "LampReads",
+        "the lamp writes": "LampWrites",
+        "the lamp walks": "LampWalks",
+        "the lamp rests": "LampRests",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the lamp jumps": "LampJumps",
+        "the lamp sits": "LampSits",
+        "the lamp stands": "LampStands",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops",
+        "the camera blinks": "CameraBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "~LampSmiles & LampWaits",
+            "P2": "LampSmiles | LampReads",
+            "P3": "~LampReads | LampWrites",
+            "P4": "~LampWrites | LampWalks",
+            "P5": "~LampWalks | LampRests",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "LampJumps | LampSits",
+            "P8": "LampStands",
+            "P9": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 4
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 1
+LLM_Response_Time_ms: 953
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 4
+Total_Runtime_ms: 958
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 17/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX079
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both the switch smiles and it does not wait.
+If the switch reads, then it waits.
+the switch reads if the switch writes.
+if the switch walks, then it writes.
+if the switch rests, then it walks.
+the door moves if the door opens.
+either the switch jumps or it sits.
+the switch stands.
+if the bell rings, then it stops.
+does the camera blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 5
+Inference_Rules: CE+MT
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 3
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the switch smiles and it does not wait.
+     if the switch reads, then it waits.
+     the switch reads if the switch writes.
+     if the switch walks, then it writes.
+     if the switch rests, then it walks.
+     the door moves if the door opens.
+     either the switch jumps or it sits.
+     the switch stands.
+     if the bell rings, then it stops.
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 6
+  Output_After_Component:
+
+     Premises:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 6
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 12
+
+Normalized_Prompt:
+Premises:
+1. the switch smiles and the switch does not wait.
+2. if the switch reads, then the switch waits.
+3. if the switch writes, then the switch reads.
+4. if the switch walks, then the switch writes.
+5. if the switch rests, then the switch walks.
+6. if the door opens, then the door moves.
+7. the switch jumps or the switch sits.
+8. the switch stands.
+9. if the bell rings, then the bell stops.
+
+Question:
+does the camera blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the switch smiles and the switch does not wait.",
+        "P2": "if the switch reads, then the switch waits.",
+        "P3": "if the switch writes, then the switch reads.",
+        "P4": "if the switch walks, then the switch writes.",
+        "P5": "if the switch rests, then the switch walks.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the switch jumps or the switch sits.",
+        "P8": "the switch stands.",
+        "P9": "if the bell rings, then the bell stops."
+    },
+    "question": "does the camera blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1034
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SwitchSmiles & ~SwitchWaits",
+            "P2": "SwitchReads -> SwitchWaits",
+            "P3": "SwitchWrites -> SwitchReads",
+            "P4": "SwitchWalks -> SwitchWrites",
+            "P5": "SwitchRests -> SwitchWalks",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "SwitchJumps | SwitchSits",
+            "P8": "SwitchStands",
+            "P9": "BellRings -> BellStops"
+        },
+        "target": "CameraBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the switch smiles": "SwitchSmiles",
+        "the switch waits": "SwitchWaits",
+        "the switch reads": "SwitchReads",
+        "the switch writes": "SwitchWrites",
+        "the switch walks": "SwitchWalks",
+        "the switch rests": "SwitchRests",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the switch jumps": "SwitchJumps",
+        "the switch sits": "SwitchSits",
+        "the switch stands": "SwitchStands",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops",
+        "the camera blinks": "CameraBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "SwitchSmiles & ~SwitchWaits",
+            "P2": "SwitchReads -> SwitchWaits",
+            "P3": "SwitchWrites -> SwitchReads",
+            "P4": "SwitchWalks -> SwitchWrites",
+            "P5": "SwitchRests -> SwitchWalks",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "SwitchJumps | SwitchSits",
+            "P8": "SwitchStands",
+            "P9": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 7
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 1034
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 7
+Total_Runtime_ms: 1041
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 18/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX079
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both the switch smiles and it does not wait.
+If the switch reads, then it waits.
+the switch reads if the switch writes.
+if the switch walks, then it writes.
+if the switch rests, then it walks.
+the door moves if the door opens.
+either the switch jumps or it sits.
+the switch stands.
+if the bell rings, then it stops.
+does the camera blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 5
+Inference_Rules: CE+MT
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 3
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the switch smiles and it does not wait.
+     if the switch reads, then it waits.
+     the switch reads if the switch writes.
+     if the switch walks, then it writes.
+     if the switch rests, then it walks.
+     the door moves if the door opens.
+     either the switch jumps or it sits.
+     the switch stands.
+     if the bell rings, then it stops.
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 6
+  Output_After_Component:
+
+     Premises:
+     1. the switch smiles and the switch does not wait.
+     2. if the switch reads, then the switch waits.
+     3. if the switch writes, then the switch reads.
+     4. if the switch walks, then the switch writes.
+     5. if the switch rests, then the switch walks.
+     6. if the door opens, then the door moves.
+     7. the switch jumps or the switch sits.
+     8. the switch stands.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 6
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 12
+
+Normalized_Prompt:
+Premises:
+1. the switch smiles and the switch does not wait.
+2. if the switch reads, then the switch waits.
+3. if the switch writes, then the switch reads.
+4. if the switch walks, then the switch writes.
+5. if the switch rests, then the switch walks.
+6. if the door opens, then the door moves.
+7. the switch jumps or the switch sits.
+8. the switch stands.
+9. if the bell rings, then the bell stops.
+
+Question:
+does the camera blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the switch smiles and the switch does not wait.",
+        "P2": "if the switch reads, then the switch waits.",
+        "P3": "if the switch writes, then the switch reads.",
+        "P4": "if the switch walks, then the switch writes.",
+        "P5": "if the switch rests, then the switch walks.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the switch jumps or the switch sits.",
+        "P8": "the switch stands.",
+        "P9": "if the bell rings, then the bell stops."
+    },
+    "question": "does the camera blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 908
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SwitchSmiles & ~SwitchWaits",
+            "P2": "SwitchReads -> SwitchWaits",
+            "P3": "SwitchWrites -> SwitchReads",
+            "P4": "SwitchWalks -> SwitchWrites",
+            "P5": "SwitchRests -> SwitchWalks",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "SwitchJumps | SwitchSits",
+            "P8": "SwitchStands",
+            "P9": "BellRings -> BellStops"
+        },
+        "target": "CameraBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the switch smiles": "SwitchSmiles",
+        "the switch waits": "SwitchWaits",
+        "the switch reads": "SwitchReads",
+        "the switch writes": "SwitchWrites",
+        "the switch walks": "SwitchWalks",
+        "the switch rests": "SwitchRests",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the switch jumps": "SwitchJumps",
+        "the switch sits": "SwitchSits",
+        "the switch stands": "SwitchStands",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops",
+        "the camera blinks": "CameraBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "SwitchSmiles & ~SwitchWaits",
+            "P2": "SwitchReads -> SwitchWaits",
+            "P3": "SwitchWrites -> SwitchReads",
+            "P4": "SwitchWalks -> SwitchWrites",
+            "P5": "SwitchRests -> SwitchWalks",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "SwitchJumps | SwitchSits",
+            "P8": "SwitchStands",
+            "P9": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 6
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 1
+LLM_Response_Time_ms: 908
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 6
+Total_Runtime_ms: 915
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 19/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX080
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the alarm smiles or it waits.
+It is false that the alarm waits.
+if the alarm smiles, then it reads.
+the alarm writes if the alarm reads.
+if the alarm writes, then it walks.
+if the alarm walks, then it rests.
+the door moves if the door opens.
+either the alarm jumps or it sits.
+the alarm stands.
+if the bell rings, then it stops.
+does the camera blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 5
+Inference_Rules: DS+HS+MP
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 3
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either the alarm smiles or it waits.
+     it is false that the alarm waits.
+     if the alarm smiles, then it reads.
+     the alarm writes if the alarm reads.
+     if the alarm writes, then it walks.
+     if the alarm walks, then it rests.
+     the door moves if the door opens.
+     either the alarm jumps or it sits.
+     the alarm stands.
+     if the bell rings, then it stops.
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 5
+  Output_After_Component:
+
+     Premises:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 6
+  Output_After_Component:
+
+     Premises:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 5
+Actual_Subject_Propagation_Count: 6
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 13
+
+Normalized_Prompt:
+Premises:
+1. the alarm smiles or the alarm waits.
+2. not the alarm waits.
+3. if the alarm smiles, then the alarm reads.
+4. if the alarm reads, then the alarm writes.
+5. if the alarm writes, then the alarm walks.
+6. if the alarm walks, then the alarm rests.
+7. if the door opens, then the door moves.
+8. the alarm jumps or the alarm sits.
+9. the alarm stands.
+10. if the bell rings, then the bell stops.
+
+Question:
+does the camera blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the alarm smiles or the alarm waits.",
+        "P2": "not the alarm waits.",
+        "P3": "if the alarm smiles, then the alarm reads.",
+        "P4": "if the alarm reads, then the alarm writes.",
+        "P5": "if the alarm writes, then the alarm walks.",
+        "P6": "if the alarm walks, then the alarm rests.",
+        "P7": "if the door opens, then the door moves.",
+        "P8": "the alarm jumps or the alarm sits.",
+        "P9": "the alarm stands.",
+        "P10": "if the bell rings, then the bell stops."
+    },
+    "question": "does the camera blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1013
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AlarmSmiles | AlarmWaits",
+            "P2": "~AlarmWaits",
+            "P3": "AlarmSmiles -> AlarmReads",
+            "P4": "AlarmReads -> AlarmWrites",
+            "P5": "AlarmWrites -> AlarmWalks",
+            "P6": "AlarmWalks -> AlarmRests",
+            "P7": "DoorOpens -> DoorMoves",
+            "P8": "AlarmJumps | AlarmSits",
+            "P9": "AlarmStands",
+            "P10": "BellRings -> BellStops"
+        },
+        "target": "CameraBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the alarm smiles": "AlarmSmiles",
+        "the alarm waits": "AlarmWaits",
+        "the alarm reads": "AlarmReads",
+        "the alarm writes": "AlarmWrites",
+        "the alarm walks": "AlarmWalks",
+        "the alarm rests": "AlarmRests",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the alarm jumps": "AlarmJumps",
+        "the alarm sits": "AlarmSits",
+        "the alarm stands": "AlarmStands",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops",
+        "the camera blinks": "CameraBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "AlarmSmiles | AlarmWaits",
+            "P2": "~AlarmWaits",
+            "P3": "AlarmSmiles -> AlarmReads",
+            "P4": "AlarmReads -> AlarmWrites",
+            "P5": "AlarmWrites -> AlarmWalks",
+            "P6": "AlarmWalks -> AlarmRests",
+            "P7": "DoorOpens -> DoorMoves",
+            "P8": "AlarmJumps | AlarmSits",
+            "P9": "AlarmStands",
+            "P10": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 6
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 1
+LLM_Response_Time_ms: 1013
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 6
+Total_Runtime_ms: 1020
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 20/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX080
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the alarm smiles or it waits.
+It is false that the alarm waits.
+if the alarm smiles, then it reads.
+the alarm writes if the alarm reads.
+if the alarm writes, then it walks.
+if the alarm walks, then it rests.
+the door moves if the door opens.
+either the alarm jumps or it sits.
+the alarm stands.
+if the bell rings, then it stops.
+does the camera blink?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE1
+Inference_Depth: 5
+Inference_Rules: DS+HS+MP
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 3
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     either the alarm smiles or it waits.
+     it is false that the alarm waits.
+     if the alarm smiles, then it reads.
+     the alarm writes if the alarm reads.
+     if the alarm writes, then it walks.
+     if the alarm walks, then it rests.
+     the door moves if the door opens.
+     either the alarm jumps or it sits.
+     the alarm stands.
+     if the bell rings, then it stops.
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 5
+  Output_After_Component:
+
+     Premises:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 6
+  Output_After_Component:
+
+     Premises:
+     1. the alarm smiles or the alarm waits.
+     2. not the alarm waits.
+     3. if the alarm smiles, then the alarm reads.
+     4. if the alarm reads, then the alarm writes.
+     5. if the alarm writes, then the alarm walks.
+     6. if the alarm walks, then the alarm rests.
+     7. if the door opens, then the door moves.
+     8. the alarm jumps or the alarm sits.
+     9. the alarm stands.
+     10. if the bell rings, then the bell stops.
+     
+     Question:
+     does the camera blink?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 5
+Actual_Subject_Propagation_Count: 6
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 13
+
+Normalized_Prompt:
+Premises:
+1. the alarm smiles or the alarm waits.
+2. not the alarm waits.
+3. if the alarm smiles, then the alarm reads.
+4. if the alarm reads, then the alarm writes.
+5. if the alarm writes, then the alarm walks.
+6. if the alarm walks, then the alarm rests.
+7. if the door opens, then the door moves.
+8. the alarm jumps or the alarm sits.
+9. the alarm stands.
+10. if the bell rings, then the bell stops.
+
+Question:
+does the camera blink?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the alarm smiles or the alarm waits.",
+        "P2": "not the alarm waits.",
+        "P3": "if the alarm smiles, then the alarm reads.",
+        "P4": "if the alarm reads, then the alarm writes.",
+        "P5": "if the alarm writes, then the alarm walks.",
+        "P6": "if the alarm walks, then the alarm rests.",
+        "P7": "if the door opens, then the door moves.",
+        "P8": "the alarm jumps or the alarm sits.",
+        "P9": "the alarm stands.",
+        "P10": "if the bell rings, then the bell stops."
+    },
+    "question": "does the camera blink?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 950
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AlarmSmiles | AlarmWaits",
+            "P2": "~AlarmWaits",
+            "P3": "AlarmSmiles -> AlarmReads",
+            "P4": "AlarmReads -> AlarmWrites",
+            "P5": "AlarmWrites -> AlarmWalks",
+            "P6": "AlarmWalks -> AlarmRests",
+            "P7": "DoorOpens -> DoorMoves",
+            "P8": "AlarmJumps | AlarmSits",
+            "P9": "AlarmStands",
+            "P10": "BellRings -> BellStops"
+        },
+        "target": "CameraBlinks"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the alarm smiles": "AlarmSmiles",
+        "the alarm waits": "AlarmWaits",
+        "the alarm reads": "AlarmReads",
+        "the alarm writes": "AlarmWrites",
+        "the alarm walks": "AlarmWalks",
+        "the alarm rests": "AlarmRests",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the alarm jumps": "AlarmJumps",
+        "the alarm sits": "AlarmSits",
+        "the alarm stands": "AlarmStands",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops",
+        "the camera blinks": "CameraBlinks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "AlarmSmiles | AlarmWaits",
+            "P2": "~AlarmWaits",
+            "P3": "AlarmSmiles -> AlarmReads",
+            "P4": "AlarmReads -> AlarmWrites",
+            "P5": "AlarmWrites -> AlarmWalks",
+            "P6": "AlarmWalks -> AlarmRests",
+            "P7": "DoorOpens -> DoorMoves",
+            "P8": "AlarmJumps | AlarmSits",
+            "P9": "AlarmStands",
+            "P10": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 6
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 950
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 6
+Total_Runtime_ms: 956
+
+================================================================================
+RUN END
+================================================================================
+

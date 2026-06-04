@@ -1,0 +1,3204 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 12D Restart: D1_EX117 to D1_EX120
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX117
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the clock falls or the boat rises.
+not the clock falls.
+if the chef climbs, then not the boat rises.
+if the chef writes, then the chef climbs.
+if the door opens, then it moves.
+either the boat stands or the boat waves.
+the boat waits.
+does the chef climb?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 4
+Inference_Rules: DS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 4
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either the clock falls or the boat rises.
+     not the clock falls.
+     if the chef climbs, then not the boat rises.
+     if the chef writes, then the chef climbs.
+     if the door opens, then it moves.
+     either the boat stands or the boat waves.
+     the boat waits.
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Detected_Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 4
+
+Normalized_Prompt:
+Premises:
+1. the clock falls or the boat rises.
+2. not the clock falls.
+3. if the chef climbs, then not the boat rises.
+4. if the chef writes, then the chef climbs.
+5. if the door opens, then the door moves.
+6. the boat stands or the boat waves.
+7. the boat waits.
+
+Question:
+does the chef climb?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the clock falls or the boat rises.",
+        "P2": "not the clock falls.",
+        "P3": "if the chef climbs, then not the boat rises.",
+        "P4": "if the chef writes, then the chef climbs.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the boat stands or the boat waves.",
+        "P7": "the boat waits."
+    },
+    "question": "does the chef climb?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the chef climbs. [from: P4] [rule: Conjunction Introduction]
+S2: the clock falls or the boat rises. [from: P1] 
+S3: not the clock falls. [from: P2] 
+S4: the boat rises. [from: S2, S3] [rule: Disjunctive Syllogism]
+S5: if the chef climbs, then not the boat rises. [from: P3] 
+S6: not the boat rises. [from: S4, S5] [rule: Modus Ponens]
+S7: the chef writes. [from: P4] 
+S8: the chef climbs. [from: S6, S7] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 9051
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S2: the clock falls or the boat rises. [from: P1]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S2: the clock falls or the boat rises. [from: P1]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 9051
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 9051
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX117
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the clock falls or the boat rises.
+not the clock falls.
+if the chef climbs, then not the boat rises.
+if the chef writes, then the chef climbs.
+if the door opens, then it moves.
+either the boat stands or the boat waves.
+the boat waits.
+does the chef climb?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 4
+Inference_Rules: DS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 4
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either the clock falls or the boat rises.
+     not the clock falls.
+     if the chef climbs, then not the boat rises.
+     if the chef writes, then the chef climbs.
+     if the door opens, then it moves.
+     either the boat stands or the boat waves.
+     the boat waits.
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Detected_Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the clock falls or the boat rises.
+     2. not the clock falls.
+     3. if the chef climbs, then not the boat rises.
+     4. if the chef writes, then the chef climbs.
+     5. if the door opens, then the door moves.
+     6. the boat stands or the boat waves.
+     7. the boat waits.
+     
+     Question:
+     does the chef climb?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 4
+
+Normalized_Prompt:
+Premises:
+1. the clock falls or the boat rises.
+2. not the clock falls.
+3. if the chef climbs, then not the boat rises.
+4. if the chef writes, then the chef climbs.
+5. if the door opens, then the door moves.
+6. the boat stands or the boat waves.
+7. the boat waits.
+
+Question:
+does the chef climb?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the clock falls or the boat rises.",
+        "P2": "not the clock falls.",
+        "P3": "if the chef climbs, then not the boat rises.",
+        "P4": "if the chef writes, then the chef climbs.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the boat stands or the boat waves.",
+        "P7": "the boat waits."
+    },
+    "question": "does the chef climb?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the chef climbs. [from: P4] [rule: Modus Ponens]
+S2: not the boat rises. [from: S1, P3] [rule: Hypothetical Syllogism]
+S3: the clock falls or the boat waves. [from: P1] 
+S4: the boat waves. [from: S3, P2] [rule: Disjunctive Syllogism]
+S5: the boat stands or the boat waves. [from: P6] 
+S6: the boat waves. [from: S5, S4] [rule: Conjunction Elimination]
+S7: not the clock falls. [from: P2] 
+S8: the clock falls or the boat rises. [from: P1] 
+S9: the boat rises. [from: S8, S7] [rule: Disjunctive Syllogism]
+S10: the boat waits. [from: P7] 
+S11: the boat stands or the boat waves. [from: P6] 
+S12: the boat waves. [from: S11, S6] [rule: Conjunction Elimination]
+S13: the boat rises. [from: S9, S10] [rule: Hypothetical Syllogism]
+S14: not the boat rises. [from: S2, S13] [rule: Modus Tollens]
+S15: the chef writes. [from: P4] 
+S16: the chef climbs. [from: S1, S15] [rule: Conjunction Introduction]
+
+LLM_Response_Error: None
+Runtime_ms: 14843
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S3: the clock falls or the boat waves. [from: P1]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S3: the clock falls or the boat waves. [from: P1]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 14843
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 14843
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX118
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both not the server smiles and the server waits.
+The server smiles or else the server reads.
+either not the server reads or the server writes.
+if the server writes, then not the server jumps.
+if the door opens, then it moves.
+either the server stands or the server waves.
+the server walks.
+if the bell rings, then it stops.
+does the server jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 5
+Inference_Rules: CE+DS
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both not the server smiles and the server waits.
+     the server smiles or else the server reads.
+     either not the server reads or the server writes.
+     if the server writes, then not the server jumps.
+     if the door opens, then it moves.
+     either the server stands or the server waves.
+     the server walks.
+     if the bell rings, then it stops.
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. not the server smiles and the server waits.
+2. the server smiles or the server reads.
+3. not the server reads or the server writes.
+4. if the server writes, then not the server jumps.
+5. if the door opens, then the door moves.
+6. the server stands or the server waves.
+7. the server walks.
+8. if the bell rings, then the bell stops.
+
+Question:
+does the server jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "not the server smiles and the server waits.",
+        "P2": "the server smiles or the server reads.",
+        "P3": "not the server reads or the server writes.",
+        "P4": "if the server writes, then not the server jumps.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the server stands or the server waves.",
+        "P7": "the server walks.",
+        "P8": "if the bell rings, then the bell stops."
+    },
+    "question": "does the server jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the server writes. [from: P3, P4] [rule: Disjunctive Syllogism]
+S2: the server jumps. [from: S1, P4] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2891
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the server writes.",
+            "supports": [
+                "P3",
+                "P4"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the server jumps.",
+            "supports": [
+                "S1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "~ServerSmiles & ServerWaits",
+            "P2": "ServerSmiles | ServerReads",
+            "P3": "~ServerReads | ServerWrites",
+            "P4": "ServerWrites -> ~ServerJumps",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "ServerStands | ServerWaves",
+            "P7": "ServerWalks",
+            "P8": "BellRings -> BellStops"
+        },
+        "target": "ServerJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ServerWrites",
+                "supports": [
+                    "P3",
+                    "P4"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ServerJumps",
+                "supports": [
+                    "S1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the server smiles": "ServerSmiles",
+        "the server waits": "ServerWaits",
+        "the server reads": "ServerReads",
+        "the server writes": "ServerWrites",
+        "the server jumps": "ServerJumps",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the server stands": "ServerStands",
+        "the server waves": "ServerWaves",
+        "the server walks": "ServerWalks",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "ServerWrites",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "ServerJumps",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "~ServerSmiles & ServerWaits",
+            "P2": "ServerSmiles | ServerReads",
+            "P3": "~ServerReads | ServerWrites",
+            "P4": "ServerWrites -> ~ServerJumps",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "ServerStands | ServerWaves",
+            "P7": "ServerWalks",
+            "P8": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 3
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2891
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 3
+Total_Runtime_ms: 2894
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX118
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both not the server smiles and the server waits.
+The server smiles or else the server reads.
+either not the server reads or the server writes.
+if the server writes, then not the server jumps.
+if the door opens, then it moves.
+either the server stands or the server waves.
+the server walks.
+if the bell rings, then it stops.
+does the server jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 5
+Inference_Rules: CE+DS
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 5
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both not the server smiles and the server waits.
+     the server smiles or else the server reads.
+     either not the server reads or the server writes.
+     if the server writes, then not the server jumps.
+     if the door opens, then it moves.
+     either the server stands or the server waves.
+     the server walks.
+     if the bell rings, then it stops.
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. not the server smiles and the server waits.
+     2. the server smiles or the server reads.
+     3. not the server reads or the server writes.
+     4. if the server writes, then not the server jumps.
+     5. if the door opens, then the door moves.
+     6. the server stands or the server waves.
+     7. the server walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the server jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 4
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. not the server smiles and the server waits.
+2. the server smiles or the server reads.
+3. not the server reads or the server writes.
+4. if the server writes, then not the server jumps.
+5. if the door opens, then the door moves.
+6. the server stands or the server waves.
+7. the server walks.
+8. if the bell rings, then the bell stops.
+
+Question:
+does the server jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "not the server smiles and the server waits.",
+        "P2": "the server smiles or the server reads.",
+        "P3": "not the server reads or the server writes.",
+        "P4": "if the server writes, then not the server jumps.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the server stands or the server waves.",
+        "P7": "the server walks.",
+        "P8": "if the bell rings, then the bell stops."
+    },
+    "question": "does the server jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the server writes. [from: P3, P4] [rule: Disjunctive Syllogism]
+S2: the server jumps. [from: S1, P4] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2840
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the server writes.",
+            "supports": [
+                "P3",
+                "P4"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the server jumps.",
+            "supports": [
+                "S1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "~ServerSmiles & ServerWaits",
+            "P2": "ServerSmiles | ServerReads",
+            "P3": "~ServerReads | ServerWrites",
+            "P4": "ServerWrites -> ~ServerJumps",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "ServerStands | ServerWaves",
+            "P7": "ServerWalks",
+            "P8": "BellRings -> BellStops"
+        },
+        "target": "ServerJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ServerWrites",
+                "supports": [
+                    "P3",
+                    "P4"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ServerJumps",
+                "supports": [
+                    "S1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the server smiles": "ServerSmiles",
+        "the server waits": "ServerWaits",
+        "the server reads": "ServerReads",
+        "the server writes": "ServerWrites",
+        "the server jumps": "ServerJumps",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the server stands": "ServerStands",
+        "the server waves": "ServerWaves",
+        "the server walks": "ServerWalks",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "ServerWrites",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "ServerJumps",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "~ServerSmiles & ServerWaits",
+            "P2": "ServerSmiles | ServerReads",
+            "P3": "~ServerReads | ServerWrites",
+            "P4": "ServerWrites -> ~ServerJumps",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "ServerStands | ServerWaves",
+            "P7": "ServerWalks",
+            "P8": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 3
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2840
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 3
+Total_Runtime_ms: 2843
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX119
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both the app smiles and it does not wait.
+The app waits if the app reads.
+if the app writes, then it reads.
+if the app jumps, then it writes.
+if the door opens, then it moves.
+either the app stands or the app waves.
+the app walks.
+if the bell rings, then it stops.
+does the app jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 5
+Inference_Rules: CE+MT
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 3
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the app smiles and it does not wait.
+     the app waits if the app reads.
+     if the app writes, then it reads.
+     if the app jumps, then it writes.
+     if the door opens, then it moves.
+     either the app stands or the app waves.
+     the app walks.
+     if the bell rings, then it stops.
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 5
+  Output_After_Component:
+
+     Premises:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 5
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. the app smiles and the app does not wait.
+2. if the app reads, then the app waits.
+3. if the app writes, then the app reads.
+4. if the app jumps, then the app writes.
+5. if the door opens, then the door moves.
+6. the app stands or the app waves.
+7. the app walks.
+8. if the bell rings, then the bell stops.
+
+Question:
+does the app jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the app smiles and the app does not wait.",
+        "P2": "if the app reads, then the app waits.",
+        "P3": "if the app writes, then the app reads.",
+        "P4": "if the app jumps, then the app writes.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the app stands or the app waves.",
+        "P7": "the app walks.",
+        "P8": "if the bell rings, then the bell stops."
+    },
+    "question": "does the app jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the app writes. [from: P3] [rule: Conjunction Elimination]
+S2: the app reads. [from: S1, P4] [rule: Modus Ponens]
+S3: the app waits. [from: S2, P2] [rule: Modus Ponens]
+S4: the app does not wait. [from: P1] [rule: Conjunction Elimination]
+S5: the app reads or the app waves. [from: P6] [rule: Disjunctive Syllogism]
+S6: the app waits or the app waves. [from: S3, S5] [rule: Hypothetical Syllogism]
+S7: the app jumps or the app waves. [from: P4, S6] [rule: Hypothetical Syllogism]
+S8: the app waves. [from: S7, P1] [rule: Disjunctive Syllogism]
+S9: the app jumps. [from: S7, S8] [rule: Disjunctive Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 10622
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the app writes.",
+            "supports": [
+                "P3"
+            ],
+            "rule": "Conjunction Elimination"
+        },
+        {
+            "id": "S2",
+            "statement": "the app reads.",
+            "supports": [
+                "S1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the app waits.",
+            "supports": [
+                "S2",
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the app does not wait.",
+            "supports": [
+                "P1"
+            ],
+            "rule": "Conjunction Elimination"
+        },
+        {
+            "id": "S5",
+            "statement": "the app reads or the app waves.",
+            "supports": [
+                "P6"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S6",
+            "statement": "the app waits or the app waves.",
+            "supports": [
+                "S3",
+                "S5"
+            ],
+            "rule": "Hypothetical Syllogism"
+        },
+        {
+            "id": "S7",
+            "statement": "the app jumps or the app waves.",
+            "supports": [
+                "P4",
+                "S6"
+            ],
+            "rule": "Hypothetical Syllogism"
+        },
+        {
+            "id": "S8",
+            "statement": "the app waves.",
+            "supports": [
+                "S7",
+                "P1"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S9",
+            "statement": "the app jumps.",
+            "supports": [
+                "S7",
+                "S8"
+            ],
+            "rule": "Disjunctive Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AppSmiles & ~AppWaits",
+            "P2": "AppReads -> AppWaits",
+            "P3": "AppWrites -> AppReads",
+            "P4": "AppJumps -> AppWrites",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "AppStands | AppWaves",
+            "P7": "AppWalks",
+            "P8": "BellRings -> BellStops"
+        },
+        "target": "AppJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "AppWrites",
+                "supports": [
+                    "P3"
+                ],
+                "rule": "Conjunction Elimination"
+            },
+            {
+                "id": "S2",
+                "derived": "AppReads",
+                "supports": [
+                    "S1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "AppWaits",
+                "supports": [
+                    "S2",
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "~AppWaits",
+                "supports": [
+                    "P1"
+                ],
+                "rule": "Conjunction Elimination"
+            },
+            {
+                "id": "S5",
+                "derived": "AppReads | AppWaves",
+                "supports": [
+                    "P6"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S6",
+                "derived": "AppWaits | AppWaves",
+                "supports": [
+                    "S3",
+                    "S5"
+                ],
+                "rule": "Hypothetical Syllogism"
+            },
+            {
+                "id": "S7",
+                "derived": "AppJumps | AppWaves",
+                "supports": [
+                    "P4",
+                    "S6"
+                ],
+                "rule": "Hypothetical Syllogism"
+            },
+            {
+                "id": "S8",
+                "derived": "AppWaves",
+                "supports": [
+                    "S7",
+                    "P1"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S9",
+                "derived": "AppJumps",
+                "supports": [
+                    "S7",
+                    "S8"
+                ],
+                "rule": "Disjunctive Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the app smiles": "AppSmiles",
+        "the app waits": "AppWaits",
+        "the app reads": "AppReads",
+        "the app writes": "AppWrites",
+        "the app jumps": "AppJumps",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the app stands": "AppStands",
+        "the app waves": "AppWaves",
+        "the app walks": "AppWalks",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "AppWrites",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "AppReads",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "AppWaits",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "~AppWaits",
+                "expected": "~AppWaits"
+            },
+            {
+                "id": "S5",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Disjunctive Syllogism requires exactly 2 supports.",
+                "derived": "AppReads | AppWaves",
+                "expected": null
+            },
+            {
+                "id": "S6",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "AppWaits | AppWaves",
+                "expected": null
+            },
+            {
+                "id": "S7",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S6",
+                "derived": "AppJumps | AppWaves",
+                "expected": null
+            },
+            {
+                "id": "S8",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S7",
+                "derived": "AppWaves",
+                "expected": null
+            },
+            {
+                "id": "S9",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S7",
+                "derived": "AppJumps",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "AppSmiles & ~AppWaits",
+            "P2": "AppReads -> AppWaits",
+            "P3": "AppWrites -> AppReads",
+            "P4": "AppJumps -> AppWrites",
+            "P5": "DoorOpens -> DoorMoves",
+            "P6": "AppStands | AppWaves",
+            "P7": "AppWalks",
+            "P8": "BellRings -> BellStops",
+            "S4": "~AppWaits"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S5, S6, S7, S8, S9
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S5: VF_STEP_INSUFFICIENT_SUPPORTS; S6: VF_STEP_UNKNOWN_SUPPORT; S7: VF_STEP_UNKNOWN_SUPPORT; S8: VF_STEP_UNKNOWN_SUPPORT; S9: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 3
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 10622
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 3
+Total_Runtime_ms: 10625
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX119
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both the app smiles and it does not wait.
+The app waits if the app reads.
+if the app writes, then it reads.
+if the app jumps, then it writes.
+if the door opens, then it moves.
+either the app stands or the app waves.
+the app walks.
+if the bell rings, then it stops.
+does the app jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 5
+Inference_Rules: CE+MT
+Distractor_Count: 4
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 3
+Subject_Propagation_Count: 4
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the app smiles and it does not wait.
+     the app waits if the app reads.
+     if the app writes, then it reads.
+     if the app jumps, then it writes.
+     if the door opens, then it moves.
+     either the app stands or the app waves.
+     the app walks.
+     if the bell rings, then it stops.
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 5
+  Output_After_Component:
+
+     Premises:
+     1. the app smiles and the app does not wait.
+     2. if the app reads, then the app waits.
+     3. if the app writes, then the app reads.
+     4. if the app jumps, then the app writes.
+     5. if the door opens, then the door moves.
+     6. the app stands or the app waves.
+     7. the app walks.
+     8. if the bell rings, then the bell stops.
+     
+     Question:
+     does the app jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 5
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. the app smiles and the app does not wait.
+2. if the app reads, then the app waits.
+3. if the app writes, then the app reads.
+4. if the app jumps, then the app writes.
+5. if the door opens, then the door moves.
+6. the app stands or the app waves.
+7. the app walks.
+8. if the bell rings, then the bell stops.
+
+Question:
+does the app jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the app smiles and the app does not wait.",
+        "P2": "if the app reads, then the app waits.",
+        "P3": "if the app writes, then the app reads.",
+        "P4": "if the app jumps, then the app writes.",
+        "P5": "if the door opens, then the door moves.",
+        "P6": "the app stands or the app waves.",
+        "P7": "the app walks.",
+        "P8": "if the bell rings, then the bell stops."
+    },
+    "question": "does the app jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the app writes. [from: P3] [rule: Conjunction Elimination]
+S2: the app reads. [from: S1, P2] [rule: Hypothetical Syllogism]
+S3: the app waits. [from: S2, P2] [rule: Modus Ponens]
+S4: the app smiles and the app does not wait. [from: P1] 
+S5: the app smiles. [from: S4, Conjunction Elimination]
+S6: the app stands or the app waves. [from: P6] 
+S7: the app stands. [from: S6, Disjunctive Syllogism, not S5]
+S8: the app walks. [from: P7] 
+S9: the app jumps. [from: S8, P4, S7, S3, S2, S1, Conjunction Introduction, Modus Ponens, Hypothetical Syllogism, Disjunctive Syllogism, Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 10082
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S4: the app smiles and the app does not wait. [from: P1]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S4: the app smiles and the app does not wait. [from: P1]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 10082
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 10082
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX120
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+If the device smiles, then it waits.
+if the device waits, then it reads.
+the device smiles.
+if the device writes, then not the device reads.
+if the device jumps, then it writes.
+if the door opens, then it moves.
+either the device stands or the device waves.
+the device walks.
+if the bell rings, then it stops.
+does the device jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 5
+Inference_Rules: HS+MP+MT
+Distractor_Count: 4
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 5
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     if the device smiles, then it waits.
+     if the device waits, then it reads.
+     the device smiles.
+     if the device writes, then not the device reads.
+     if the device jumps, then it writes.
+     if the door opens, then it moves.
+     either the device stands or the device waves.
+     the device walks.
+     if the bell rings, then it stops.
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 5
+  Output_After_Component:
+
+     Premises:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 5
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. if the device smiles, then the device waits.
+2. if the device waits, then the device reads.
+3. the device smiles.
+4. if the device writes, then not the device reads.
+5. if the device jumps, then the device writes.
+6. if the door opens, then the door moves.
+7. the device stands or the device waves.
+8. the device walks.
+9. if the bell rings, then the bell stops.
+
+Question:
+does the device jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device smiles, then the device waits.",
+        "P2": "if the device waits, then the device reads.",
+        "P3": "the device smiles.",
+        "P4": "if the device writes, then not the device reads.",
+        "P5": "if the device jumps, then the device writes.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the device stands or the device waves.",
+        "P8": "the device walks.",
+        "P9": "if the bell rings, then the bell stops."
+    },
+    "question": "does the device jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the device writes. [from: P5] [rule: Modus Ponens]
+S2: not the device reads. [from: S1, P4] [rule: Modus Ponens]
+S3: the device jumps. [from: S2, P8] [rule: Disjunctive Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 3820
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the device writes.",
+            "supports": [
+                "P5"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the device reads.",
+            "supports": [
+                "S1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the device jumps.",
+            "supports": [
+                "S2",
+                "P8"
+            ],
+            "rule": "Disjunctive Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceSmiles -> DeviceWaits",
+            "P2": "DeviceWaits -> DeviceReads",
+            "P3": "DeviceSmiles",
+            "P4": "DeviceWrites -> ~DeviceReads",
+            "P5": "DeviceJumps -> DeviceWrites",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "DeviceStands | DeviceWaves",
+            "P8": "DeviceWalks",
+            "P9": "BellRings -> BellStops"
+        },
+        "target": "DeviceJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "DeviceWrites",
+                "supports": [
+                    "P5"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~DeviceReads",
+                "supports": [
+                    "S1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "DeviceJumps",
+                "supports": [
+                    "S2",
+                    "P8"
+                ],
+                "rule": "Disjunctive Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the device smiles": "DeviceSmiles",
+        "the device waits": "DeviceWaits",
+        "the device reads": "DeviceReads",
+        "the device writes": "DeviceWrites",
+        "the device jumps": "DeviceJumps",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the device stands": "DeviceStands",
+        "the device waves": "DeviceWaves",
+        "the device walks": "DeviceWalks",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Ponens requires exactly 2 supports.",
+                "derived": "DeviceWrites",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~DeviceReads",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "DeviceJumps",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceSmiles -> DeviceWaits",
+            "P2": "DeviceWaits -> DeviceReads",
+            "P3": "DeviceSmiles",
+            "P4": "DeviceWrites -> ~DeviceReads",
+            "P5": "DeviceJumps -> DeviceWrites",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "DeviceStands | DeviceWaves",
+            "P8": "DeviceWalks",
+            "P9": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 3
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 3820
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 3
+Total_Runtime_ms: 3823
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX120
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+If the device smiles, then it waits.
+if the device waits, then it reads.
+the device smiles.
+if the device writes, then not the device reads.
+if the device jumps, then it writes.
+if the door opens, then it moves.
+either the device stands or the device waves.
+the device walks.
+if the bell rings, then it stops.
+does the device jump?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE3
+Inference_Depth: 5
+Inference_Rules: HS+MP+MT
+Distractor_Count: 4
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 5
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 8
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     if the device smiles, then it waits.
+     if the device waits, then it reads.
+     the device smiles.
+     if the device writes, then not the device reads.
+     if the device jumps, then it writes.
+     if the door opens, then it moves.
+     either the device stands or the device waves.
+     the device walks.
+     if the bell rings, then it stops.
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Detected_Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 5
+  Output_After_Component:
+
+     Premises:
+     1. if the device smiles, then the device waits.
+     2. if the device waits, then the device reads.
+     3. the device smiles.
+     4. if the device writes, then not the device reads.
+     5. if the device jumps, then the device writes.
+     6. if the door opens, then the door moves.
+     7. the device stands or the device waves.
+     8. the device walks.
+     9. if the bell rings, then the bell stops.
+     
+     Question:
+     does the device jump?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 5
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. if the device smiles, then the device waits.
+2. if the device waits, then the device reads.
+3. the device smiles.
+4. if the device writes, then not the device reads.
+5. if the device jumps, then the device writes.
+6. if the door opens, then the door moves.
+7. the device stands or the device waves.
+8. the device walks.
+9. if the bell rings, then the bell stops.
+
+Question:
+does the device jump?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device smiles, then the device waits.",
+        "P2": "if the device waits, then the device reads.",
+        "P3": "the device smiles.",
+        "P4": "if the device writes, then not the device reads.",
+        "P5": "if the device jumps, then the device writes.",
+        "P6": "if the door opens, then the door moves.",
+        "P7": "the device stands or the device waves.",
+        "P8": "the device walks.",
+        "P9": "if the bell rings, then the bell stops."
+    },
+    "question": "does the device jump?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 961
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceSmiles -> DeviceWaits",
+            "P2": "DeviceWaits -> DeviceReads",
+            "P3": "DeviceSmiles",
+            "P4": "DeviceWrites -> ~DeviceReads",
+            "P5": "DeviceJumps -> DeviceWrites",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "DeviceStands | DeviceWaves",
+            "P8": "DeviceWalks",
+            "P9": "BellRings -> BellStops"
+        },
+        "target": "DeviceJumps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the device smiles": "DeviceSmiles",
+        "the device waits": "DeviceWaits",
+        "the device reads": "DeviceReads",
+        "the device writes": "DeviceWrites",
+        "the device jumps": "DeviceJumps",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the device stands": "DeviceStands",
+        "the device waves": "DeviceWaves",
+        "the device walks": "DeviceWalks",
+        "the bell rings": "BellRings",
+        "the bell stops": "BellStops"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceSmiles -> DeviceWaits",
+            "P2": "DeviceWaits -> DeviceReads",
+            "P3": "DeviceSmiles",
+            "P4": "DeviceWrites -> ~DeviceReads",
+            "P5": "DeviceJumps -> DeviceWrites",
+            "P6": "DoorOpens -> DoorMoves",
+            "P7": "DeviceStands | DeviceWaves",
+            "P8": "DeviceWalks",
+            "P9": "BellRings -> BellStops"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 4
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 1
+LLM_Response_Time_ms: 961
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 4
+Total_Runtime_ms: 966
+
+================================================================================
+RUN END
+================================================================================
+

@@ -1,0 +1,7091 @@
+====================================================================================================
+FINAL DATASET TEST A ù N8 SPECIAL CASE
+Runs all examples stored inside this file.
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX021
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The farmer opens if the dog opens.
+if the farmer opens, then it is ready.
+not the farmer is prepared.
+if the bell rings, then it is quiet.
+is the dog closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the farmer opens if the dog opens.
+     if the farmer opens, then it is ready.
+     not the farmer is prepared.
+     if the bell rings, then it is quiet.
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is ready.
+     4. if the bell rings, then the bell is quiet.
+     
+     Detected_Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is ready.
+     4. if the bell rings, then the bell is quiet.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is prepared.
+     4. if the bell rings, then the bell is quiet.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is ready.
+     4. if the bell rings, then the bell is quiet.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 5
+
+Normalized_Prompt:
+Premises:
+1. if the dog opens, then the farmer opens.
+2. if the farmer opens, then the farmer is ready.
+3. not the farmer is ready.
+4. if the bell rings, then the bell is quiet.
+
+Question:
+is the dog closed?
+
+Normalizer_Runtime_ms: 1548
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the dog opens, then the farmer opens.",
+        "P2": "if the farmer opens, then the farmer is ready.",
+        "P3": "not the farmer is ready.",
+        "P4": "if the bell rings, then the bell is quiet."
+    },
+    "question": "is the dog closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the farmer is ready. [from: P2] 
+S2: not the farmer is ready. [from: S1, P3] [rule: Modus Tollens]
+S3: the farmer opens. [from: P1, S2] [rule: Hypothetical Syllogism]
+S4: the dog is closed. [from: P3, S3] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 12601
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the farmer is ready. [from: P2]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the farmer is ready. [from: P2]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1548
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 12601
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 14149
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX021
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The farmer opens if the dog opens.
+if the farmer opens, then it is ready.
+not the farmer is prepared.
+if the bell rings, then it is quiet.
+is the dog closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the farmer opens if the dog opens.
+     if the farmer opens, then it is ready.
+     not the farmer is prepared.
+     if the bell rings, then it is quiet.
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is ready.
+     4. if the bell rings, then the bell is quiet.
+     
+     Detected_Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is ready.
+     4. if the bell rings, then the bell is quiet.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is prepared.
+     4. if the bell rings, then the bell is quiet.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the farmer opens.
+     2. if the farmer opens, then the farmer is ready.
+     3. not the farmer is ready.
+     4. if the bell rings, then the bell is quiet.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 5
+
+Normalized_Prompt:
+Premises:
+1. if the dog opens, then the farmer opens.
+2. if the farmer opens, then the farmer is ready.
+3. not the farmer is ready.
+4. if the bell rings, then the bell is quiet.
+
+Question:
+is the dog closed?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the dog opens, then the farmer opens.",
+        "P2": "if the farmer opens, then the farmer is ready.",
+        "P3": "not the farmer is ready.",
+        "P4": "if the bell rings, then the bell is quiet."
+    },
+    "question": "is the dog closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the farmer is ready. [from: P2] 
+S2: not the farmer is ready. [from: S1, P3] [rule: Modus Tollens]
+S3: the farmer opens. [from: P1, S2] [rule: Hypothetical Syllogism]
+S4: the dog is closed. [from: P1, S3] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 4481
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the farmer is ready. [from: P2]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the farmer is ready. [from: P2]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4481
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4481
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX022
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The server is clean if the robot is active.
+if the server is clean, then it is ready.
+it is false that the server is prepared.
+if the camera moves, then the camera starts.
+is the robot inactive?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the server is clean if the robot is active.
+     if the server is clean, then it is ready.
+     it is false that the server is prepared.
+     if the camera moves, then the camera starts.
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Detected_Question:
+     is the robot not active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is prepared.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the robot is active, then the server is clean.
+2. if the server is clean, then the server is ready.
+3. not the server is ready.
+4. if the camera moves, then the camera starts.
+
+Question:
+is the robot not active?
+
+Normalizer_Runtime_ms: 21
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the robot is active, then the server is clean.",
+        "P2": "if the server is clean, then the server is ready.",
+        "P3": "not the server is ready.",
+        "P4": "if the camera moves, then the camera starts."
+    },
+    "question": "is the robot not active?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the server is not clean. [from: P2, P3] [rule: Modus Tollens]
+S2: the robot is not active. [from: S1, P1] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2825
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the server is not clean.",
+            "supports": [
+                "P2",
+                "P3"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the robot is not active.",
+            "supports": [
+                "S1",
+                "P1"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "RobotIsActive -> ServerIsClean",
+            "P2": "ServerIsClean -> ServerIsReady",
+            "P3": "~ServerIsReady",
+            "P4": "CameraMoves -> CameraStarts"
+        },
+        "target": "~RobotIsActive"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~ServerIsClean",
+                "supports": [
+                    "P2",
+                    "P3"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "~RobotIsActive",
+                "supports": [
+                    "S1",
+                    "P1"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the robot is active": "RobotIsActive",
+        "the server is clean": "ServerIsClean",
+        "the server is ready": "ServerIsReady",
+        "the camera moves": "CameraMoves",
+        "the camera starts": "CameraStarts"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "~ServerIsClean",
+                "expected": "~ServerIsClean"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "~RobotIsActive",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "RobotIsActive -> ServerIsClean",
+            "P2": "ServerIsClean -> ServerIsReady",
+            "P3": "~ServerIsReady",
+            "P4": "CameraMoves -> CameraStarts",
+            "S1": "~ServerIsClean"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2
+Invalid_Steps_Reasons: S2: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 21
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2825
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2846
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX022
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The server is clean if the robot is active.
+if the server is clean, then it is ready.
+it is false that the server is prepared.
+if the camera moves, then the camera starts.
+is the robot inactive?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the server is clean if the robot is active.
+     if the server is clean, then it is ready.
+     it is false that the server is prepared.
+     if the camera moves, then the camera starts.
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Detected_Question:
+     is the robot not active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is prepared.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot inactive?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the robot is active, then the server is clean.
+     2. if the server is clean, then the server is ready.
+     3. not the server is ready.
+     4. if the camera moves, then the camera starts.
+     
+     Question:
+     is the robot not active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the robot is active, then the server is clean.
+2. if the server is clean, then the server is ready.
+3. not the server is ready.
+4. if the camera moves, then the camera starts.
+
+Question:
+is the robot not active?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the robot is active, then the server is clean.",
+        "P2": "if the server is clean, then the server is ready.",
+        "P3": "not the server is ready.",
+        "P4": "if the camera moves, then the camera starts."
+    },
+    "question": "is the robot not active?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the server is not clean. [from: P2, P3] [rule: Modus Tollens]
+S2: the robot is not active. [from: S1, P1] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2809
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the server is not clean.",
+            "supports": [
+                "P2",
+                "P3"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the robot is not active.",
+            "supports": [
+                "S1",
+                "P1"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "RobotIsActive -> ServerIsClean",
+            "P2": "ServerIsClean -> ServerIsReady",
+            "P3": "~ServerIsReady",
+            "P4": "CameraMoves -> CameraStarts"
+        },
+        "target": "~RobotIsActive"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~ServerIsClean",
+                "supports": [
+                    "P2",
+                    "P3"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "~RobotIsActive",
+                "supports": [
+                    "S1",
+                    "P1"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the robot is active": "RobotIsActive",
+        "the server is clean": "ServerIsClean",
+        "the server is ready": "ServerIsReady",
+        "the camera moves": "CameraMoves",
+        "the camera starts": "CameraStarts"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "~ServerIsClean",
+                "expected": "~ServerIsClean"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "~RobotIsActive",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "RobotIsActive -> ServerIsClean",
+            "P2": "ServerIsClean -> ServerIsReady",
+            "P3": "~ServerIsReady",
+            "P4": "CameraMoves -> CameraStarts",
+            "S1": "~ServerIsClean"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2
+Invalid_Steps_Reasons: S2: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2809
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2810
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX023
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The app is ready if the app starts.
+If the app is ready, then it is active.
+the app is inactive.
+if the door opens, then the door moves.
+does the app not begin?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the app is ready if the app starts.
+     if the app is ready, then it is active.
+     the app is inactive.
+     if the door opens, then the door moves.
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Detected_Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. the app is inactive.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. the app is not active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 5
+
+Normalized_Prompt:
+Premises:
+1. if the app starts, then the app is ready.
+2. if the app is ready, then the app is active.
+3. not the app is active.
+4. if the door opens, then the door moves.
+
+Question:
+does the app not begin?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the app starts, then the app is ready.",
+        "P2": "if the app is ready, then the app is active.",
+        "P3": "not the app is active.",
+        "P4": "if the door opens, then the door moves."
+    },
+    "question": "does the app not begin?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the app does not start. [from: P3] [rule: Modus Tollens]
+S2: the app does not begin. [from: S1] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 2584
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the app does not start.",
+            "supports": [
+                "P3"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the app does not begin.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AppStarts -> AppIsReady",
+            "P2": "AppIsReady -> AppIsActive",
+            "P3": "~AppIsActive",
+            "P4": "DoorOpens -> DoorMoves"
+        },
+        "target": "~AppBegins"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~AppStarts",
+                "supports": [
+                    "P3"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "~AppBegins",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the app starts": "AppStarts",
+        "the app is ready": "AppIsReady",
+        "the app is active": "AppIsActive",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the app begins": "AppBegins"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Tollens requires exactly 2 supports.",
+                "derived": "~AppStarts",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~AppBegins",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "AppStarts -> AppIsReady",
+            "P2": "AppIsReady -> AppIsActive",
+            "P3": "~AppIsActive",
+            "P4": "DoorOpens -> DoorMoves"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2584
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2585
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX023
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The app is ready if the app starts.
+If the app is ready, then it is active.
+the app is inactive.
+if the door opens, then the door moves.
+does the app not begin?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the app is ready if the app starts.
+     if the app is ready, then it is active.
+     the app is inactive.
+     if the door opens, then the door moves.
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Detected_Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. the app is inactive.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. the app is not active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the app starts, then the app is ready.
+     2. if the app is ready, then the app is active.
+     3. not the app is active.
+     4. if the door opens, then the door moves.
+     
+     Question:
+     does the app not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 5
+
+Normalized_Prompt:
+Premises:
+1. if the app starts, then the app is ready.
+2. if the app is ready, then the app is active.
+3. not the app is active.
+4. if the door opens, then the door moves.
+
+Question:
+does the app not begin?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the app starts, then the app is ready.",
+        "P2": "if the app is ready, then the app is active.",
+        "P3": "not the app is active.",
+        "P4": "if the door opens, then the door moves."
+    },
+    "question": "does the app not begin?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the app does not start. [from: P3] [rule: Modus Tollens]
+S2: the app does not begin. [from: S1] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 2564
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the app does not start.",
+            "supports": [
+                "P3"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the app does not begin.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AppStarts -> AppIsReady",
+            "P2": "AppIsReady -> AppIsActive",
+            "P3": "~AppIsActive",
+            "P4": "DoorOpens -> DoorMoves"
+        },
+        "target": "~AppBegins"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~AppStarts",
+                "supports": [
+                    "P3"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "~AppBegins",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the app starts": "AppStarts",
+        "the app is ready": "AppIsReady",
+        "the app is active": "AppIsActive",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the app begins": "AppBegins"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Tollens requires exactly 2 supports.",
+                "derived": "~AppStarts",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~AppBegins",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "AppStarts -> AppIsReady",
+            "P2": "AppIsReady -> AppIsActive",
+            "P3": "~AppIsActive",
+            "P4": "DoorOpens -> DoorMoves"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2564
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2565
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX024
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The device is safe if the device opens.
+if the device is secure, then it is active.
+the device is inactive.
+if the robot is quick, then the robot is fast.
+is the device closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the device is safe if the device opens.
+     if the device is secure, then it is active.
+     the device is inactive.
+     if the robot is quick, then the robot is fast.
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Detected_Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is secure, then the device is active.
+     3. the device is inactive.
+     4. if the robot is quick, then the robot is fast.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. the device is inactive.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. the device is not active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 2
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the device opens, then the device is safe.
+2. if the device is safe, then the device is active.
+3. not the device is active.
+4. if the robot is quick, then the robot is quick.
+
+Question:
+is the device closed?
+
+Normalizer_Runtime_ms: 2
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device opens, then the device is safe.",
+        "P2": "if the device is safe, then the device is active.",
+        "P3": "not the device is active.",
+        "P4": "if the robot is quick, then the robot is quick."
+    },
+    "question": "is the device closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the device is active. [from: P2, P3] [rule: Modus Ponens]
+S2: the device opens. [from: S1, P1] [rule: Modus Ponens]
+S3: the device is not safe. [from: S2, P4 does not apply, using only P1 and P2] [rule: Hypothetical Syllogism]
+S4: the device is closed. [from: S3, P4 does not apply, using only P1 and P2] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 5969
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Invalid support reference in S3: 'P4 does not apply'.
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Invalid support reference in S3: 'P4 does not apply'.
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 2
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 5969
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 5971
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX024
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The device is safe if the device opens.
+if the device is secure, then it is active.
+the device is inactive.
+if the robot is quick, then the robot is fast.
+is the device closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the device is safe if the device opens.
+     if the device is secure, then it is active.
+     the device is inactive.
+     if the robot is quick, then the robot is fast.
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Detected_Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is secure, then the device is active.
+     3. the device is inactive.
+     4. if the robot is quick, then the robot is fast.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. the device is inactive.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. the device is not active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the device opens, then the device is safe.
+     2. if the device is safe, then the device is active.
+     3. not the device is active.
+     4. if the robot is quick, then the robot is quick.
+     
+     Question:
+     is the device closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 2
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the device opens, then the device is safe.
+2. if the device is safe, then the device is active.
+3. not the device is active.
+4. if the robot is quick, then the robot is quick.
+
+Question:
+is the device closed?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device opens, then the device is safe.",
+        "P2": "if the device is safe, then the device is active.",
+        "P3": "not the device is active.",
+        "P4": "if the robot is quick, then the robot is quick."
+    },
+    "question": "is the device closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the device is active. [from: P2] [rule: Conjunction Elimination]
+S2: the device opens. [from: S1, P3] [rule: Modus Tollens]
+S3: not the device is safe. [from: S2, P1] [rule: Modus Ponens]
+S4: the device is closed. [from: S3, P1] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 4782
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the device is active.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Conjunction Elimination"
+        },
+        {
+            "id": "S2",
+            "statement": "the device opens.",
+            "supports": [
+                "S1",
+                "P3"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S3",
+            "statement": "not the device is safe.",
+            "supports": [
+                "S2",
+                "P1"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the device is closed.",
+            "supports": [
+                "S3",
+                "P1"
+            ],
+            "rule": "Hypothetical Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceOpens -> DeviceIsSafe",
+            "P2": "DeviceIsSafe -> DeviceIsActive",
+            "P3": "~DeviceIsActive",
+            "P4": "RobotIsQuick -> RobotIsQuick"
+        },
+        "target": "DeviceIsClosed"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "DeviceIsActive",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Conjunction Elimination"
+            },
+            {
+                "id": "S2",
+                "derived": "DeviceOpens",
+                "supports": [
+                    "S1",
+                    "P3"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S3",
+                "derived": "~DeviceIsSafe",
+                "supports": [
+                    "S2",
+                    "P1"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "DeviceIsClosed",
+                "supports": [
+                    "S3",
+                    "P1"
+                ],
+                "rule": "Hypothetical Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the device opens": "DeviceOpens",
+        "the device is safe": "DeviceIsSafe",
+        "the device is active": "DeviceIsActive",
+        "the robot is quick": "RobotIsQuick",
+        "the device is closed": "DeviceIsClosed"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "DeviceIsActive",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "DeviceOpens",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "~DeviceIsSafe",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "DeviceIsClosed",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceOpens -> DeviceIsSafe",
+            "P2": "DeviceIsSafe -> DeviceIsActive",
+            "P3": "~DeviceIsActive",
+            "P4": "RobotIsQuick -> RobotIsQuick"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4782
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4783
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 9/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX025
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The dog is hot if the dog opens.
+if the dog is hot, then it is ready.
+it is false that the dog is prepared.
+if the guard arrives, then he is calm.
+is the dog closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the dog is hot if the dog opens.
+     if the dog is hot, then it is ready.
+     it is false that the dog is prepared.
+     if the guard arrives, then he is calm.
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is ready.
+     4. if the guard arrives, then the guard is calm.
+     
+     Detected_Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is ready.
+     4. if the guard arrives, then the guard is calm.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is prepared.
+     4. if the guard arrives, then the guard is calm.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is ready.
+     4. if the guard arrives, then the guard is calm.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the dog opens, then the dog is hot.
+2. if the dog is hot, then the dog is ready.
+3. not the dog is ready.
+4. if the guard arrives, then the guard is calm.
+
+Question:
+is the dog closed?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the dog opens, then the dog is hot.",
+        "P2": "if the dog is hot, then the dog is ready.",
+        "P3": "not the dog is ready.",
+        "P4": "if the guard arrives, then the guard is calm."
+    },
+    "question": "is the dog closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the dog is ready. [from: P2] 
+S2: the dog is hot. [from: S1, P1] [rule: Modus Ponens]
+S3: the dog opens. [from: S2, P4 does not exist but we can use a hypothetical syllogism with an empty set of premises for the second conditional] 
+S4: if the dog is hot, then the dog opens. [hypothetical syllogism with an empty set of premises]
+S5: the dog is closed. [from: S3, P4 does not exist but we can use a hypothetical syllogism with an empty set of premises for the first conditional]
+
+LLM_Response_Error: None
+Runtime_ms: 6780
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the dog is ready. [from: P2]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the dog is ready. [from: P2]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 6780
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 6781
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 10/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX025
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The dog is hot if the dog opens.
+if the dog is hot, then it is ready.
+it is false that the dog is prepared.
+if the guard arrives, then he is calm.
+is the dog closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the dog is hot if the dog opens.
+     if the dog is hot, then it is ready.
+     it is false that the dog is prepared.
+     if the guard arrives, then he is calm.
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is ready.
+     4. if the guard arrives, then the guard is calm.
+     
+     Detected_Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is ready.
+     4. if the guard arrives, then the guard is calm.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is prepared.
+     4. if the guard arrives, then the guard is calm.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog opens, then the dog is hot.
+     2. if the dog is hot, then the dog is ready.
+     3. not the dog is ready.
+     4. if the guard arrives, then the guard is calm.
+     
+     Question:
+     is the dog closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the dog opens, then the dog is hot.
+2. if the dog is hot, then the dog is ready.
+3. not the dog is ready.
+4. if the guard arrives, then the guard is calm.
+
+Question:
+is the dog closed?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the dog opens, then the dog is hot.",
+        "P2": "if the dog is hot, then the dog is ready.",
+        "P3": "not the dog is ready.",
+        "P4": "if the guard arrives, then the guard is calm."
+    },
+    "question": "is the dog closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the dog is hot. [from: P1] [rule: Hypothetical Syllogism]
+S2: not the dog is ready. [from: P3] 
+S3: if the dog is hot, then the dog is ready. [from: P2] 
+S4: the dog is closed. [from: S1, S3] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 4296
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S2: not the dog is ready. [from: P3]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S2: not the dog is ready. [from: P3]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4296
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4296
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 11/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX026
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The farmer is big if the farmer opens.
+If the farmer is large, then it is active.
+the farmer is inactive.
+if the bell is clean, then the bell is safe.
+is the farmer closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the farmer is big if the farmer opens.
+     if the farmer is large, then it is active.
+     the farmer is inactive.
+     if the bell is clean, then the bell is safe.
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Detected_Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is large, then the farmer is active.
+     3. the farmer is inactive.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. the farmer is inactive.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. the farmer is not active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the farmer opens, then the farmer is big.
+2. if the farmer is big, then the farmer is active.
+3. not the farmer is active.
+4. if the bell is clean, then the bell is safe.
+
+Question:
+is the farmer closed?
+
+Normalizer_Runtime_ms: 2
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the farmer opens, then the farmer is big.",
+        "P2": "if the farmer is big, then the farmer is active.",
+        "P3": "not the farmer is active.",
+        "P4": "if the bell is clean, then the bell is safe."
+    },
+    "question": "is the farmer closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the farmer is active. [from: P2] 
+S2: the farmer opens. [from: S1, P1] [rule: Modus Ponens]
+S3: not the farmer opens. [from: P3] 
+S4: the farmer is closed. [from: S3, S2] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 4061
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the farmer is active. [from: P2]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the farmer is active. [from: P2]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 2
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4061
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4063
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 12/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX026
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The farmer is big if the farmer opens.
+If the farmer is large, then it is active.
+the farmer is inactive.
+if the bell is clean, then the bell is safe.
+is the farmer closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the farmer is big if the farmer opens.
+     if the farmer is large, then it is active.
+     the farmer is inactive.
+     if the bell is clean, then the bell is safe.
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Detected_Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is large, then the farmer is active.
+     3. the farmer is inactive.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. the farmer is inactive.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. the farmer is not active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the farmer opens, then the farmer is big.
+     2. if the farmer is big, then the farmer is active.
+     3. not the farmer is active.
+     4. if the bell is clean, then the bell is safe.
+     
+     Question:
+     is the farmer closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the farmer opens, then the farmer is big.
+2. if the farmer is big, then the farmer is active.
+3. not the farmer is active.
+4. if the bell is clean, then the bell is safe.
+
+Question:
+is the farmer closed?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the farmer opens, then the farmer is big.",
+        "P2": "if the farmer is big, then the farmer is active.",
+        "P3": "not the farmer is active.",
+        "P4": "if the bell is clean, then the bell is safe."
+    },
+    "question": "is the farmer closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the farmer is active. [from: P2] 
+S2: the farmer opens. [from: S1, P1] [rule: Modus Ponens]
+S3: not the farmer opens. [from: P3] 
+S4: the farmer is closed. [from: S3, S2] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 3999
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the farmer is active. [from: P2]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the farmer is active. [from: P2]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 3999
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4000
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 13/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX027
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+It is visible if the speaker is quick.
+if the speaker is visible, then not the speaker is strong.
+the speaker is fast.
+if the guard is ready, then it is prepared.
+is the speaker weak?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     it is visible if the speaker is quick.
+     if the speaker is visible, then not the speaker is strong.
+     the speaker is fast.
+     if the guard is ready, then it is prepared.
+     is the speaker weak?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Detected_Question:
+     is the speaker not strong?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is fast.
+     4. if the guard is ready, then the guard is prepared.
+     
+     Question:
+     is the speaker weak?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker weak?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 3
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the speaker is quick, then the speaker is visible.
+2. if the speaker is visible, then not the speaker is strong.
+3. the speaker is quick.
+4. if the guard is quick, then the guard is ready.
+
+Question:
+is the speaker not strong?
+
+Normalizer_Runtime_ms: 3
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the speaker is quick, then the speaker is visible.",
+        "P2": "if the speaker is visible, then not the speaker is strong.",
+        "P3": "the speaker is quick.",
+        "P4": "if the guard is quick, then the guard is ready."
+    },
+    "question": "is the speaker not strong?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the speaker is visible. [from: P1, P3] [rule: Modus Ponens]
+S2: not the speaker is strong. [from: S1, P2] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 2797
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the speaker is visible.",
+            "supports": [
+                "P1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the speaker is strong.",
+            "supports": [
+                "S1",
+                "P2"
+            ],
+            "rule": "Modus Tollens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SpeakerIsQuick -> SpeakerIsVisible",
+            "P2": "SpeakerIsVisible -> ~SpeakerIsStrong",
+            "P3": "SpeakerIsQuick",
+            "P4": "GuardIsQuick -> GuardIsReady"
+        },
+        "target": "~SpeakerIsStrong"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "SpeakerIsVisible",
+                "supports": [
+                    "P1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~SpeakerIsStrong",
+                "supports": [
+                    "S1",
+                    "P2"
+                ],
+                "rule": "Modus Tollens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the speaker is quick": "SpeakerIsQuick",
+        "the speaker is visible": "SpeakerIsVisible",
+        "the speaker is strong": "SpeakerIsStrong",
+        "the guard is quick": "GuardIsQuick",
+        "the guard is ready": "GuardIsReady"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "SpeakerIsVisible",
+                "expected": "SpeakerIsVisible"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "~SpeakerIsStrong",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SpeakerIsQuick -> SpeakerIsVisible",
+            "P2": "SpeakerIsVisible -> ~SpeakerIsStrong",
+            "P3": "SpeakerIsQuick",
+            "P4": "GuardIsQuick -> GuardIsReady",
+            "S1": "SpeakerIsVisible"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2
+Invalid_Steps_Reasons: S2: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 3
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2797
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2800
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 14/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX027
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+It is visible if the speaker is quick.
+if the speaker is visible, then not the speaker is strong.
+the speaker is fast.
+if the guard is ready, then it is prepared.
+is the speaker weak?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     it is visible if the speaker is quick.
+     if the speaker is visible, then not the speaker is strong.
+     the speaker is fast.
+     if the guard is ready, then it is prepared.
+     is the speaker weak?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Detected_Question:
+     is the speaker not strong?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is fast.
+     4. if the guard is ready, then the guard is prepared.
+     
+     Question:
+     is the speaker weak?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker weak?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the speaker is quick, then the speaker is visible.
+     2. if the speaker is visible, then not the speaker is strong.
+     3. the speaker is quick.
+     4. if the guard is quick, then the guard is ready.
+     
+     Question:
+     is the speaker not strong?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 3
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the speaker is quick, then the speaker is visible.
+2. if the speaker is visible, then not the speaker is strong.
+3. the speaker is quick.
+4. if the guard is quick, then the guard is ready.
+
+Question:
+is the speaker not strong?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the speaker is quick, then the speaker is visible.",
+        "P2": "if the speaker is visible, then not the speaker is strong.",
+        "P3": "the speaker is quick.",
+        "P4": "if the guard is quick, then the guard is ready."
+    },
+    "question": "is the speaker not strong?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the speaker is visible. [from: P1, P3] [rule: Modus Ponens]
+S2: not the speaker is strong. [from: S1, P2] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2727
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the speaker is visible.",
+            "supports": [
+                "P1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the speaker is strong.",
+            "supports": [
+                "S1",
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SpeakerIsQuick -> SpeakerIsVisible",
+            "P2": "SpeakerIsVisible -> ~SpeakerIsStrong",
+            "P3": "SpeakerIsQuick",
+            "P4": "GuardIsQuick -> GuardIsReady"
+        },
+        "target": "~SpeakerIsStrong"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "SpeakerIsVisible",
+                "supports": [
+                    "P1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~SpeakerIsStrong",
+                "supports": [
+                    "S1",
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the speaker is quick": "SpeakerIsQuick",
+        "the speaker is visible": "SpeakerIsVisible",
+        "the speaker is strong": "SpeakerIsStrong",
+        "the guard is quick": "GuardIsQuick",
+        "the guard is ready": "GuardIsReady"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "SpeakerIsVisible",
+                "expected": "SpeakerIsVisible"
+            },
+            {
+                "id": "S2",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "~SpeakerIsStrong",
+                "expected": "~SpeakerIsStrong"
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SpeakerIsQuick -> SpeakerIsVisible",
+            "P2": "SpeakerIsVisible -> ~SpeakerIsStrong",
+            "P3": "SpeakerIsQuick",
+            "P4": "GuardIsQuick -> GuardIsReady",
+            "S1": "SpeakerIsVisible",
+            "S2": "~SpeakerIsStrong"
+        }
+    }
+}
+
+Steps_Correctness: All Correct
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2727
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2728
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 15/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX028
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The guard is solid if the guard is prepared.
+not the guard opens if the guard is solid.
+the guard is ready.
+if the farmer walks, then he rests.
+is the guard closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the guard is solid if the guard is prepared.
+     not the guard opens if the guard is solid.
+     the guard is ready.
+     if the farmer walks, then he rests.
+     is the guard closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Detected_Question:
+     is the guard not opens?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is ready.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the guard is prepared, then the guard is solid.
+2. if the guard is solid, then not the guard opens.
+3. the guard is prepared.
+4. if the farmer walks, then the farmer rests.
+
+Question:
+is the guard not opens?
+
+Normalizer_Runtime_ms: 2
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the guard is prepared, then the guard is solid.",
+        "P2": "if the guard is solid, then not the guard opens.",
+        "P3": "the guard is prepared.",
+        "P4": "if the farmer walks, then the farmer rests."
+    },
+    "question": "is the guard not opens?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the guard is solid. [from: P1, P3] [rule: Modus Ponens]
+S2: not the guard opens. [from: S1, P2] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2752
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the guard is solid.",
+            "supports": [
+                "P1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the guard opens.",
+            "supports": [
+                "S1",
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "GuardIsPrepared -> GuardIsSolid",
+            "P2": "GuardIsSolid -> ~GuardOpens",
+            "P3": "GuardIsPrepared",
+            "P4": "FarmerWalks -> FarmerRests"
+        },
+        "target": "~GuardIsOpens"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "GuardIsSolid",
+                "supports": [
+                    "P1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~GuardOpens",
+                "supports": [
+                    "S1",
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the guard is prepared": "GuardIsPrepared",
+        "the guard is solid": "GuardIsSolid",
+        "the guard opens": "GuardOpens",
+        "the farmer walks": "FarmerWalks",
+        "the farmer rests": "FarmerRests",
+        "the guard is opens": "GuardIsOpens"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "GuardIsSolid",
+                "expected": "GuardIsSolid"
+            },
+            {
+                "id": "S2",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "~GuardOpens",
+                "expected": "~GuardOpens"
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "GuardIsPrepared -> GuardIsSolid",
+            "P2": "GuardIsSolid -> ~GuardOpens",
+            "P3": "GuardIsPrepared",
+            "P4": "FarmerWalks -> FarmerRests",
+            "S1": "GuardIsSolid",
+            "S2": "~GuardOpens"
+        }
+    }
+}
+
+Steps_Correctness: All Correct
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 2
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2752
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2754
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 16/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX028
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The guard is solid if the guard is prepared.
+not the guard opens if the guard is solid.
+the guard is ready.
+if the farmer walks, then he rests.
+is the guard closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the guard is solid if the guard is prepared.
+     not the guard opens if the guard is solid.
+     the guard is ready.
+     if the farmer walks, then he rests.
+     is the guard closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Detected_Question:
+     is the guard not opens?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is ready.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the guard is prepared, then the guard is solid.
+     2. if the guard is solid, then not the guard opens.
+     3. the guard is prepared.
+     4. if the farmer walks, then the farmer rests.
+     
+     Question:
+     is the guard not opens?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the guard is prepared, then the guard is solid.
+2. if the guard is solid, then not the guard opens.
+3. the guard is prepared.
+4. if the farmer walks, then the farmer rests.
+
+Question:
+is the guard not opens?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the guard is prepared, then the guard is solid.",
+        "P2": "if the guard is solid, then not the guard opens.",
+        "P3": "the guard is prepared.",
+        "P4": "if the farmer walks, then the farmer rests."
+    },
+    "question": "is the guard not opens?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the guard is solid. [from: P1, P3] [rule: Modus Ponens]
+S2: not the guard opens. [from: S1, P2] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2712
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the guard is solid.",
+            "supports": [
+                "P1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the guard opens.",
+            "supports": [
+                "S1",
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "GuardIsPrepared -> GuardIsSolid",
+            "P2": "GuardIsSolid -> ~GuardOpens",
+            "P3": "GuardIsPrepared",
+            "P4": "FarmerWalks -> FarmerRests"
+        },
+        "target": "~GuardIsOpens"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "GuardIsSolid",
+                "supports": [
+                    "P1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~GuardOpens",
+                "supports": [
+                    "S1",
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the guard is prepared": "GuardIsPrepared",
+        "the guard is solid": "GuardIsSolid",
+        "the guard opens": "GuardOpens",
+        "the farmer walks": "FarmerWalks",
+        "the farmer rests": "FarmerRests",
+        "the guard is opens": "GuardIsOpens"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "GuardIsSolid",
+                "expected": "GuardIsSolid"
+            },
+            {
+                "id": "S2",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "~GuardOpens",
+                "expected": "~GuardOpens"
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "GuardIsPrepared -> GuardIsSolid",
+            "P2": "GuardIsSolid -> ~GuardOpens",
+            "P3": "GuardIsPrepared",
+            "P4": "FarmerWalks -> FarmerRests",
+            "S1": "GuardIsSolid",
+            "S2": "~GuardOpens"
+        }
+    }
+}
+
+Steps_Correctness: All Correct
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2712
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2713
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 17/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX029
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The artist is ready if the artist begins.
+if the artist is prepared, then it is safe.
+if the artist is secure, then not the artist is open.
+the artist starts.
+if the doctor is ready, then the doctor is safe.
+is the artist closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the artist is ready if the artist begins.
+     if the artist is prepared, then it is safe.
+     if the artist is secure, then not the artist is open.
+     the artist starts.
+     if the doctor is ready, then the doctor is safe.
+     is the artist closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Detected_Question:
+     is the artist not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is prepared, then the artist is safe.
+     3. if the artist is secure, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is ready, then the doctor is safe.
+     
+     Question:
+     is the artist closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 4
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the artist begins, then the artist is ready.
+2. if the artist is ready, then the artist is safe.
+3. if the artist is safe, then not the artist is open.
+4. the artist starts.
+5. if the doctor is prepared, then the doctor is secure.
+
+Question:
+is the artist not open?
+
+Normalizer_Runtime_ms: 2
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the artist begins, then the artist is ready.",
+        "P2": "if the artist is ready, then the artist is safe.",
+        "P3": "if the artist is safe, then not the artist is open.",
+        "P4": "the artist starts.",
+        "P5": "if the doctor is prepared, then the doctor is secure."
+    },
+    "question": "is the artist not open?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the artist is safe. [from: P2] [rule: Conjunction Introduction]
+S2: the artist is not open. [from: S1, P3] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2659
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the artist is safe.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Conjunction Introduction"
+        },
+        {
+            "id": "S2",
+            "statement": "the artist is not open.",
+            "supports": [
+                "S1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ArtistBegins -> ArtistIsReady",
+            "P2": "ArtistIsReady -> ArtistIsSafe",
+            "P3": "ArtistIsSafe -> ~ArtistIsOpen",
+            "P4": "ArtistStarts",
+            "P5": "DoctorIsPrepared -> DoctorIsSecure"
+        },
+        "target": "~ArtistIsOpen"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ArtistIsSafe",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Conjunction Introduction"
+            },
+            {
+                "id": "S2",
+                "derived": "~ArtistIsOpen",
+                "supports": [
+                    "S1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the artist begins": "ArtistBegins",
+        "the artist is ready": "ArtistIsReady",
+        "the artist is safe": "ArtistIsSafe",
+        "the artist is open": "ArtistIsOpen",
+        "the artist starts": "ArtistStarts",
+        "the doctor is prepared": "DoctorIsPrepared",
+        "the doctor is secure": "DoctorIsSecure"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Conjunction Introduction requires exactly 2 supports.",
+                "derived": "ArtistIsSafe",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~ArtistIsOpen",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ArtistBegins -> ArtistIsReady",
+            "P2": "ArtistIsReady -> ArtistIsSafe",
+            "P3": "ArtistIsSafe -> ~ArtistIsOpen",
+            "P4": "ArtistStarts",
+            "P5": "DoctorIsPrepared -> DoctorIsSecure"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 2
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2659
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2661
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 18/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX029
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The artist is ready if the artist begins.
+if the artist is prepared, then it is safe.
+if the artist is secure, then not the artist is open.
+the artist starts.
+if the doctor is ready, then the doctor is safe.
+is the artist closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the artist is ready if the artist begins.
+     if the artist is prepared, then it is safe.
+     if the artist is secure, then not the artist is open.
+     the artist starts.
+     if the doctor is ready, then the doctor is safe.
+     is the artist closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Detected_Question:
+     is the artist not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is prepared, then the artist is safe.
+     3. if the artist is secure, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is ready, then the doctor is safe.
+     
+     Question:
+     is the artist closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 4
+  Output_After_Component:
+
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the artist begins, then the artist is ready.
+     2. if the artist is ready, then the artist is safe.
+     3. if the artist is safe, then not the artist is open.
+     4. the artist starts.
+     5. if the doctor is prepared, then the doctor is secure.
+     
+     Question:
+     is the artist not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 4
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the artist begins, then the artist is ready.
+2. if the artist is ready, then the artist is safe.
+3. if the artist is safe, then not the artist is open.
+4. the artist starts.
+5. if the doctor is prepared, then the doctor is secure.
+
+Question:
+is the artist not open?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the artist begins, then the artist is ready.",
+        "P2": "if the artist is ready, then the artist is safe.",
+        "P3": "if the artist is safe, then not the artist is open.",
+        "P4": "the artist starts.",
+        "P5": "if the doctor is prepared, then the doctor is secure."
+    },
+    "question": "is the artist not open?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the artist is safe. [from: P2] [rule: Conjunction Introduction]
+S2: the artist is not open. [from: S1, P3] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2594
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the artist is safe.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Conjunction Introduction"
+        },
+        {
+            "id": "S2",
+            "statement": "the artist is not open.",
+            "supports": [
+                "S1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ArtistBegins -> ArtistIsReady",
+            "P2": "ArtistIsReady -> ArtistIsSafe",
+            "P3": "ArtistIsSafe -> ~ArtistIsOpen",
+            "P4": "ArtistStarts",
+            "P5": "DoctorIsPrepared -> DoctorIsSecure"
+        },
+        "target": "~ArtistIsOpen"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ArtistIsSafe",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Conjunction Introduction"
+            },
+            {
+                "id": "S2",
+                "derived": "~ArtistIsOpen",
+                "supports": [
+                    "S1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the artist begins": "ArtistBegins",
+        "the artist is ready": "ArtistIsReady",
+        "the artist is safe": "ArtistIsSafe",
+        "the artist is open": "ArtistIsOpen",
+        "the artist starts": "ArtistStarts",
+        "the doctor is prepared": "DoctorIsPrepared",
+        "the doctor is secure": "DoctorIsSecure"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Conjunction Introduction requires exactly 2 supports.",
+                "derived": "ArtistIsSafe",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~ArtistIsOpen",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ArtistBegins -> ArtistIsReady",
+            "P2": "ArtistIsReady -> ArtistIsSafe",
+            "P3": "ArtistIsSafe -> ~ArtistIsOpen",
+            "P4": "ArtistStarts",
+            "P5": "DoctorIsPrepared -> DoctorIsSecure"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2594
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 2596
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 19/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX030
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The driver is near if the driver is prepared.
+If the driver is near, then it is safe.
+if the driver is secure, then not the driver is open.
+the driver is ready.
+if the pilot is clean, then it is fast.
+is the driver closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the driver is near if the driver is prepared.
+     if the driver is near, then it is safe.
+     if the driver is secure, then not the driver is open.
+     the driver is ready.
+     if the pilot is clean, then it is fast.
+     is the driver closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is safe, then not the driver is open.
+     4. the driver is prepared.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Detected_Question:
+     is the driver near?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is safe, then not the driver is open.
+     4. the driver is prepared.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Question:
+     is the driver near?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is secure, then not the driver is open.
+     4. the driver is ready.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Question:
+     is the driver closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is safe, then not the driver is open.
+     4. the driver is prepared.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Question:
+     is the driver near?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 3
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the driver is prepared, then the driver is near.
+2. if the driver is near, then the driver is safe.
+3. if the driver is safe, then not the driver is open.
+4. the driver is prepared.
+5. if the pilot is clean, then the pilot is fast.
+
+Question:
+is the driver near?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the driver is prepared, then the driver is near.",
+        "P2": "if the driver is near, then the driver is safe.",
+        "P3": "if the driver is safe, then not the driver is open.",
+        "P4": "the driver is prepared.",
+        "P5": "if the pilot is clean, then the pilot is fast."
+    },
+    "question": "is the driver near?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the driver is near. [from: P1, P4] [rule: Modus Ponens]
+S2: the driver is safe. [from: S1, P2] [rule: Hypothetical Syllogism]
+S3: not the driver is open. [from: S2, P3] [rule: Modus Ponens]
+S4: the driver is near. [from: S3, P1, P4] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 5071
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the driver is near.",
+            "supports": [
+                "P1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "the driver is safe.",
+            "supports": [
+                "S1",
+                "P2"
+            ],
+            "rule": "Hypothetical Syllogism"
+        },
+        {
+            "id": "S3",
+            "statement": "not the driver is open.",
+            "supports": [
+                "S2",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the driver is near.",
+            "supports": [
+                "S3",
+                "P1",
+                "P4"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DriverIsPrepared -> DriverIsNear",
+            "P2": "DriverIsNear -> DriverIsSafe",
+            "P3": "DriverIsSafe -> ~DriverIsOpen",
+            "P4": "DriverIsPrepared",
+            "P5": "PilotIsClean -> PilotIsFast"
+        },
+        "target": "DriverIsNear"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "DriverIsNear",
+                "supports": [
+                    "P1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "DriverIsSafe",
+                "supports": [
+                    "S1",
+                    "P2"
+                ],
+                "rule": "Hypothetical Syllogism"
+            },
+            {
+                "id": "S3",
+                "derived": "~DriverIsOpen",
+                "supports": [
+                    "S2",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "DriverIsNear",
+                "supports": [
+                    "S3",
+                    "P1",
+                    "P4"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the driver is prepared": "DriverIsPrepared",
+        "the driver is near": "DriverIsNear",
+        "the driver is safe": "DriverIsSafe",
+        "the driver is open": "DriverIsOpen",
+        "the pilot is clean": "PilotIsClean",
+        "the pilot is fast": "PilotIsFast"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "DriverIsNear",
+                "expected": "DriverIsNear"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "DriverIsSafe",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "~DriverIsOpen",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "DriverIsNear",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DriverIsPrepared -> DriverIsNear",
+            "P2": "DriverIsNear -> DriverIsSafe",
+            "P3": "DriverIsSafe -> ~DriverIsOpen",
+            "P4": "DriverIsPrepared",
+            "P5": "PilotIsClean -> PilotIsFast",
+            "S1": "DriverIsNear"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2, S3, S4
+Invalid_Steps_Reasons: S2: VF_STEP_RULE_NOT_APPLICABLE; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 5071
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 5073
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 20/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX030
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The driver is near if the driver is prepared.
+If the driver is near, then it is safe.
+if the driver is secure, then not the driver is open.
+the driver is ready.
+if the pilot is clean, then it is fast.
+is the driver closed?
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the driver is near if the driver is prepared.
+     if the driver is near, then it is safe.
+     if the driver is secure, then not the driver is open.
+     the driver is ready.
+     if the pilot is clean, then it is fast.
+     is the driver closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is safe, then not the driver is open.
+     4. the driver is prepared.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Detected_Question:
+     is the driver near?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is safe, then not the driver is open.
+     4. the driver is prepared.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Question:
+     is the driver near?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is secure, then not the driver is open.
+     4. the driver is ready.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Question:
+     is the driver closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the driver is prepared, then the driver is near.
+     2. if the driver is near, then the driver is safe.
+     3. if the driver is safe, then not the driver is open.
+     4. the driver is prepared.
+     5. if the pilot is clean, then the pilot is fast.
+     
+     Question:
+     is the driver near?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 3
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 8
+
+Normalized_Prompt:
+Premises:
+1. if the driver is prepared, then the driver is near.
+2. if the driver is near, then the driver is safe.
+3. if the driver is safe, then not the driver is open.
+4. the driver is prepared.
+5. if the pilot is clean, then the pilot is fast.
+
+Question:
+is the driver near?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the driver is prepared, then the driver is near.",
+        "P2": "if the driver is near, then the driver is safe.",
+        "P3": "if the driver is safe, then not the driver is open.",
+        "P4": "the driver is prepared.",
+        "P5": "if the pilot is clean, then the pilot is fast."
+    },
+    "question": "is the driver near?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the driver is near. [from: P1, P4] [rule: Modus Ponens]
+S2: the driver is safe. [from: S1, P2] [rule: Hypothetical Syllogism]
+S3: not the driver is open. [from: S2, P3] [rule: Modus Ponens]
+S4: the driver is near. [from: S3, P1] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 4945
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the driver is near.",
+            "supports": [
+                "P1",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "the driver is safe.",
+            "supports": [
+                "S1",
+                "P2"
+            ],
+            "rule": "Hypothetical Syllogism"
+        },
+        {
+            "id": "S3",
+            "statement": "not the driver is open.",
+            "supports": [
+                "S2",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the driver is near.",
+            "supports": [
+                "S3",
+                "P1"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DriverIsPrepared -> DriverIsNear",
+            "P2": "DriverIsNear -> DriverIsSafe",
+            "P3": "DriverIsSafe -> ~DriverIsOpen",
+            "P4": "DriverIsPrepared",
+            "P5": "PilotIsClean -> PilotIsFast"
+        },
+        "target": "DriverIsNear"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "DriverIsNear",
+                "supports": [
+                    "P1",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "DriverIsSafe",
+                "supports": [
+                    "S1",
+                    "P2"
+                ],
+                "rule": "Hypothetical Syllogism"
+            },
+            {
+                "id": "S3",
+                "derived": "~DriverIsOpen",
+                "supports": [
+                    "S2",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "DriverIsNear",
+                "supports": [
+                    "S3",
+                    "P1"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the driver is prepared": "DriverIsPrepared",
+        "the driver is near": "DriverIsNear",
+        "the driver is safe": "DriverIsSafe",
+        "the driver is open": "DriverIsOpen",
+        "the pilot is clean": "PilotIsClean",
+        "the pilot is fast": "PilotIsFast"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "DriverIsNear",
+                "expected": "DriverIsNear"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "DriverIsSafe",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "~DriverIsOpen",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "DriverIsNear",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DriverIsPrepared -> DriverIsNear",
+            "P2": "DriverIsNear -> DriverIsSafe",
+            "P3": "DriverIsSafe -> ~DriverIsOpen",
+            "P4": "DriverIsPrepared",
+            "P5": "PilotIsClean -> PilotIsFast",
+            "S1": "DriverIsNear"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2, S3, S4
+Invalid_Steps_Reasons: S2: VF_STEP_RULE_NOT_APPLICABLE; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: consistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4945
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 4946
+
+================================================================================
+RUN END
+================================================================================
+

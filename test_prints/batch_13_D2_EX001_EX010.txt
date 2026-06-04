@@ -1,0 +1,492 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 13: D2_EX001 to D2_EX010
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX001
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ù D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N1
+Expected_Specific_Error: CA_EMPTY_INPUT
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: failed
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: CA_EMPTY_INPUT
+  Error_Message: NORMALIZATION_ERROR: Empty input
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: skipped
+  Triggered: N/A
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N1
+Normalizer_Error_Code: CA_EMPTY_INPUT
+Normalizer_Error_Message: NORMALIZATION_ERROR: Empty input
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: CA_EMPTY_INPUT
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX002
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Ahmed studies @ home.
+Does Ahmed study?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ù D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N1
+Expected_Specific_Error: CA_UNSUPPORTED_CHARACTER
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: failed
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     ahmed studies @ home.
+     does ahmed study?
+
+  Error_Code: CA_UNSUPPORTED_CHARACTER
+  Error_Message: NORMALIZATION_ERROR: Unsupported character(s) found: @
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: skipped
+  Triggered: N/A
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N1
+Normalizer_Error_Code: CA_UNSUPPORTED_CHARACTER
+Normalizer_Error_Message: NORMALIZATION_ERROR: Unsupported character(s) found: @
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: CA_UNSUPPORTED_CHARACTER
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX003
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Traceback (most recent call last):
+  File "C:\Users\Omar Ayman\Desktop\langGraph\tests\test_Final_a.py", line 277, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Omar Ayman\Desktop\langGraph\tests\test_Final_a.py", line 273, in main
+    run_and_print_example(example)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Omar Ayman\Desktop\langGraph\tests\final_run_utils.py", line 963, in run_and_print_example
+    print(raw_input)
+    ~~~~~^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f60a' in position 11: character maps to <undefined>

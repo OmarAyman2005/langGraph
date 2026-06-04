@@ -203,12 +203,42 @@ def _extract_simple_subject(clause: str) -> str | None:
     - ahmed plays football
     - the sensor is active
     - the guard wakes up
+    - not the robot is active  -> the robot
     """
 
     words = _tokens(clause)
 
     if len(words) < 2:
         return None
+
+    # ==================================================
+    # Handle leading canonical negation:
+    # not the robot is active -> the robot
+    # not ahmed is ready -> ahmed
+    # ==================================================
+    if words[0] == "not":
+        inner_words = words[1:]
+
+        if len(inner_words) < 2:
+            return None
+
+        if inner_words[0] in PRONOUNS:
+            return None
+
+        if inner_words[0] in DETERMINERS:
+            for i, word in enumerate(inner_words):
+                if i > 0 and word in AUXILIARIES:
+                    subject_words = inner_words[:i]
+                    if len(subject_words) >= 2:
+                        return " ".join(subject_words)
+                    return None
+
+            if len(inner_words) >= 3:
+                return " ".join(inner_words[:2])
+
+            return None
+
+        return inner_words[0]
 
     first = words[0]
 
@@ -248,6 +278,13 @@ def _count_possible_entities(clause: str) -> int:
     """
 
     words = _tokens(clause)
+    # Ignore leading canonical negation for ambiguity counting.
+    # Example:
+    # not the robot is active
+    # should be counted like:
+    # the robot is active
+    if words and words[0] == "not":
+        words = words[1:]
 
     if len(words) < 2:
         return 0

@@ -1,0 +1,2918 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 5A Restart: D1_EX042 to D1_EX045
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX042
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The engine works if the engine starts.
+If the engine works, then it is prepared.
+the engine is unready.
+the camera moves if the camera opens.
+either the engine is clean or the engine is quick.
+does the engine not begin?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the engine works if the engine starts.
+     if the engine works, then it is prepared.
+     the engine is unready.
+     the camera moves if the camera opens.
+     either the engine is clean or the engine is quick.
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Detected_Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the engine starts, then the engine works.
+2. if the engine works, then the engine is prepared.
+3. the engine is unready.
+4. if the camera opens, then the camera moves.
+5. the engine is clean or the engine is quick.
+
+Question:
+does the engine not begin?
+
+Normalizer_Runtime_ms: 1619
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine starts, then the engine works.",
+        "P2": "if the engine works, then the engine is prepared.",
+        "P3": "the engine is unready.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the engine is clean or the engine is quick."
+    },
+    "question": "does the engine not begin?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the engine does not start. [from: P3] [rule: Conjunction Introduction]
+S2: if the engine starts, then the engine works. [from: P1] [rule: None]
+S3: the engine is unready. [from: P3] [rule: None]
+S4: the engine does not work. [from: S1, S3] [rule: Modus Ponens]
+S5: if the engine works, then the engine is prepared. [from: P2] [rule: None]
+S6: the engine is unready. [from: P3] [rule: None]
+S7: the engine is not prepared. [from: S4, S6] [rule: Modus Tollens]
+S8: the engine does not start or the engine is not prepared. [from: P5] [rule: Disjunctive Syllogism]
+S9: the engine does not start. [from: S7, S8] [rule: Conjunction Elimination]
+S10: if it begins, then it starts. [from: None] [rule: Hypothetical Syllogism]
+S11: the engine is unready. [from: P3] [rule: None]
+S12: it does not begin. [from: S9, S10, S11] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 14489
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Unsupported rule in S2: 'None'.
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Unsupported rule in S2: 'None'.
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1619
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 14489
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 16108
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX042
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The engine works if the engine starts.
+If the engine works, then it is prepared.
+the engine is unready.
+the camera moves if the camera opens.
+either the engine is clean or the engine is quick.
+does the engine not begin?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the engine works if the engine starts.
+     if the engine works, then it is prepared.
+     the engine is unready.
+     the camera moves if the camera opens.
+     either the engine is clean or the engine is quick.
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Detected_Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the engine starts, then the engine works.
+2. if the engine works, then the engine is prepared.
+3. the engine is unready.
+4. if the camera opens, then the camera moves.
+5. the engine is clean or the engine is quick.
+
+Question:
+does the engine not begin?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine starts, then the engine works.",
+        "P2": "if the engine works, then the engine is prepared.",
+        "P3": "the engine is unready.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the engine is clean or the engine is quick."
+    },
+    "question": "does the engine not begin?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the engine does not start. [from: P3] [rule: Conjunction Introduction]
+S2: if the engine starts, then the engine works. [from: P1] [rule: None]
+S3: the engine is unready. [from: P3] [rule: None]
+S4: the engine does not work. [from: S1, S3] [rule: Modus Ponens]
+S5: if the engine works, then the engine is prepared. [from: P2] [rule: None]
+S6: the engine is unready. [from: P3] [rule: None]
+S7: the engine is not prepared. [from: S4, S6] [rule: Modus Tollens]
+S8: the engine does not start or the engine is not prepared. [from: P5] [rule: Disjunctive Syllogism]
+S9: the engine does not start. [from: S7, S8] [rule: Conjunction Elimination]
+S10: if it begins, then it starts. [from: None] [rule: Hypothetical Syllogism]
+S11: the engine is unready. [from: P3] [rule: None]
+S12: it does not begin. [from: S9, S10, S11] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 12896
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Unsupported rule in S2: 'None'.
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Unsupported rule in S2: 'None'.
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 12896
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 12896
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX043
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The robot works if the robot moves.
+If the robot works, then it is active.
+the robot is inactive.
+the door moves if the door opens.
+either the robot is prepared or the robot is fresh.
+does the robot not travel?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 1
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the robot works if the robot moves.
+     if the robot works, then it is active.
+     the robot is inactive.
+     the door moves if the door opens.
+     either the robot is prepared or the robot is fresh.
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Detected_Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. the robot is inactive.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. the robot is not active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. if the robot moves, then the robot works.
+2. if the robot works, then the robot is active.
+3. not the robot is active.
+4. if the door opens, then the door moves.
+5. the robot is prepared or the robot is fresh.
+
+Question:
+does the robot not travel?
+
+Normalizer_Runtime_ms: 3
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the robot moves, then the robot works.",
+        "P2": "if the robot works, then the robot is active.",
+        "P3": "not the robot is active.",
+        "P4": "if the door opens, then the door moves.",
+        "P5": "the robot is prepared or the robot is fresh."
+    },
+    "question": "does the robot not travel?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the robot does not work. [from: P3] [rule: Modus Ponens]
+S2: the robot does not move. [from: S1, P1] [rule: Modus Ponens]
+S3: the door does not move. [from: S2, P4] [rule: Hypothetical Syllogism]
+S4: the robot does not travel. [from: S3] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 4829
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the robot does not work.",
+            "supports": [
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "the robot does not move.",
+            "supports": [
+                "S1",
+                "P1"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the door does not move.",
+            "supports": [
+                "S2",
+                "P4"
+            ],
+            "rule": "Hypothetical Syllogism"
+        },
+        {
+            "id": "S4",
+            "statement": "the robot does not travel.",
+            "supports": [
+                "S3"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "RobotMoves -> RobotWorks",
+            "P2": "RobotWorks -> RobotIsActive",
+            "P3": "~RobotIsActive",
+            "P4": "DoorOpens -> DoorMoves",
+            "P5": "RobotIsPrepared | RobotIsFresh"
+        },
+        "target": "~RobotTravels"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~RobotWorks",
+                "supports": [
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~RobotMoves",
+                "supports": [
+                    "S1",
+                    "P1"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "~DoorMoves",
+                "supports": [
+                    "S2",
+                    "P4"
+                ],
+                "rule": "Hypothetical Syllogism"
+            },
+            {
+                "id": "S4",
+                "derived": "~RobotTravels",
+                "supports": [
+                    "S3"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the robot moves": "RobotMoves",
+        "the robot works": "RobotWorks",
+        "the robot is active": "RobotIsActive",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the robot is prepared": "RobotIsPrepared",
+        "the robot is fresh": "RobotIsFresh",
+        "the robot travels": "RobotTravels"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Ponens requires exactly 2 supports.",
+                "derived": "~RobotWorks",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~RobotMoves",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "~DoorMoves",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "~RobotTravels",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "RobotMoves -> RobotWorks",
+            "P2": "RobotWorks -> RobotIsActive",
+            "P3": "~RobotIsActive",
+            "P4": "DoorOpens -> DoorMoves",
+            "P5": "RobotIsPrepared | RobotIsFresh"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 3
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4829
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4832
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX043
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The robot works if the robot moves.
+If the robot works, then it is active.
+the robot is inactive.
+the door moves if the door opens.
+either the robot is prepared or the robot is fresh.
+does the robot not travel?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 1
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the robot works if the robot moves.
+     if the robot works, then it is active.
+     the robot is inactive.
+     the door moves if the door opens.
+     either the robot is prepared or the robot is fresh.
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Detected_Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. the robot is inactive.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. the robot is not active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. if the robot moves, then the robot works.
+     2. if the robot works, then the robot is active.
+     3. not the robot is active.
+     4. if the door opens, then the door moves.
+     5. the robot is prepared or the robot is fresh.
+     
+     Question:
+     does the robot not travel?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. if the robot moves, then the robot works.
+2. if the robot works, then the robot is active.
+3. not the robot is active.
+4. if the door opens, then the door moves.
+5. the robot is prepared or the robot is fresh.
+
+Question:
+does the robot not travel?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the robot moves, then the robot works.",
+        "P2": "if the robot works, then the robot is active.",
+        "P3": "not the robot is active.",
+        "P4": "if the door opens, then the door moves.",
+        "P5": "the robot is prepared or the robot is fresh."
+    },
+    "question": "does the robot not travel?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the robot does not work. [from: P3] [rule: Modus Ponens]
+S2: the robot does not move. [from: S1, P1] [rule: Modus Ponens]
+S3: the door does not move. [from: S2, P4] [rule: Modus Ponens]
+S4: the robot does not travel. [from: S3] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 4683
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the robot does not work.",
+            "supports": [
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "the robot does not move.",
+            "supports": [
+                "S1",
+                "P1"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S3",
+            "statement": "the door does not move.",
+            "supports": [
+                "S2",
+                "P4"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S4",
+            "statement": "the robot does not travel.",
+            "supports": [
+                "S3"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "RobotMoves -> RobotWorks",
+            "P2": "RobotWorks -> RobotIsActive",
+            "P3": "~RobotIsActive",
+            "P4": "DoorOpens -> DoorMoves",
+            "P5": "RobotIsPrepared | RobotIsFresh"
+        },
+        "target": "~RobotTravels"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~RobotWorks",
+                "supports": [
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~RobotMoves",
+                "supports": [
+                    "S1",
+                    "P1"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S3",
+                "derived": "~DoorMoves",
+                "supports": [
+                    "S2",
+                    "P4"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S4",
+                "derived": "~RobotTravels",
+                "supports": [
+                    "S3"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the robot moves": "RobotMoves",
+        "the robot works": "RobotWorks",
+        "the robot is active": "RobotIsActive",
+        "the door opens": "DoorOpens",
+        "the door moves": "DoorMoves",
+        "the robot is prepared": "RobotIsPrepared",
+        "the robot is fresh": "RobotIsFresh",
+        "the robot travels": "RobotTravels"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Ponens requires exactly 2 supports.",
+                "derived": "~RobotWorks",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~RobotMoves",
+                "expected": null
+            },
+            {
+                "id": "S3",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S2",
+                "derived": "~DoorMoves",
+                "expected": null
+            },
+            {
+                "id": "S4",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S3",
+                "derived": "~RobotTravels",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "RobotMoves -> RobotWorks",
+            "P2": "RobotWorks -> RobotIsActive",
+            "P3": "~RobotIsActive",
+            "P4": "DoorOpens -> DoorMoves",
+            "P5": "RobotIsPrepared | RobotIsFresh"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2, S3, S4
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT; S3: VF_STEP_UNKNOWN_SUPPORT; S4: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 4683
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 4684
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX044
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The door is secure if the door opens.
+If the door is safe, then it is prepared.
+the door is unready.
+if the bell rings, then it is silent.
+either the door is smooth or the door is visible.
+the door is nice.
+is the door closed?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 1
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the door is secure if the door opens.
+     if the door is safe, then it is prepared.
+     the door is unready.
+     if the bell rings, then it is silent.
+     either the door is smooth or the door is visible.
+     the door is nice.
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Detected_Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is safe, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. if the door opens, then the door is secure.
+2. if the door is secure, then the door is prepared.
+3. the door is unready.
+4. if the bell rings, then the bell is silent.
+5. the door is smooth or the door is visible.
+6. the door is nice.
+
+Question:
+is the door closed?
+
+Normalizer_Runtime_ms: 4
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the door opens, then the door is secure.",
+        "P2": "if the door is secure, then the door is prepared.",
+        "P3": "the door is unready.",
+        "P4": "if the bell rings, then the bell is silent.",
+        "P5": "the door is smooth or the door is visible.",
+        "P6": "the door is nice."
+    },
+    "question": "is the door closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 973
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DoorOpens -> DoorIsSecure",
+            "P2": "DoorIsSecure -> DoorIsPrepared",
+            "P3": "DoorIsUnready",
+            "P4": "BellRings -> BellIsSilent",
+            "P5": "DoorIsSmooth | DoorIsVisible",
+            "P6": "DoorIsNice"
+        },
+        "target": "DoorIsClosed"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the door opens": "DoorOpens",
+        "the door is secure": "DoorIsSecure",
+        "the door is prepared": "DoorIsPrepared",
+        "the door is unready": "DoorIsUnready",
+        "the bell rings": "BellRings",
+        "the bell is silent": "BellIsSilent",
+        "the door is smooth": "DoorIsSmooth",
+        "the door is visible": "DoorIsVisible",
+        "the door is nice": "DoorIsNice",
+        "the door is closed": "DoorIsClosed"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "DoorOpens -> DoorIsSecure",
+            "P2": "DoorIsSecure -> DoorIsPrepared",
+            "P3": "DoorIsUnready",
+            "P4": "BellRings -> BellIsSilent",
+            "P5": "DoorIsSmooth | DoorIsVisible",
+            "P6": "DoorIsNice"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 4
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 973
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 977
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX044
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The door is secure if the door opens.
+If the door is safe, then it is prepared.
+the door is unready.
+if the bell rings, then it is silent.
+either the door is smooth or the door is visible.
+the door is nice.
+is the door closed?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 1
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 7
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the door is secure if the door opens.
+     if the door is safe, then it is prepared.
+     the door is unready.
+     if the bell rings, then it is silent.
+     either the door is smooth or the door is visible.
+     the door is nice.
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Detected_Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is safe, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the door opens, then the door is secure.
+     2. if the door is secure, then the door is prepared.
+     3. the door is unready.
+     4. if the bell rings, then the bell is silent.
+     5. the door is smooth or the door is visible.
+     6. the door is nice.
+     
+     Question:
+     is the door closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 7
+
+Normalized_Prompt:
+Premises:
+1. if the door opens, then the door is secure.
+2. if the door is secure, then the door is prepared.
+3. the door is unready.
+4. if the bell rings, then the bell is silent.
+5. the door is smooth or the door is visible.
+6. the door is nice.
+
+Question:
+is the door closed?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the door opens, then the door is secure.",
+        "P2": "if the door is secure, then the door is prepared.",
+        "P3": "the door is unready.",
+        "P4": "if the bell rings, then the bell is silent.",
+        "P5": "the door is smooth or the door is visible.",
+        "P6": "the door is nice."
+    },
+    "question": "is the door closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 932
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DoorOpens -> DoorIsSecure",
+            "P2": "DoorIsSecure -> DoorIsPrepared",
+            "P3": "DoorIsUnready",
+            "P4": "BellRings -> BellIsSilent",
+            "P5": "DoorIsSmooth | DoorIsVisible",
+            "P6": "DoorIsNice"
+        },
+        "target": "DoorIsClosed"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the door opens": "DoorOpens",
+        "the door is secure": "DoorIsSecure",
+        "the door is prepared": "DoorIsPrepared",
+        "the door is unready": "DoorIsUnready",
+        "the bell rings": "BellRings",
+        "the bell is silent": "BellIsSilent",
+        "the door is smooth": "DoorIsSmooth",
+        "the door is visible": "DoorIsVisible",
+        "the door is nice": "DoorIsNice",
+        "the door is closed": "DoorIsClosed"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "DoorOpens -> DoorIsSecure",
+            "P2": "DoorIsSecure -> DoorIsPrepared",
+            "P3": "DoorIsUnready",
+            "P4": "BellRings -> BellIsSilent",
+            "P5": "DoorIsSmooth | DoorIsVisible",
+            "P6": "DoorIsNice"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 932
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 932
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX045
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The window is warm if the window opens.
+If the window is hot, then it is prepared.
+the window is unready.
+if the lamp starts, then it moves.
+either the window is solid or the window is early.
+the window is large.
+is the window closed?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the window is warm if the window opens.
+     if the window is hot, then it is prepared.
+     the window is unready.
+     if the lamp starts, then it moves.
+     either the window is solid or the window is early.
+     the window is large.
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Detected_Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the window opens, then the window is warm.
+2. if the window is hot, then the window is prepared.
+3. the window is unready.
+4. if the lamp starts, then the lamp moves.
+5. the window is solid or the window is early.
+6. the window is large.
+
+Question:
+is the window closed?
+
+Normalizer_Runtime_ms: 4
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the window opens, then the window is warm.",
+        "P2": "if the window is hot, then the window is prepared.",
+        "P3": "the window is unready.",
+        "P4": "if the lamp starts, then the lamp moves.",
+        "P5": "the window is solid or the window is early.",
+        "P6": "the window is large."
+    },
+    "question": "is the window closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1010
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "WindowOpens -> WindowIsWarm",
+            "P2": "WindowIsHot -> WindowIsPrepared",
+            "P3": "WindowIsUnready",
+            "P4": "LampStarts -> LampMoves",
+            "P5": "WindowIsSolid | WindowIsEarly",
+            "P6": "WindowIsLarge"
+        },
+        "target": "WindowIsClosed"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the window opens": "WindowOpens",
+        "the window is warm": "WindowIsWarm",
+        "the window is hot": "WindowIsHot",
+        "the window is prepared": "WindowIsPrepared",
+        "the window is unready": "WindowIsUnready",
+        "the lamp starts": "LampStarts",
+        "the lamp moves": "LampMoves",
+        "the window is solid": "WindowIsSolid",
+        "the window is early": "WindowIsEarly",
+        "the window is large": "WindowIsLarge",
+        "the window is closed": "WindowIsClosed"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "WindowOpens -> WindowIsWarm",
+            "P2": "WindowIsHot -> WindowIsPrepared",
+            "P3": "WindowIsUnready",
+            "P4": "LampStarts -> LampMoves",
+            "P5": "WindowIsSolid | WindowIsEarly",
+            "P6": "WindowIsLarge"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 4
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 1010
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 1014
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/8
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX045
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The window is warm if the window opens.
+If the window is hot, then it is prepared.
+the window is unready.
+if the lamp starts, then it moves.
+either the window is solid or the window is early.
+the window is large.
+is the window closed?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 4
+Inference_Rules: HS+MT
+Distractor_Count: 3
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the window is warm if the window opens.
+     if the window is hot, then it is prepared.
+     the window is unready.
+     if the lamp starts, then it moves.
+     either the window is solid or the window is early.
+     the window is large.
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Detected_Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. if the window opens, then the window is warm.
+     2. if the window is hot, then the window is prepared.
+     3. the window is unready.
+     4. if the lamp starts, then the lamp moves.
+     5. the window is solid or the window is early.
+     6. the window is large.
+     
+     Question:
+     is the window closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 2
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the window opens, then the window is warm.
+2. if the window is hot, then the window is prepared.
+3. the window is unready.
+4. if the lamp starts, then the lamp moves.
+5. the window is solid or the window is early.
+6. the window is large.
+
+Question:
+is the window closed?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the window opens, then the window is warm.",
+        "P2": "if the window is hot, then the window is prepared.",
+        "P3": "the window is unready.",
+        "P4": "if the lamp starts, then the lamp moves.",
+        "P5": "the window is solid or the window is early.",
+        "P6": "the window is large."
+    },
+    "question": "is the window closed?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 942
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "WindowOpens -> WindowIsWarm",
+            "P2": "WindowIsHot -> WindowIsPrepared",
+            "P3": "WindowIsUnready",
+            "P4": "LampStarts -> LampMoves",
+            "P5": "WindowIsSolid | WindowIsEarly",
+            "P6": "WindowIsLarge"
+        },
+        "target": "WindowIsClosed"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the window opens": "WindowOpens",
+        "the window is warm": "WindowIsWarm",
+        "the window is hot": "WindowIsHot",
+        "the window is prepared": "WindowIsPrepared",
+        "the window is unready": "WindowIsUnready",
+        "the lamp starts": "LampStarts",
+        "the lamp moves": "LampMoves",
+        "the window is solid": "WindowIsSolid",
+        "the window is early": "WindowIsEarly",
+        "the window is large": "WindowIsLarge",
+        "the window is closed": "WindowIsClosed"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "WindowOpens -> WindowIsWarm",
+            "P2": "WindowIsHot -> WindowIsPrepared",
+            "P3": "WindowIsUnready",
+            "P4": "LampStarts -> LampMoves",
+            "P5": "WindowIsSolid | WindowIsEarly",
+            "P6": "WindowIsLarge"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 942
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 942
+
+================================================================================
+RUN END
+================================================================================
+

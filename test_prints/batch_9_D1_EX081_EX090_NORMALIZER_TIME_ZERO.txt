@@ -1,0 +1,6276 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 9: D1_EX081 to D1_EX090
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX081
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+if the engine is safe, then the sensor works.
+if the signal moves, then the printer starts.
+does the printer start?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: MP
+Distractor_Count: 0
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 0
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine is safe, then the sensor works.
+     2. if the signal moves, then the printer starts.
+     
+     Detected_Question:
+     does the printer start?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine is safe, then the sensor works.
+     2. if the signal moves, then the printer starts.
+     
+     Question:
+     does the printer start?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+Premises:
+1. if the engine is safe, then the sensor works.
+2. if the signal moves, then the printer starts.
+
+Question:
+does the printer start?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine is safe, then the sensor works.",
+        "P2": "if the signal moves, then the printer starts."
+    },
+    "question": "does the printer start?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the signal moves. [from: P2] [rule: Conjunction Introduction]
+S2: the printer starts. [from: S1] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 9391
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the signal moves.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Conjunction Introduction"
+        },
+        {
+            "id": "S2",
+            "statement": "the printer starts.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "EngineIsSafe -> SensorWorks",
+            "P2": "SignalMoves -> PrinterStarts"
+        },
+        "target": "PrinterStarts"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "SignalMoves",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Conjunction Introduction"
+            },
+            {
+                "id": "S2",
+                "derived": "PrinterStarts",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the engine is safe": "EngineIsSafe",
+        "the sensor works": "SensorWorks",
+        "the signal moves": "SignalMoves",
+        "the printer starts": "PrinterStarts"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Conjunction Introduction requires exactly 2 supports.",
+                "derived": "SignalMoves",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "PrinterStarts",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "EngineIsSafe -> SensorWorks",
+            "P2": "SignalMoves -> PrinterStarts"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 9391
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 9391
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX081
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+if the engine is safe, then the sensor works.
+if the signal moves, then the printer starts.
+does the printer start?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: MP
+Distractor_Count: 0
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 0
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine is safe, then the sensor works.
+     2. if the signal moves, then the printer starts.
+     
+     Detected_Question:
+     does the printer start?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine is safe, then the sensor works.
+     2. if the signal moves, then the printer starts.
+     
+     Question:
+     does the printer start?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+Premises:
+1. if the engine is safe, then the sensor works.
+2. if the signal moves, then the printer starts.
+
+Question:
+does the printer start?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine is safe, then the sensor works.",
+        "P2": "if the signal moves, then the printer starts."
+    },
+    "question": "does the printer start?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the signal moves. [from: P2] [rule: Conjunction Introduction]
+S2: the printer starts. [from: S1] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2391
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the signal moves.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Conjunction Introduction"
+        },
+        {
+            "id": "S2",
+            "statement": "the printer starts.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "EngineIsSafe -> SensorWorks",
+            "P2": "SignalMoves -> PrinterStarts"
+        },
+        "target": "PrinterStarts"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "SignalMoves",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Conjunction Introduction"
+            },
+            {
+                "id": "S2",
+                "derived": "PrinterStarts",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the engine is safe": "EngineIsSafe",
+        "the sensor works": "SensorWorks",
+        "the signal moves": "SignalMoves",
+        "the printer starts": "PrinterStarts"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Conjunction Introduction requires exactly 2 supports.",
+                "derived": "SignalMoves",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "PrinterStarts",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "EngineIsSafe -> SensorWorks",
+            "P2": "SignalMoves -> PrinterStarts"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2391
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2391
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX082
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+if the device is early, then the speaker is quick.
+the device is early.
+if ahmed is active, then the driver is strong.
+is ahmed active?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: MP
+Distractor_Count: 0
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 0
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device is early, then the speaker is quick.
+     2. the device is early.
+     3. if ahmed is active, then the driver is strong.
+     
+     Detected_Question:
+     is ahmed active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device is early, then the speaker is quick.
+     2. the device is early.
+     3. if ahmed is active, then the driver is strong.
+     
+     Question:
+     is ahmed active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+Premises:
+1. if the device is early, then the speaker is quick.
+2. the device is early.
+3. if ahmed is active, then the driver is strong.
+
+Question:
+is ahmed active?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device is early, then the speaker is quick.",
+        "P2": "the device is early.",
+        "P3": "if ahmed is active, then the driver is strong."
+    },
+    "question": "is ahmed active?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 986
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceIsEarly -> SpeakerIsQuick",
+            "P2": "DeviceIsEarly",
+            "P3": "AhmedIsActive -> DriverIsStrong"
+        },
+        "target": "AhmedIsActive"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the device is early": "DeviceIsEarly",
+        "the speaker is quick": "SpeakerIsQuick",
+        "ahmed is active": "AhmedIsActive",
+        "the driver is strong": "DriverIsStrong"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceIsEarly -> SpeakerIsQuick",
+            "P2": "DeviceIsEarly",
+            "P3": "AhmedIsActive -> DriverIsStrong"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 986
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 986
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX082
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+if the device is early, then the speaker is quick.
+the device is early.
+if ahmed is active, then the driver is strong.
+is ahmed active?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: MP
+Distractor_Count: 0
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 0
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device is early, then the speaker is quick.
+     2. the device is early.
+     3. if ahmed is active, then the driver is strong.
+     
+     Detected_Question:
+     is ahmed active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device is early, then the speaker is quick.
+     2. the device is early.
+     3. if ahmed is active, then the driver is strong.
+     
+     Question:
+     is ahmed active?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+Premises:
+1. if the device is early, then the speaker is quick.
+2. the device is early.
+3. if ahmed is active, then the driver is strong.
+
+Question:
+is ahmed active?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device is early, then the speaker is quick.",
+        "P2": "the device is early.",
+        "P3": "if ahmed is active, then the driver is strong."
+    },
+    "question": "is ahmed active?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 943
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceIsEarly -> SpeakerIsQuick",
+            "P2": "DeviceIsEarly",
+            "P3": "AhmedIsActive -> DriverIsStrong"
+        },
+        "target": "AhmedIsActive"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the device is early": "DeviceIsEarly",
+        "the speaker is quick": "SpeakerIsQuick",
+        "ahmed is active": "AhmedIsActive",
+        "the driver is strong": "DriverIsStrong"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceIsEarly -> SpeakerIsQuick",
+            "P2": "DeviceIsEarly",
+            "P3": "AhmedIsActive -> DriverIsStrong"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 943
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 943
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX083
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+If mariam is bright, then omar helps.
+the engine speaks and the printer is big.
+if the camera waits, then the camera moves.
+does the camera wait?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: CE
+Distractor_Count: 0
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 1
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     if mariam is bright, then omar helps.
+     the engine speaks and the printer is big.
+     if the camera waits, then the camera moves.
+     does the camera wait?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if mariam is bright, then omar helps.
+     2. the engine speaks and the printer is big.
+     3. if the camera waits, then the camera moves.
+     
+     Detected_Question:
+     does the camera wait?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if mariam is bright, then omar helps.
+     2. the engine speaks and the printer is big.
+     3. if the camera waits, then the camera moves.
+     
+     Question:
+     does the camera wait?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 1
+
+Normalized_Prompt:
+Premises:
+1. if mariam is bright, then omar helps.
+2. the engine speaks and the printer is big.
+3. if the camera waits, then the camera moves.
+
+Question:
+does the camera wait?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if mariam is bright, then omar helps.",
+        "P2": "the engine speaks and the printer is big.",
+        "P3": "if the camera waits, then the camera moves."
+    },
+    "question": "does the camera wait?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 1011
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "MariamIsBright -> OmarHelps",
+            "P2": "EngineSpeaks & PrinterIsBig",
+            "P3": "CameraWaits -> CameraMoves"
+        },
+        "target": "CameraWaits"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "mariam is bright": "MariamIsBright",
+        "omar helps": "OmarHelps",
+        "the engine speaks": "EngineSpeaks",
+        "the printer is big": "PrinterIsBig",
+        "the camera waits": "CameraWaits",
+        "the camera moves": "CameraMoves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "MariamIsBright -> OmarHelps",
+            "P2": "EngineSpeaks & PrinterIsBig",
+            "P3": "CameraWaits -> CameraMoves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 1011
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 1011
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX083
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+If mariam is bright, then omar helps.
+the engine speaks and the printer is big.
+if the camera waits, then the camera moves.
+does the camera wait?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: CE
+Distractor_Count: 0
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 1
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     if mariam is bright, then omar helps.
+     the engine speaks and the printer is big.
+     if the camera waits, then the camera moves.
+     does the camera wait?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if mariam is bright, then omar helps.
+     2. the engine speaks and the printer is big.
+     3. if the camera waits, then the camera moves.
+     
+     Detected_Question:
+     does the camera wait?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if mariam is bright, then omar helps.
+     2. the engine speaks and the printer is big.
+     3. if the camera waits, then the camera moves.
+     
+     Question:
+     does the camera wait?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 1
+
+Normalized_Prompt:
+Premises:
+1. if mariam is bright, then omar helps.
+2. the engine speaks and the printer is big.
+3. if the camera waits, then the camera moves.
+
+Question:
+does the camera wait?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if mariam is bright, then omar helps.",
+        "P2": "the engine speaks and the printer is big.",
+        "P3": "if the camera waits, then the camera moves."
+    },
+    "question": "does the camera wait?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 939
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "MariamIsBright -> OmarHelps",
+            "P2": "EngineSpeaks & PrinterIsBig",
+            "P3": "CameraWaits -> CameraMoves"
+        },
+        "target": "CameraWaits"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "mariam is bright": "MariamIsBright",
+        "omar helps": "OmarHelps",
+        "the engine speaks": "EngineSpeaks",
+        "the printer is big": "PrinterIsBig",
+        "the camera waits": "CameraWaits",
+        "the camera moves": "CameraMoves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "MariamIsBright -> OmarHelps",
+            "P2": "EngineSpeaks & PrinterIsBig",
+            "P3": "CameraWaits -> CameraMoves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 939
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 939
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX084
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+if the signal moves, then the switch waits.
+the drone accepts and the painter waits.
+if the camera sleeps, then the camera moves.
+does the camera sleep?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: CE
+Distractor_Count: 0
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 0
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the signal moves, then the switch waits.
+     2. the drone accepts and the painter waits.
+     3. if the camera sleeps, then the camera moves.
+     
+     Detected_Question:
+     does the camera sleep?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the signal moves, then the switch waits.
+     2. the drone accepts and the painter waits.
+     3. if the camera sleeps, then the camera moves.
+     
+     Question:
+     does the camera sleep?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+Premises:
+1. if the signal moves, then the switch waits.
+2. the drone accepts and the painter waits.
+3. if the camera sleeps, then the camera moves.
+
+Question:
+does the camera sleep?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the signal moves, then the switch waits.",
+        "P2": "the drone accepts and the painter waits.",
+        "P3": "if the camera sleeps, then the camera moves."
+    },
+    "question": "does the camera sleep?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 981
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SignalMoves -> SwitchWaits",
+            "P2": "DroneAccepts & PainterWaits",
+            "P3": "CameraSleeps -> CameraMoves"
+        },
+        "target": "CameraSleeps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the signal moves": "SignalMoves",
+        "the switch waits": "SwitchWaits",
+        "the drone accepts": "DroneAccepts",
+        "the painter waits": "PainterWaits",
+        "the camera sleeps": "CameraSleeps",
+        "the camera moves": "CameraMoves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SignalMoves -> SwitchWaits",
+            "P2": "DroneAccepts & PainterWaits",
+            "P3": "CameraSleeps -> CameraMoves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 981
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 981
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX084
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+if the signal moves, then the switch waits.
+the drone accepts and the painter waits.
+if the camera sleeps, then the camera moves.
+does the camera sleep?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 1
+Inference_Rules: CE
+Distractor_Count: 0
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 0
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 0
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the signal moves, then the switch waits.
+     2. the drone accepts and the painter waits.
+     3. if the camera sleeps, then the camera moves.
+     
+     Detected_Question:
+     does the camera sleep?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the signal moves, then the switch waits.
+     2. the drone accepts and the painter waits.
+     3. if the camera sleeps, then the camera moves.
+     
+     Question:
+     does the camera sleep?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 0
+
+Normalized_Prompt:
+Premises:
+1. if the signal moves, then the switch waits.
+2. the drone accepts and the painter waits.
+3. if the camera sleeps, then the camera moves.
+
+Question:
+does the camera sleep?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the signal moves, then the switch waits.",
+        "P2": "the drone accepts and the painter waits.",
+        "P3": "if the camera sleeps, then the camera moves."
+    },
+    "question": "does the camera sleep?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 954
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SignalMoves -> SwitchWaits",
+            "P2": "DroneAccepts & PainterWaits",
+            "P3": "CameraSleeps -> CameraMoves"
+        },
+        "target": "CameraSleeps"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the signal moves": "SignalMoves",
+        "the switch waits": "SwitchWaits",
+        "the drone accepts": "DroneAccepts",
+        "the painter waits": "PainterWaits",
+        "the camera sleeps": "CameraSleeps",
+        "the camera moves": "CameraMoves"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SignalMoves -> SwitchWaits",
+            "P2": "DroneAccepts & PainterWaits",
+            "P3": "CameraSleeps -> CameraMoves"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 954
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 954
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 9/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX085
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Either the router is correct or the router is clean.
+not the router is correct.
+if the router is bright, then the router is fast.
+is the router bright?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: DS
+Distractor_Count: 0
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 2
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either the router is correct or the router is clean.
+     not the router is correct.
+     if the router is bright, then the router is fast.
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the router is correct or the router is clean.
+     2. not the router is correct.
+     3. if the router is bright, then the router is fast.
+     
+     Detected_Question:
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the router is correct or the router is clean.
+     2. not the router is correct.
+     3. if the router is bright, then the router is fast.
+     
+     Question:
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the router is correct or the router is clean.
+     2. not the router is correct.
+     3. if the router is bright, then the router is fast.
+     
+     Question:
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+Premises:
+1. the router is correct or the router is clean.
+2. not the router is correct.
+3. if the router is bright, then the router is fast.
+
+Question:
+is the router bright?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the router is correct or the router is clean.",
+        "P2": "not the router is correct.",
+        "P3": "if the router is bright, then the router is fast."
+    },
+    "question": "is the router bright?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the router is correct or the router is clean. [from: P1] 
+S2: not the router is correct. [from: P2] 
+S3: the router is clean. [from: S1, S2] [rule: Disjunctive Syllogism]
+S4: if the router is bright, then the router is fast. [from: P3] 
+S5: not the router is fast. [from: S3, S4] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 5443
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the router is correct or the router is clean. [from: P1]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the router is correct or the router is clean. [from: P1]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 5443
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 5443
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 10/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX085
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Either the router is correct or the router is clean.
+not the router is correct.
+if the router is bright, then the router is fast.
+is the router bright?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: DS
+Distractor_Count: 0
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 2
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     either the router is correct or the router is clean.
+     not the router is correct.
+     if the router is bright, then the router is fast.
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the router is correct or the router is clean.
+     2. not the router is correct.
+     3. if the router is bright, then the router is fast.
+     
+     Detected_Question:
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the router is correct or the router is clean.
+     2. not the router is correct.
+     3. if the router is bright, then the router is fast.
+     
+     Question:
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the router is correct or the router is clean.
+     2. not the router is correct.
+     3. if the router is bright, then the router is fast.
+     
+     Question:
+     is the router bright?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+Premises:
+1. the router is correct or the router is clean.
+2. not the router is correct.
+3. if the router is bright, then the router is fast.
+
+Question:
+is the router bright?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the router is correct or the router is clean.",
+        "P2": "not the router is correct.",
+        "P3": "if the router is bright, then the router is fast."
+    },
+    "question": "is the router bright?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+S1: the router is correct or the router is clean. [from: P1] 
+S2: not the router is correct. [from: P2] 
+S3: the router is clean. [from: S1, S2] [rule: Disjunctive Syllogism]
+S4: if the router is bright, then the router is fast. [from: P3] 
+S5: not the router is fast. [from: S3, S4] [rule: Modus Tollens]
+
+LLM_Response_Error: None
+Runtime_ms: 5446
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Malformed step format: 'S1: the router is correct or the router is clean. [from: P1]'
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: LLM_Response_Parser
+Error_Message: Malformed step format: 'S1: the router is correct or the router is clean. [from: P1]'
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 5446
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 5446
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 11/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX086
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+either the server is big or the server is hot.
+not the server is big.
+if the server is sick, then the server is ready.
+if the server is fair, then the server is round.
+is the server sick?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: DS
+Distractor_Count: 1
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 1
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the server is big or the server is hot.
+     2. not the server is big.
+     3. if the server is sick, then the server is ready.
+     4. if the server is fair, then the server is round.
+     
+     Detected_Question:
+     is the server sick?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the server is big or the server is hot.
+     2. not the server is big.
+     3. if the server is sick, then the server is ready.
+     4. if the server is fair, then the server is round.
+     
+     Question:
+     is the server sick?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the server is big or the server is hot.
+     2. not the server is big.
+     3. if the server is sick, then the server is ready.
+     4. if the server is fair, then the server is round.
+     
+     Question:
+     is the server sick?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 1
+
+Normalized_Prompt:
+Premises:
+1. the server is big or the server is hot.
+2. not the server is big.
+3. if the server is sick, then the server is ready.
+4. if the server is fair, then the server is round.
+
+Question:
+is the server sick?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the server is big or the server is hot.",
+        "P2": "not the server is big.",
+        "P3": "if the server is sick, then the server is ready.",
+        "P4": "if the server is fair, then the server is round."
+    },
+    "question": "is the server sick?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the server is hot. [from: P1, P2] [rule: Disjunctive Syllogism]
+S2: the server is sick. [from: S1] [rule: Conjunction Introduction]
+
+LLM_Response_Error: None
+Runtime_ms: 2751
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the server is hot.",
+            "supports": [
+                "P1",
+                "P2"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the server is sick.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Conjunction Introduction"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ServerIsBig | ServerIsHot",
+            "P2": "~ServerIsBig",
+            "P3": "ServerIsSick -> ServerIsReady",
+            "P4": "ServerIsFair -> ServerIsRound"
+        },
+        "target": "ServerIsSick"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ServerIsHot",
+                "supports": [
+                    "P1",
+                    "P2"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ServerIsSick",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Conjunction Introduction"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the server is big": "ServerIsBig",
+        "the server is hot": "ServerIsHot",
+        "the server is sick": "ServerIsSick",
+        "the server is ready": "ServerIsReady",
+        "the server is fair": "ServerIsFair",
+        "the server is round": "ServerIsRound"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "ServerIsHot",
+                "expected": "ServerIsHot"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Conjunction Introduction requires exactly 2 supports.",
+                "derived": "ServerIsSick",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ServerIsBig | ServerIsHot",
+            "P2": "~ServerIsBig",
+            "P3": "ServerIsSick -> ServerIsReady",
+            "P4": "ServerIsFair -> ServerIsRound",
+            "S1": "ServerIsHot"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2
+Invalid_Steps_Reasons: S2: VF_STEP_INSUFFICIENT_SUPPORTS
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2751
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2751
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 12/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX086
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+either the server is big or the server is hot.
+not the server is big.
+if the server is sick, then the server is ready.
+if the server is fair, then the server is round.
+is the server sick?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: DS
+Distractor_Count: 1
+Case_Adjustment_Count: 0
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 1
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: No
+  Actual_Case_Adjustment_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the server is big or the server is hot.
+     2. not the server is big.
+     3. if the server is sick, then the server is ready.
+     4. if the server is fair, then the server is round.
+     
+     Detected_Question:
+     is the server sick?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the server is big or the server is hot.
+     2. not the server is big.
+     3. if the server is sick, then the server is ready.
+     4. if the server is fair, then the server is round.
+     
+     Question:
+     is the server sick?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. the server is big or the server is hot.
+     2. not the server is big.
+     3. if the server is sick, then the server is ready.
+     4. if the server is fair, then the server is round.
+     
+     Question:
+     is the server sick?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 0
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 1
+
+Normalized_Prompt:
+Premises:
+1. the server is big or the server is hot.
+2. not the server is big.
+3. if the server is sick, then the server is ready.
+4. if the server is fair, then the server is round.
+
+Question:
+is the server sick?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the server is big or the server is hot.",
+        "P2": "not the server is big.",
+        "P3": "if the server is sick, then the server is ready.",
+        "P4": "if the server is fair, then the server is round."
+    },
+    "question": "is the server sick?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the server is hot. [from: P1, P2] [rule: Disjunctive Syllogism]
+S2: the server is sick. [from: S1] [rule: Conjunction Introduction]
+
+LLM_Response_Error: None
+Runtime_ms: 2741
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the server is hot.",
+            "supports": [
+                "P1",
+                "P2"
+            ],
+            "rule": "Disjunctive Syllogism"
+        },
+        {
+            "id": "S2",
+            "statement": "the server is sick.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Conjunction Introduction"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "ServerIsBig | ServerIsHot",
+            "P2": "~ServerIsBig",
+            "P3": "ServerIsSick -> ServerIsReady",
+            "P4": "ServerIsFair -> ServerIsRound"
+        },
+        "target": "ServerIsSick"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "ServerIsHot",
+                "supports": [
+                    "P1",
+                    "P2"
+                ],
+                "rule": "Disjunctive Syllogism"
+            },
+            {
+                "id": "S2",
+                "derived": "ServerIsSick",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Conjunction Introduction"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the server is big": "ServerIsBig",
+        "the server is hot": "ServerIsHot",
+        "the server is sick": "ServerIsSick",
+        "the server is ready": "ServerIsReady",
+        "the server is fair": "ServerIsFair",
+        "the server is round": "ServerIsRound"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": true,
+                "error": null,
+                "error_details": null,
+                "derived": "ServerIsHot",
+                "expected": "ServerIsHot"
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Conjunction Introduction requires exactly 2 supports.",
+                "derived": "ServerIsSick",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "ServerIsBig | ServerIsHot",
+            "P2": "~ServerIsBig",
+            "P3": "ServerIsSick -> ServerIsReady",
+            "P4": "ServerIsFair -> ServerIsRound",
+            "S1": "ServerIsHot"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S2
+Invalid_Steps_Reasons: S2: VF_STEP_INSUFFICIENT_SUPPORTS
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2741
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2741
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 13/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX087
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The app is ready if the app is fast.
+not the app is ready.
+if the app is correct, then the app is smooth.
+if the app is kind, then the app is light.
+is the app correct?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: MT
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 2
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the app is ready if the app is fast.
+     not the app is ready.
+     if the app is correct, then the app is smooth.
+     if the app is kind, then the app is light.
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the app is fast, then the app is ready.
+     2. not the app is ready.
+     3. if the app is correct, then the app is smooth.
+     4. if the app is kind, then the app is light.
+     
+     Detected_Question:
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the app is fast, then the app is ready.
+     2. not the app is ready.
+     3. if the app is correct, then the app is smooth.
+     4. if the app is kind, then the app is light.
+     
+     Question:
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the app is fast, then the app is ready.
+     2. not the app is ready.
+     3. if the app is correct, then the app is smooth.
+     4. if the app is kind, then the app is light.
+     
+     Question:
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+Premises:
+1. if the app is fast, then the app is ready.
+2. not the app is ready.
+3. if the app is correct, then the app is smooth.
+4. if the app is kind, then the app is light.
+
+Question:
+is the app correct?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the app is fast, then the app is ready.",
+        "P2": "not the app is ready.",
+        "P3": "if the app is correct, then the app is smooth.",
+        "P4": "if the app is kind, then the app is light."
+    },
+    "question": "is the app correct?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the app is not correct. [from: P2] [rule: Modus Tollens]
+S2: the app is correct. [from: S1] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 2662
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the app is not correct.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the app is correct.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Hypothetical Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AppIsFast -> AppIsReady",
+            "P2": "~AppIsReady",
+            "P3": "AppIsCorrect -> AppIsSmooth",
+            "P4": "AppIsKind -> AppIsLight"
+        },
+        "target": "AppIsCorrect"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~AppIsCorrect",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "AppIsCorrect",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Hypothetical Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the app is fast": "AppIsFast",
+        "the app is ready": "AppIsReady",
+        "the app is correct": "AppIsCorrect",
+        "the app is smooth": "AppIsSmooth",
+        "the app is kind": "AppIsKind",
+        "the app is light": "AppIsLight"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Tollens requires exactly 2 supports.",
+                "derived": "~AppIsCorrect",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "AppIsCorrect",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "AppIsFast -> AppIsReady",
+            "P2": "~AppIsReady",
+            "P3": "AppIsCorrect -> AppIsSmooth",
+            "P4": "AppIsKind -> AppIsLight"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2662
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2662
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 14/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX087
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The app is ready if the app is fast.
+not the app is ready.
+if the app is correct, then the app is smooth.
+if the app is kind, then the app is light.
+is the app correct?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: MT
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 2
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the app is ready if the app is fast.
+     not the app is ready.
+     if the app is correct, then the app is smooth.
+     if the app is kind, then the app is light.
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the app is fast, then the app is ready.
+     2. not the app is ready.
+     3. if the app is correct, then the app is smooth.
+     4. if the app is kind, then the app is light.
+     
+     Detected_Question:
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the app is fast, then the app is ready.
+     2. not the app is ready.
+     3. if the app is correct, then the app is smooth.
+     4. if the app is kind, then the app is light.
+     
+     Question:
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the app is fast, then the app is ready.
+     2. not the app is ready.
+     3. if the app is correct, then the app is smooth.
+     4. if the app is kind, then the app is light.
+     
+     Question:
+     is the app correct?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+Premises:
+1. if the app is fast, then the app is ready.
+2. not the app is ready.
+3. if the app is correct, then the app is smooth.
+4. if the app is kind, then the app is light.
+
+Question:
+is the app correct?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the app is fast, then the app is ready.",
+        "P2": "not the app is ready.",
+        "P3": "if the app is correct, then the app is smooth.",
+        "P4": "if the app is kind, then the app is light."
+    },
+    "question": "is the app correct?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the app is not correct. [from: P2] [rule: Modus Tollens]
+S2: the app is correct. [from: S1] [rule: Hypothetical Syllogism]
+
+LLM_Response_Error: None
+Runtime_ms: 2623
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the app is not correct.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Modus Tollens"
+        },
+        {
+            "id": "S2",
+            "statement": "the app is correct.",
+            "supports": [
+                "S1"
+            ],
+            "rule": "Hypothetical Syllogism"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AppIsFast -> AppIsReady",
+            "P2": "~AppIsReady",
+            "P3": "AppIsCorrect -> AppIsSmooth",
+            "P4": "AppIsKind -> AppIsLight"
+        },
+        "target": "AppIsCorrect"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "~AppIsCorrect",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Modus Tollens"
+            },
+            {
+                "id": "S2",
+                "derived": "AppIsCorrect",
+                "supports": [
+                    "S1"
+                ],
+                "rule": "Hypothetical Syllogism"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the app is fast": "AppIsFast",
+        "the app is ready": "AppIsReady",
+        "the app is correct": "AppIsCorrect",
+        "the app is smooth": "AppIsSmooth",
+        "the app is kind": "AppIsKind",
+        "the app is light": "AppIsLight"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Tollens requires exactly 2 supports.",
+                "derived": "~AppIsCorrect",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "AppIsCorrect",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "AppIsFast -> AppIsReady",
+            "P2": "~AppIsReady",
+            "P3": "AppIsCorrect -> AppIsSmooth",
+            "P4": "AppIsKind -> AppIsLight"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2623
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 2623
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 15/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX088
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The device is ready if the device is strong.
+not the device is ready.
+if the device is powerful, then the device is clear.
+if the device is early, then the device is quick.
+is the device powerful?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: MT
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 1
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 3
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the device is ready if the device is strong.
+     not the device is ready.
+     if the device is powerful, then the device is clear.
+     if the device is early, then the device is quick.
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Detected_Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 3
+
+Normalized_Prompt:
+Premises:
+1. if the device is strong, then the device is ready.
+2. not the device is ready.
+3. if the device is powerful, then the device is clear.
+4. if the device is early, then the device is ready.
+
+Question:
+is the device powerful?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device is strong, then the device is ready.",
+        "P2": "not the device is ready.",
+        "P3": "if the device is powerful, then the device is clear.",
+        "P4": "if the device is early, then the device is ready."
+    },
+    "question": "is the device powerful?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 986
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceIsStrong -> DeviceIsReady",
+            "P2": "~DeviceIsReady",
+            "P3": "DeviceIsPowerful -> DeviceIsClear",
+            "P4": "DeviceIsEarly -> DeviceIsReady"
+        },
+        "target": "DeviceIsPowerful"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the device is strong": "DeviceIsStrong",
+        "the device is ready": "DeviceIsReady",
+        "the device is powerful": "DeviceIsPowerful",
+        "the device is clear": "DeviceIsClear",
+        "the device is early": "DeviceIsEarly"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceIsStrong -> DeviceIsReady",
+            "P2": "~DeviceIsReady",
+            "P3": "DeviceIsPowerful -> DeviceIsClear",
+            "P4": "DeviceIsEarly -> DeviceIsReady"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 986
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 986
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 16/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX088
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The device is ready if the device is strong.
+not the device is ready.
+if the device is powerful, then the device is clear.
+if the device is early, then the device is quick.
+is the device powerful?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: MT
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 0
+Synonym_Unification_Count: 1
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 3
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the device is ready if the device is strong.
+     not the device is ready.
+     if the device is powerful, then the device is clear.
+     if the device is early, then the device is quick.
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Detected_Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the device is strong, then the device is ready.
+     2. not the device is ready.
+     3. if the device is powerful, then the device is clear.
+     4. if the device is early, then the device is ready.
+     
+     Question:
+     is the device powerful?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 1
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 3
+
+Normalized_Prompt:
+Premises:
+1. if the device is strong, then the device is ready.
+2. not the device is ready.
+3. if the device is powerful, then the device is clear.
+4. if the device is early, then the device is ready.
+
+Question:
+is the device powerful?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the device is strong, then the device is ready.",
+        "P2": "not the device is ready.",
+        "P3": "if the device is powerful, then the device is clear.",
+        "P4": "if the device is early, then the device is ready."
+    },
+    "question": "is the device powerful?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 968
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DeviceIsStrong -> DeviceIsReady",
+            "P2": "~DeviceIsReady",
+            "P3": "DeviceIsPowerful -> DeviceIsClear",
+            "P4": "DeviceIsEarly -> DeviceIsReady"
+        },
+        "target": "DeviceIsPowerful"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the device is strong": "DeviceIsStrong",
+        "the device is ready": "DeviceIsReady",
+        "the device is powerful": "DeviceIsPowerful",
+        "the device is clear": "DeviceIsClear",
+        "the device is early": "DeviceIsEarly"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "DeviceIsStrong -> DeviceIsReady",
+            "P2": "~DeviceIsReady",
+            "P3": "DeviceIsPowerful -> DeviceIsClear",
+            "P4": "DeviceIsEarly -> DeviceIsReady"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 968
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 968
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 17/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX089
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The dog is steady if the dog is open.
+if the dog is steady, then it is plain.
+the dog is open.
+if the dog is ready, then the dog is sharp.
+if the dog is sick, then the dog is happy.
+is the dog ready?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: HS+MP
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 3
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the dog is steady if the dog is open.
+     if the dog is steady, then it is plain.
+     the dog is open.
+     if the dog is ready, then the dog is sharp.
+     if the dog is sick, then the dog is happy.
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Detected_Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 3
+
+Normalized_Prompt:
+Premises:
+1. if the dog is open, then the dog is steady.
+2. if the dog is steady, then the dog is plain.
+3. the dog is open.
+4. if the dog is ready, then the dog is sharp.
+5. if the dog is sick, then the dog is happy.
+
+Question:
+is the dog ready?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the dog is open, then the dog is steady.",
+        "P2": "if the dog is steady, then the dog is plain.",
+        "P3": "the dog is open.",
+        "P4": "if the dog is ready, then the dog is sharp.",
+        "P5": "if the dog is sick, then the dog is happy."
+    },
+    "question": "is the dog ready?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+No Derivation Found
+
+LLM_Response_Error: None
+Runtime_ms: 894
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "No Derivation Found"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DogIsOpen -> DogIsSteady",
+            "P2": "DogIsSteady -> DogIsPlain",
+            "P3": "DogIsOpen",
+            "P4": "DogIsReady -> DogIsSharp",
+            "P5": "DogIsSick -> DogIsHappy"
+        },
+        "target": "DogIsReady"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "No Derivation Found"
+    },
+    "proposition_map": {
+        "the dog is open": "DogIsOpen",
+        "the dog is steady": "DogIsSteady",
+        "the dog is plain": "DogIsPlain",
+        "the dog is ready": "DogIsReady",
+        "the dog is sharp": "DogIsSharp",
+        "the dog is sick": "DogIsSick",
+        "the dog is happy": "DogIsHappy"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "NO_DERIVATION_FOUND",
+        "available_knowledge": {
+            "P1": "DogIsOpen -> DogIsSteady",
+            "P2": "DogIsSteady -> DogIsPlain",
+            "P3": "DogIsOpen",
+            "P4": "DogIsReady -> DogIsSharp",
+            "P5": "DogIsSick -> DogIsHappy"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: NO_DERIVATION_FOUND
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 894
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 894
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 18/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX089
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The dog is steady if the dog is open.
+if the dog is steady, then it is plain.
+the dog is open.
+if the dog is ready, then the dog is sharp.
+if the dog is sick, then the dog is happy.
+is the dog ready?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 2
+Inference_Rules: HS+MP
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 3
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the dog is steady if the dog is open.
+     if the dog is steady, then it is plain.
+     the dog is open.
+     if the dog is ready, then the dog is sharp.
+     if the dog is sick, then the dog is happy.
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Detected_Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the dog is open, then the dog is steady.
+     2. if the dog is steady, then the dog is plain.
+     3. the dog is open.
+     4. if the dog is ready, then the dog is sharp.
+     5. if the dog is sick, then the dog is happy.
+     
+     Question:
+     is the dog ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 3
+
+Normalized_Prompt:
+Premises:
+1. if the dog is open, then the dog is steady.
+2. if the dog is steady, then the dog is plain.
+3. the dog is open.
+4. if the dog is ready, then the dog is sharp.
+5. if the dog is sick, then the dog is happy.
+
+Question:
+is the dog ready?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the dog is open, then the dog is steady.",
+        "P2": "if the dog is steady, then the dog is plain.",
+        "P3": "the dog is open.",
+        "P4": "if the dog is ready, then the dog is sharp.",
+        "P5": "if the dog is sick, then the dog is happy."
+    },
+    "question": "is the dog ready?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+No Derivation Found
+
+LLM_Response_Error: None
+Runtime_ms: 848
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "No Derivation Found"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "DogIsOpen -> DogIsSteady",
+            "P2": "DogIsSteady -> DogIsPlain",
+            "P3": "DogIsOpen",
+            "P4": "DogIsReady -> DogIsSharp",
+            "P5": "DogIsSick -> DogIsHappy"
+        },
+        "target": "DogIsReady"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "No Derivation Found"
+    },
+    "proposition_map": {
+        "the dog is open": "DogIsOpen",
+        "the dog is steady": "DogIsSteady",
+        "the dog is plain": "DogIsPlain",
+        "the dog is ready": "DogIsReady",
+        "the dog is sharp": "DogIsSharp",
+        "the dog is sick": "DogIsSick",
+        "the dog is happy": "DogIsHappy"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "NO_DERIVATION_FOUND",
+        "available_knowledge": {
+            "P1": "DogIsOpen -> DogIsSteady",
+            "P2": "DogIsSteady -> DogIsPlain",
+            "P3": "DogIsOpen",
+            "P4": "DogIsReady -> DogIsSharp",
+            "P5": "DogIsSick -> DogIsHappy"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: NO_DERIVATION_FOUND
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 848
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 848
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 19/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX090
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The farmer is calm if the farmer is ready.
+if the farmer is calm, then he is honest.
+the farmer is ready.
+if the farmer is safe, then the farmer is near.
+if the farmer is secure, then the farmer is prepared.
+is the farmer safe?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: HS+MP
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 3
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the farmer is calm if the farmer is ready.
+     if the farmer is calm, then he is honest.
+     the farmer is ready.
+     if the farmer is safe, then the farmer is near.
+     if the farmer is secure, then the farmer is prepared.
+     is the farmer safe?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Detected_Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is secure, then the farmer is prepared.
+     
+     Question:
+     is the farmer safe?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 3
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the farmer is ready, then the farmer is calm.
+2. if the farmer is calm, then the farmer is honest.
+3. the farmer is ready.
+4. if the farmer is safe, then the farmer is near.
+5. if the farmer is safe, then the farmer is ready.
+
+Question:
+is the farmer secure?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the farmer is ready, then the farmer is calm.",
+        "P2": "if the farmer is calm, then the farmer is honest.",
+        "P3": "the farmer is ready.",
+        "P4": "if the farmer is safe, then the farmer is near.",
+        "P5": "if the farmer is safe, then the farmer is ready."
+    },
+    "question": "is the farmer secure?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 996
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "FarmerIsReady -> FarmerIsCalm",
+            "P2": "FarmerIsCalm -> FarmerIsHonest",
+            "P3": "FarmerIsReady",
+            "P4": "FarmerIsSafe -> FarmerIsNear",
+            "P5": "FarmerIsSafe -> FarmerIsReady"
+        },
+        "target": "FarmerIsSecure"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the farmer is ready": "FarmerIsReady",
+        "the farmer is calm": "FarmerIsCalm",
+        "the farmer is honest": "FarmerIsHonest",
+        "the farmer is safe": "FarmerIsSafe",
+        "the farmer is near": "FarmerIsNear",
+        "the farmer is secure": "FarmerIsSecure"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "FarmerIsReady -> FarmerIsCalm",
+            "P2": "FarmerIsCalm -> FarmerIsHonest",
+            "P3": "FarmerIsReady",
+            "P4": "FarmerIsSafe -> FarmerIsNear",
+            "P5": "FarmerIsSafe -> FarmerIsReady"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 996
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 997
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 20/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX090
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+The farmer is calm if the farmer is ready.
+if the farmer is calm, then he is honest.
+the farmer is ready.
+if the farmer is safe, then the farmer is near.
+if the farmer is secure, then the farmer is prepared.
+is the farmer safe?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: not_entailed
+Expected_Not_Entailed_Type: NE2
+Inference_Depth: 3
+Inference_Rules: HS+MP
+Distractor_Count: 1
+Case_Adjustment_Count: 1
+Pattern_Rewrite_Count: 1
+Subject_Propagation_Count: 1
+Synonym_Unification_Count: 3
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     the farmer is calm if the farmer is ready.
+     if the farmer is calm, then he is honest.
+     the farmer is ready.
+     if the farmer is safe, then the farmer is near.
+     if the farmer is secure, then the farmer is prepared.
+     is the farmer safe?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Detected_Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is secure, then the farmer is prepared.
+     
+     Question:
+     is the farmer safe?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the farmer is ready, then the farmer is calm.
+     2. if the farmer is calm, then the farmer is honest.
+     3. the farmer is ready.
+     4. if the farmer is safe, then the farmer is near.
+     5. if the farmer is safe, then the farmer is ready.
+     
+     Question:
+     is the farmer secure?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 1
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 3
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the farmer is ready, then the farmer is calm.
+2. if the farmer is calm, then the farmer is honest.
+3. the farmer is ready.
+4. if the farmer is safe, then the farmer is near.
+5. if the farmer is safe, then the farmer is ready.
+
+Question:
+is the farmer secure?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the farmer is ready, then the farmer is calm.",
+        "P2": "if the farmer is calm, then the farmer is honest.",
+        "P3": "the farmer is ready.",
+        "P4": "if the farmer is safe, then the farmer is near.",
+        "P5": "if the farmer is safe, then the farmer is ready."
+    },
+    "question": "is the farmer secure?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: not_entailed
+Steps:
+Target Not Found in Premises
+
+LLM_Response_Error: None
+Runtime_ms: 943
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "not_entailed",
+    "steps": [],
+    "special_case": "Target Not Found in Premises"
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "FarmerIsReady -> FarmerIsCalm",
+            "P2": "FarmerIsCalm -> FarmerIsHonest",
+            "P3": "FarmerIsReady",
+            "P4": "FarmerIsSafe -> FarmerIsNear",
+            "P5": "FarmerIsSafe -> FarmerIsReady"
+        },
+        "target": "FarmerIsSecure"
+    },
+    "symbolic_trace": {
+        "answer": "not_entailed",
+        "steps": [],
+        "special_case": "Target Not Found in Premises"
+    },
+    "proposition_map": {
+        "the farmer is ready": "FarmerIsReady",
+        "the farmer is calm": "FarmerIsCalm",
+        "the farmer is honest": "FarmerIsHonest",
+        "the farmer is safe": "FarmerIsSafe",
+        "the farmer is near": "FarmerIsNear",
+        "the farmer is secure": "FarmerIsSecure"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "valid",
+        "answer_label": "not_entailed",
+        "step_results": [],
+        "final_answer_check": "consistent",
+        "not_entailed_reason": "TARGET_NOT_FOUND_IN_PREMISES",
+        "available_knowledge": {
+            "P1": "FarmerIsReady -> FarmerIsCalm",
+            "P2": "FarmerIsCalm -> FarmerIsHonest",
+            "P3": "FarmerIsReady",
+            "P4": "FarmerIsSafe -> FarmerIsNear",
+            "P5": "FarmerIsSafe -> FarmerIsReady"
+        }
+    }
+}
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: None
+Not_Entailed_Reason: TARGET_NOT_FOUND_IN_PREMISES
+Final_Answer_Consistency: consistent
+Final_Validity: valid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: valid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 943
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 944
+
+================================================================================
+RUN END
+================================================================================
+

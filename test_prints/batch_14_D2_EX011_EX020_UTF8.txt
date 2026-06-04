@@ -1,0 +1,2464 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 14: D2_EX011 to D2_EX020
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX011
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Ahmed studies.
+Does Ahmed pass?
+Why does Sara read?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N2
+Expected_Specific_Error: QD_MULTIPLE_YN_QUESTIONS + QD_NON_YN_QUESTION
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 3
+  Output_After_Component:
+
+     ahmed studies.
+     does ahmed pass?
+     why does sara read?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: failed
+  Output_After_Component:
+
+     null
+
+  Error_Code: QD_NON_YN_QUESTION
+  Error_Message: NORMALIZATION_ERROR: Non yes/no question detected
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: skipped
+  Triggered: N/A
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N2
+Normalizer_Error_Code: QD_NON_YN_QUESTION
+Normalizer_Error_Message: NORMALIZATION_ERROR: Non yes/no question detected
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 3
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 3
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: QD_NON_YN_QUESTION
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX012
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Does Ahmed study?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N3
+Expected_Specific_Error: PS_NO_CANDIDATE_PREMISES
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     does ahmed study?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     N/A
+     
+     Detected_Question:
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: failed
+  Output_After_Component:
+
+     null
+
+  Error_Code: PS_NO_CANDIDATE_PREMISES
+  Error_Message: NORMALIZATION_ERROR: No candidate premises found
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: skipped
+  Triggered: N/A
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N3
+Normalizer_Error_Code: PS_NO_CANDIDATE_PREMISES
+Normalizer_Error_Message: NORMALIZATION_ERROR: No candidate premises found
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 1
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: PS_NO_CANDIDATE_PREMISES
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX013
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Is Sara ready?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N3
+Expected_Specific_Error: PS_NO_CANDIDATE_PREMISES
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 1
+  Output_After_Component:
+
+     is sara ready?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     N/A
+     
+     Detected_Question:
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: failed
+  Output_After_Component:
+
+     null
+
+  Error_Code: PS_NO_CANDIDATE_PREMISES
+  Error_Message: NORMALIZATION_ERROR: No candidate premises found
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: skipped
+  Triggered: N/A
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N3
+Normalizer_Error_Code: PS_NO_CANDIDATE_PREMISES
+Normalizer_Error_Message: NORMALIZATION_ERROR: No candidate premises found
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 1
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 1
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: PS_NO_CANDIDATE_PREMISES
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 4/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX014
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Ahmed studies Sara reads.
+Does Ahmed study?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N3
+Expected_Specific_Error: PS_INVALID_PREMISE_SEGMENTATION
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     ahmed studies sara reads.
+     does ahmed study?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. ahmed studies sara reads.
+     
+     Detected_Question:
+     does ahmed study?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. ahmed studies sara reads.
+     
+     Question:
+     does ahmed study?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+Premises:
+1. ahmed studies sara reads.
+
+Question:
+does ahmed study?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "ahmed studies sara reads."
+    },
+    "question": "does ahmed study?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: ahmed studies. [from: P1] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 11950
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "ahmed studies.",
+            "supports": [
+                "P1"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "AhmedStudiesSaraReads"
+        },
+        "target": "AhmedStudies"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "AhmedStudies",
+                "supports": [
+                    "P1"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "ahmed studies sara reads": "AhmedStudiesSaraReads",
+        "ahmed studies": "AhmedStudies"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "AhmedStudies",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "AhmedStudiesSaraReads"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 11950
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 11950
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 5/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX015
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Karim walks Layla waits.
+Does Karim walk?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N3
+Expected_Specific_Error: PS_INVALID_PREMISE_SEGMENTATION
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     karim walks layla waits.
+     does karim walk?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. karim walks layla waits.
+     
+     Detected_Question:
+     does karim walk?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. karim walks layla waits.
+     
+     Question:
+     does karim walk?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: No
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+Premises:
+1. karim walks layla waits.
+
+Question:
+does karim walk?
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "karim walks layla waits."
+    },
+    "question": "does karim walk?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: karim walks. [from: P1] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 1848
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "karim walks.",
+            "supports": [
+                "P1"
+            ],
+            "rule": "Conjunction Elimination"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "KarimWalksLaylaWaits"
+        },
+        "target": "KarimWalks"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "KarimWalks",
+                "supports": [
+                    "P1"
+                ],
+                "rule": "Conjunction Elimination"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "karim walks layla waits": "KarimWalksLaylaWaits",
+        "karim walks": "KarimWalks"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_RULE_NOT_APPLICABLE",
+                "error_details": null,
+                "derived": "KarimWalks",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "KarimWalksLaylaWaits"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1
+Invalid_Steps_Reasons: S1: VF_STEP_RULE_NOT_APPLICABLE
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 1848
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 1848
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 6/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX016
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Every student studies.
+Does Ahmed study?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N4
+Expected_Specific_Error: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     every student studies.
+     does ahmed study?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     N/A
+     
+     Detected_Question:
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: failed
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+  Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N4
+Normalizer_Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+Normalizer_Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 7/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX017
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Some teachers read.
+Does Sara read?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N4
+Expected_Specific_Error: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     some teachers read.
+     does sara read?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     N/A
+     
+     Detected_Question:
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: failed
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+  Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N4
+Normalizer_Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+Normalizer_Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 8/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX018
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Ahmed is taller than Sara.
+Is Ahmed tall?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N4
+Expected_Specific_Error: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     ahmed is taller than sara.
+     is ahmed tall?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     N/A
+     
+     Detected_Question:
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: failed
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+  Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N4
+Normalizer_Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+Normalizer_Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 9/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX019
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Ahmed probably studies.
+Does Ahmed study?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N4
+Expected_Specific_Error: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     ahmed probably studies.
+     does ahmed study?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     N/A
+     
+     Detected_Question:
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     N/A
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: failed
+  Triggered: No
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+  Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N4
+Normalizer_Error_Code: SPM_UNSUPPORTED_SENTENCE_PATTERN
+Normalizer_Error_Message: NORMALIZATION_ERROR: One or more premises do not map into supported sentence patterns
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: SPM_UNSUPPORTED_SENTENCE_PATTERN
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 10/10
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D2_EX020
+Dataset_Type: D2
+Run_ID: 1
+
+[RAW INPUT]
+Ahmed studies.
+What does Ahmed do?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ΓÇö D1]
+Expected_Entailment_Status: N/A
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: N/A
+Inference_Rules: N/A
+Distractor_Count: N/A
+Case_Adjustment_Count: N/A
+Pattern_Rewrite_Count: N/A
+Subject_Propagation_Count: N/A
+Synonym_Unification_Count: N/A
+Antonym_Unification_Count: N/A
+Normalization_Complexity_Score: N/A
+
+[DATASET METADATA ΓÇö D2]
+Expected_Component: Normalizer
+Expected_SubComponent: N5
+Expected_Specific_Error: QPM_UNSUPPORTED_QUESTION_PATTERN
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: failed
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     ahmed studies.
+     what does ahmed do?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: failed
+  Output_After_Component:
+
+     null
+
+  Error_Code: QD_NON_YN_QUESTION
+  Error_Message: NORMALIZATION_ERROR: No yes/no question detected
+Non yes/no question detected
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: skipped
+  Triggered: N/A
+  Actual_Pattern_Rewrite_Count: 0
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: skipped
+  Output_After_Component:
+
+     skipped_due_to_previous_failure
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: skipped
+  Triggered: N/A
+  Actual_Subject_Propagation_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: skipped
+  Triggered: N/A
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component:
+
+     See normalizer debug.
+
+  Error_Code: N/A
+  Error_Message: N/A
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: failed
+Failed_Normalizer_SubComponent: N2
+Normalizer_Error_Code: QD_NON_YN_QUESTION
+Normalizer_Error_Message: NORMALIZATION_ERROR: No yes/no question detected
+Non yes/no question detected
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 0
+Actual_Subject_Propagation_Count: 0
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 2
+
+Normalized_Prompt:
+None
+
+Normalizer_Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: skipped
+
+Parsed_Normalized_Prompt:
+null
+
+Prompt_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: skipped
+
+LLM_Model: N/A
+LLM_Temperature: N/A
+
+LLM_Response:
+null
+
+LLM_Response_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: skipped
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: failed
+Explanation_Validity: N/A
+Error_Component: Normalizer
+Error_Message: QD_NON_YN_QUESTION
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 0
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 0
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 0
+Total_Runtime_ms: 0
+
+================================================================================
+RUN END
+================================================================================
+

@@ -8,58 +8,37 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from tests.final_run_utils import run_and_print_example
 
 
-def read_multiline_input() -> str:
-    print("Manual Debug Test: Final Full Pipeline Runtime Output")
-    print("Paste one raw input.")
-    print("When finished, type END on a new line.")
-    print("=" * 100)
+EXAMPLE = {
+    "Example_ID": "DEMO_D1_EX009_STYLE_SUCCESS",
+    "Dataset_Type": "D1",
+    "Run_ID": 1,
 
-    lines = []
+    "Raw_Input": """Both the sensor is ready and it is clean.
+is the sensor prepared?""",
 
-    while True:
-        line = input()
+    "Expected_Entailment_Status": "entailed",
+    "Expected_Not_Entailed_Type": "N/A",
+    "Inference_Depth": 1,
+    "Inference_Rules": "CE",
+    "Distractor_Count": 0,
+    "Case_Adjustment_Count": 1,
+    "Pattern_Rewrite_Count": 1,
+    "Subject_Propagation_Count": 1,
+    "Synonym_Unification_Count": 1,
+    "Antonym_Unification_Count": 0,
+    "Normalization_Complexity_Score": 4,
 
-        if line.strip() == "END":
-            break
-
-        lines.append(line)
-
-    return "\n".join(lines)
+    "Expected_Component": "N/A",
+    "Expected_SubComponent": "N/A",
+    "Expected_Specific_Error": "N/A",
+}
 
 
 def main() -> None:
-    raw_input = read_multiline_input()
-
-    example = {
-        "Example_ID": "MANUAL_EX001",
-        "Dataset_Type": "MANUAL",
-        "Run_ID": 1,
-        "Raw_Input": raw_input,
-
-        # D1 metadata hidden as N/A
-        "Expected_Entailment_Status": "N/A",
-        "Expected_Not_Entailed_Type": "N/A",
-        "Inference_Depth": "N/A",
-        "Inference_Rules": "N/A",
-        "Distractor_Count": "N/A",
-        "Case_Adjustment_Count": "N/A",
-        "Pattern_Rewrite_Count": "N/A",
-        "Subject_Propagation_Count": "N/A",
-        "Synonym_Unification_Count": "N/A",
-        "Antonym_Unification_Count": "N/A",
-        "Normalization_Complexity_Score": "N/A",
-
-        # D2 metadata hidden as N/A
-        "Expected_Component": "N/A",
-        "Expected_SubComponent": "N/A",
-        "Expected_Specific_Error": "N/A",
-    }
-
-    print("\n\n")
-    run_and_print_example(
-        example=example,
-        include_dataset_metadata=False,
-    )
+    print("=" * 100)
+    print("FINAL TEST B — DEMO 1: D1 VALID ENTAILED CE EXAMPLE")
+    print("=" * 100)
+    run_and_print_example(EXAMPLE)
 
 
 if __name__ == "__main__":

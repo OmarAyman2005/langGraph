@@ -1,0 +1,1127 @@
+====================================================================================================
+FINAL DATASET TEST A
+Batch 5: D1_EX041 to D1_EX050
+====================================================================================================
+
+
+
+####################################################################################################
+EXAMPLE 1/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX041
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+Both the sensor is glad and it is honest.
+The sensor is prepared if the sensor is happy.
+if the sensor is ready, then not the sensor is open.
+if the dog is clean, then it is secure.
+either the sensor is intelligent or the sensor is calm.
+is the sensor closed?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: CE+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 2
+Antonym_Unification_Count: 1
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the sensor is glad and it is honest.
+     the sensor is prepared if the sensor is happy.
+     if the sensor is ready, then not the sensor is open.
+     if the dog is clean, then it is secure.
+     either the sensor is intelligent or the sensor is calm.
+     is the sensor closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Detected_Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is happy, then the sensor is prepared.
+     3. if the sensor is ready, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 2
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. the sensor is glad and the sensor is honest.
+2. if the sensor is glad, then the sensor is prepared.
+3. if the sensor is prepared, then not the sensor is open.
+4. if the dog is clean, then the dog is secure.
+5. the sensor is intelligent or the sensor is calm.
+
+Question:
+is the sensor not open?
+
+Normalizer_Runtime_ms: 1637
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the sensor is glad and the sensor is honest.",
+        "P2": "if the sensor is glad, then the sensor is prepared.",
+        "P3": "if the sensor is prepared, then not the sensor is open.",
+        "P4": "if the dog is clean, then the dog is secure.",
+        "P5": "the sensor is intelligent or the sensor is calm."
+    },
+    "question": "is the sensor not open?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the sensor is prepared. [from: P2] [rule: Modus Ponens]
+S2: not the sensor is open. [from: S1, P3] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 9613
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the sensor is prepared.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the sensor is open.",
+            "supports": [
+                "S1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SensorIsGlad & SensorIsHonest",
+            "P2": "SensorIsGlad -> SensorIsPrepared",
+            "P3": "SensorIsPrepared -> ~SensorIsOpen",
+            "P4": "DogIsClean -> DogIsSecure",
+            "P5": "SensorIsIntelligent | SensorIsCalm"
+        },
+        "target": "~SensorIsOpen"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "SensorIsPrepared",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~SensorIsOpen",
+                "supports": [
+                    "S1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the sensor is glad": "SensorIsGlad",
+        "the sensor is honest": "SensorIsHonest",
+        "the sensor is prepared": "SensorIsPrepared",
+        "the sensor is open": "SensorIsOpen",
+        "the dog is clean": "DogIsClean",
+        "the dog is secure": "DogIsSecure",
+        "the sensor is intelligent": "SensorIsIntelligent",
+        "the sensor is calm": "SensorIsCalm"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Ponens requires exactly 2 supports.",
+                "derived": "SensorIsPrepared",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~SensorIsOpen",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SensorIsGlad & SensorIsHonest",
+            "P2": "SensorIsGlad -> SensorIsPrepared",
+            "P3": "SensorIsPrepared -> ~SensorIsOpen",
+            "P4": "DogIsClean -> DogIsSecure",
+            "P5": "SensorIsIntelligent | SensorIsCalm"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1637
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 9613
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 11251
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 2/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX041
+Dataset_Type: D1
+Run_ID: 2
+
+[RAW INPUT]
+Both the sensor is glad and it is honest.
+The sensor is prepared if the sensor is happy.
+if the sensor is ready, then not the sensor is open.
+if the dog is clean, then it is secure.
+either the sensor is intelligent or the sensor is calm.
+is the sensor closed?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: CE+MP
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 2
+Antonym_Unification_Count: 1
+Normalization_Complexity_Score: 9
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     both the sensor is glad and it is honest.
+     the sensor is prepared if the sensor is happy.
+     if the sensor is ready, then not the sensor is open.
+     if the dog is clean, then it is secure.
+     either the sensor is intelligent or the sensor is calm.
+     is the sensor closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Detected_Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is happy, then the sensor is prepared.
+     3. if the sensor is ready, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Synonym_Unification_Count: 2
+  Output_After_Component:
+
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor closed?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: Yes
+  Actual_Antonym_Unification_Count: 1
+  Output_After_Component:
+
+     Here it 1st Does That:
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+     
+     THEN INTERNALLY IT CALLS N4 ON THE REWRITTEN PREMISE(S) TO DO THAT:
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+     
+     THEN IT DOES THIS (Removes the Double not):
+     Premises:
+     1. the sensor is glad and the sensor is honest.
+     2. if the sensor is glad, then the sensor is prepared.
+     3. if the sensor is prepared, then not the sensor is open.
+     4. if the dog is clean, then the dog is secure.
+     5. the sensor is intelligent or the sensor is calm.
+     
+     Question:
+     is the sensor not open?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 2
+Actual_Synonym_Unification_Count: 2
+Actual_Antonym_Unification_Count: 1
+Actual_Normalization_Complexity_Score: 10
+
+Normalized_Prompt:
+Premises:
+1. the sensor is glad and the sensor is honest.
+2. if the sensor is glad, then the sensor is prepared.
+3. if the sensor is prepared, then not the sensor is open.
+4. if the dog is clean, then the dog is secure.
+5. the sensor is intelligent or the sensor is calm.
+
+Question:
+is the sensor not open?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "the sensor is glad and the sensor is honest.",
+        "P2": "if the sensor is glad, then the sensor is prepared.",
+        "P3": "if the sensor is prepared, then not the sensor is open.",
+        "P4": "if the dog is clean, then the dog is secure.",
+        "P5": "the sensor is intelligent or the sensor is calm."
+    },
+    "question": "is the sensor not open?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the sensor is prepared. [from: P2] [rule: Modus Ponens]
+S2: not the sensor is open. [from: S1, P3] [rule: Modus Ponens]
+
+LLM_Response_Error: None
+Runtime_ms: 2613
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: success
+
+Parsed_LLM_Response:
+{
+    "answer": "entailed",
+    "steps": [
+        {
+            "id": "S1",
+            "statement": "the sensor is prepared.",
+            "supports": [
+                "P2"
+            ],
+            "rule": "Modus Ponens"
+        },
+        {
+            "id": "S2",
+            "statement": "not the sensor is open.",
+            "supports": [
+                "S1",
+                "P3"
+            ],
+            "rule": "Modus Ponens"
+        }
+    ],
+    "special_case": null
+}
+
+LLM_Response_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: success
+
+Symbolic_Translation:
+{
+    "symbolic_problem": {
+        "premises": {
+            "P1": "SensorIsGlad & SensorIsHonest",
+            "P2": "SensorIsGlad -> SensorIsPrepared",
+            "P3": "SensorIsPrepared -> ~SensorIsOpen",
+            "P4": "DogIsClean -> DogIsSecure",
+            "P5": "SensorIsIntelligent | SensorIsCalm"
+        },
+        "target": "~SensorIsOpen"
+    },
+    "symbolic_trace": {
+        "answer": "entailed",
+        "steps": [
+            {
+                "id": "S1",
+                "derived": "SensorIsPrepared",
+                "supports": [
+                    "P2"
+                ],
+                "rule": "Modus Ponens"
+            },
+            {
+                "id": "S2",
+                "derived": "~SensorIsOpen",
+                "supports": [
+                    "S1",
+                    "P3"
+                ],
+                "rule": "Modus Ponens"
+            }
+        ],
+        "special_case": null
+    },
+    "proposition_map": {
+        "the sensor is glad": "SensorIsGlad",
+        "the sensor is honest": "SensorIsHonest",
+        "the sensor is prepared": "SensorIsPrepared",
+        "the sensor is open": "SensorIsOpen",
+        "the dog is clean": "DogIsClean",
+        "the dog is secure": "DogIsSecure",
+        "the sensor is intelligent": "SensorIsIntelligent",
+        "the sensor is calm": "SensorIsCalm"
+    }
+}
+
+Translator_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: success
+
+Verifier_Output:
+{
+    "verification_success": true,
+    "verification_error": null,
+    "verification_result": {
+        "validity": "invalid",
+        "answer_label": "entailed",
+        "step_results": [
+            {
+                "id": "S1",
+                "valid": false,
+                "error": "VF_STEP_INSUFFICIENT_SUPPORTS",
+                "error_details": "Modus Ponens requires exactly 2 supports.",
+                "derived": "SensorIsPrepared",
+                "expected": null
+            },
+            {
+                "id": "S2",
+                "valid": false,
+                "error": "VF_STEP_UNKNOWN_SUPPORT",
+                "error_details": "unknown support S1",
+                "derived": "~SensorIsOpen",
+                "expected": null
+            }
+        ],
+        "final_answer_check": "inconsistent",
+        "not_entailed_reason": "N/A",
+        "available_knowledge": {
+            "P1": "SensorIsGlad & SensorIsHonest",
+            "P2": "SensorIsGlad -> SensorIsPrepared",
+            "P3": "SensorIsPrepared -> ~SensorIsOpen",
+            "P4": "DogIsClean -> DogIsSecure",
+            "P5": "SensorIsIntelligent | SensorIsCalm"
+        }
+    }
+}
+
+Steps_Correctness: Failed: S1, S2
+Invalid_Steps_Reasons: S1: VF_STEP_INSUFFICIENT_SUPPORTS; S2: VF_STEP_UNKNOWN_SUPPORT
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: inconsistent
+Final_Validity: invalid
+Verifier_Error: None
+Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[FINAL RUNTIME DECISION]
+Pipeline_Status: success
+Explanation_Validity: invalid
+Error_Component: None
+Error_Message: None
+
+--------------------------------------------------------------------------------
+[TIMING SUMMARY]
+Normalization_Time_ms: 1
+Prompt_Parsing_Time_ms: 0
+LLM_Response_Time_ms: 2613
+LLM_Response_Parsing_Time_ms: 0
+Translation_Time_ms: 0
+Verification_Time_ms: 1
+Total_Runtime_ms: 2615
+
+================================================================================
+RUN END
+================================================================================
+
+
+
+
+####################################################################################################
+EXAMPLE 3/20
+####################################################################################################
+================================================================================
+RUN START
+================================================================================
+
+Example_ID: D1_EX042
+Dataset_Type: D1
+Run_ID: 1
+
+[RAW INPUT]
+The engine works if the engine starts.
+If the engine works, then it is prepared.
+the engine is unready.
+the camera moves if the camera opens.
+either the engine is clean or the engine is quick.
+does the engine not begin?
+
+--------------------------------------------------------------------------------
+[DATASET METADATA ù D1]
+Expected_Entailment_Status: entailed
+Expected_Not_Entailed_Type: N/A
+Inference_Depth: 3
+Inference_Rules: HS+MT
+Distractor_Count: 2
+Case_Adjustment_Count: 2
+Pattern_Rewrite_Count: 2
+Subject_Propagation_Count: 2
+Synonym_Unification_Count: 0
+Antonym_Unification_Count: 0
+Normalization_Complexity_Score: 6
+
+[DATASET METADATA ù D2]
+Expected_Component: N/A
+Expected_SubComponent: N/A
+Expected_Specific_Error: N/A
+
+--------------------------------------------------------------------------------
+[COMPONENT 1: NORMALIZER]
+Status: success
+
+[NORMALIZER SUBCOMPONENT TRACE]
+
+N1_Character_Adjuster:
+  Status: success
+  Triggered: Yes
+  Actual_Case_Adjustment_Count: 2
+  Output_After_Component:
+
+     the engine works if the engine starts.
+     if the engine works, then it is prepared.
+     the engine is unready.
+     the camera moves if the camera opens.
+     either the engine is clean or the engine is quick.
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N2_Question_Detector:
+  Status: success
+  Output_After_Component:
+
+     Candidate_Premises_Text:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Detected_Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N3_Premise_Segmenter:
+  Status: success
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N4_Sentence_Pattern_Matcher:
+  Status: success
+  Triggered: Yes
+  Actual_Pattern_Rewrite_Count: 3
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N5_Question_Pattern_Matcher:
+  Status: success
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N6_Subject_Propagator:
+  Status: success
+  Triggered: Yes
+  Actual_Subject_Propagation_Count: 1
+  Output_After_Component:
+
+     Premises:
+     1. if the engine starts, then the engine works.
+     2. if the engine works, then the engine is prepared.
+     3. the engine is unready.
+     4. if the camera opens, then the camera moves.
+     5. the engine is clean or the engine is quick.
+     
+     Question:
+     does the engine not begin?
+
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N7_Synonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Synonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+N8_Antonym_Words_Unifier:
+  Status: success
+  Triggered: No
+  Actual_Antonym_Unification_Count: 0
+  Output_After_Component: WAS NOT MODIFIED
+  Error_Code: None
+  Error_Message: None
+  Runtime_ms: 0
+
+[NORMALIZER FINAL SUMMARY]
+Normalizer_Status: success
+Failed_Normalizer_SubComponent: None
+Normalizer_Error_Code: None
+Normalizer_Error_Message: None
+
+Triggered_Normalization_Features:
+Actual_Case_Adjustment_Count: 2
+Actual_Pattern_Rewrite_Count: 3
+Actual_Subject_Propagation_Count: 1
+Actual_Synonym_Unification_Count: 0
+Actual_Antonym_Unification_Count: 0
+Actual_Normalization_Complexity_Score: 6
+
+Normalized_Prompt:
+Premises:
+1. if the engine starts, then the engine works.
+2. if the engine works, then the engine is prepared.
+3. the engine is unready.
+4. if the camera opens, then the camera moves.
+5. the engine is clean or the engine is quick.
+
+Question:
+does the engine not begin?
+
+Normalizer_Runtime_ms: 1
+
+--------------------------------------------------------------------------------
+[COMPONENT 2: NORMALIZED PROMPT PARSER]
+Status: success
+
+Parsed_Normalized_Prompt:
+{
+    "premises": {
+        "P1": "if the engine starts, then the engine works.",
+        "P2": "if the engine works, then the engine is prepared.",
+        "P3": "the engine is unready.",
+        "P4": "if the camera opens, then the camera moves.",
+        "P5": "the engine is clean or the engine is quick."
+    },
+    "question": "does the engine not begin?"
+}
+
+Prompt_Parser_Error: None
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 3: LLM REASONING MODULE]
+Status: success
+
+LLM_Model: llama3.1:8b
+LLM_Temperature: 0
+
+LLM_Response:
+Answer: entailed
+Steps:
+S1: the engine does not start. [from: P3] [rule: Conjunction Introduction]
+S2: if the engine starts, then the engine works. [from: P1] [rule: None]
+S3: the engine is unready. [from: P3] [rule: None]
+S4: the engine does not work. [from: S1, S3] [rule: Modus Ponens]
+S5: if the engine works, then the engine is prepared. [from: P2] [rule: None]
+S6: the engine is unready. [from: P3] [rule: None]
+S7: the engine is not prepared. [from: S4, S6] [rule: Modus Tollens]
+S8: the engine does not start or the engine is not prepared. [from: P5] [rule: Disjunctive Syllogism]
+S9: the engine does not start. [from: S7, S8] [rule: Conjunction Elimination]
+
+LLM_Response_Error: None
+Runtime_ms: 9804
+
+--------------------------------------------------------------------------------
+[COMPONENT 4: LLM RESPONSE PARSER]
+Status: failed
+
+Parsed_LLM_Response:
+null
+
+LLM_Response_Parser_Error: Unsupported rule in S2: 'None'.
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 5: TRANSLATOR]
+Status: skipped
+
+Symbolic_Translation:
+null
+
+Translator_Error: N/A
+Runtime_ms: 0
+
+--------------------------------------------------------------------------------
+[COMPONENT 6: VERIFIER]
+Status: skipped
+
+Verifier_Output:
+null
+
+Steps_Correctness: N/A
+Invalid_Steps_Reasons: N/A
+Not_Entailed_Reason: N/A
+Final_Answer_Consistency: N/A
+Final_Validity: N/A
+Verifier_Error: N/A
